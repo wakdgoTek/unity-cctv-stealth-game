@@ -1,0 +1,459 @@
+using UnityEditor;
+using UnityEditor.Events;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.UI;
+
+public static class CctvDemoSceneBuilder
+{
+    [MenuItem("Tools/CCTV Starter/Create Stealth Mini Game")]
+    public static void CreateStealthMiniGame()
+    {
+        CleanupGeneratedObjects();
+
+        GameObject root = new GameObject("StealthMiniGame");
+
+        GameObject floor = CreateCube("Floor", new Vector3(0f, -0.05f, 0f), new Vector3(30f, 0.1f, 58f), "M_Floor", new Color(0.18f, 0.21f, 0.23f));
+        floor.transform.SetParent(root.transform);
+
+        CreateWall(root.transform, "Back_Wall", new Vector3(0f, 1.5f, -29f), new Vector3(30f, 3f, 0.45f));
+        CreateWall(root.transform, "Front_Wall", new Vector3(0f, 1.5f, 29f), new Vector3(30f, 3f, 0.45f));
+        CreateWall(root.transform, "Left_Wall", new Vector3(-15f, 1.5f, 0f), new Vector3(0.45f, 3f, 58f));
+        CreateWall(root.transform, "Right_Wall", new Vector3(15f, 1.5f, 0f), new Vector3(0.45f, 3f, 58f));
+
+        CreateWall(root.transform, "Gate_Wall_A_Left", new Vector3(-8.2f, 1.5f, -16f), new Vector3(13.6f, 3f, 0.45f));
+        CreateWall(root.transform, "Gate_Wall_A_Right", new Vector3(8.2f, 1.5f, -16f), new Vector3(7.6f, 3f, 0.45f));
+        CreateWall(root.transform, "Gate_Wall_B_Left", new Vector3(-8.2f, 1.5f, 0f), new Vector3(7.6f, 3f, 0.45f));
+        CreateWall(root.transform, "Gate_Wall_B_Right", new Vector3(8.2f, 1.5f, 0f), new Vector3(13.6f, 3f, 0.45f));
+        CreateWall(root.transform, "Gate_Wall_C_Left", new Vector3(-8.2f, 1.5f, 15.5f), new Vector3(13.6f, 3f, 0.45f));
+        CreateWall(root.transform, "Gate_Wall_C_Right", new Vector3(8.2f, 1.5f, 15.5f), new Vector3(7.6f, 3f, 0.45f));
+
+        CreateWall(root.transform, "Cover_A", new Vector3(-5.4f, 1.25f, -23f), new Vector3(7.5f, 2.5f, 0.45f));
+        CreateWall(root.transform, "Cover_B", new Vector3(6.2f, 1.25f, -20.3f), new Vector3(5.8f, 2.5f, 0.45f));
+        CreateWall(root.transform, "Cover_C", new Vector3(3.5f, 1.25f, -10.4f), new Vector3(8.4f, 2.5f, 0.45f));
+        CreateWall(root.transform, "Cover_D", new Vector3(-6.5f, 1.25f, -6.7f), new Vector3(5.2f, 2.5f, 0.45f));
+        CreateWall(root.transform, "Cover_E", new Vector3(-3.5f, 1.25f, 5.2f), new Vector3(8f, 2.5f, 0.45f));
+        CreateWall(root.transform, "Cover_F", new Vector3(6.7f, 1.25f, 8.6f), new Vector3(5.5f, 2.5f, 0.45f));
+        CreateWall(root.transform, "Cover_G", new Vector3(2.5f, 1.25f, 21f), new Vector3(9f, 2.5f, 0.45f));
+        CreateWall(root.transform, "Cover_H", new Vector3(-7.8f, 1.25f, 23.5f), new Vector3(4.8f, 2.5f, 0.45f));
+
+        CreatePillar(root.transform, "Pillar_A", new Vector3(-11f, 1.25f, -19f));
+        CreatePillar(root.transform, "Pillar_B", new Vector3(11f, 1.25f, -11f));
+        CreatePillar(root.transform, "Pillar_C", new Vector3(-11f, 1.25f, 4f));
+        CreatePillar(root.transform, "Pillar_D", new Vector3(11f, 1.25f, 18f));
+
+        CreateCrateStack(root.transform, new Vector3(-10.6f, 0.55f, -25f), 3);
+        CreateCrateStack(root.transform, new Vector3(10.2f, 0.55f, -14f), 2);
+        CreateCrateStack(root.transform, new Vector3(-10.5f, 0.55f, -2.5f), 4);
+        CreateCrateStack(root.transform, new Vector3(10.5f, 0.55f, 3.4f), 3);
+        CreateCrateStack(root.transform, new Vector3(-10.8f, 0.55f, 13f), 2);
+        CreateCrateStack(root.transform, new Vector3(10.8f, 0.55f, 24f), 4);
+
+        CreateFloorStripe(root.transform, "Start_Stripe", new Vector3(0f, 0.01f, -26.2f), new Vector3(8f, 0.03f, 0.18f), "M_StartStripe", new Color(0.1f, 0.55f, 0.9f));
+        CreateFloorStripe(root.transform, "Danger_Stripe_A", new Vector3(0f, 0.012f, -16f), new Vector3(4.2f, 0.03f, 0.16f), "M_DangerStripe", new Color(1f, 0.72f, 0.1f));
+        CreateFloorStripe(root.transform, "Danger_Stripe_B", new Vector3(0f, 0.012f, 0f), new Vector3(4.2f, 0.03f, 0.16f), "M_DangerStripe", new Color(1f, 0.72f, 0.1f));
+        CreateFloorStripe(root.transform, "Danger_Stripe_C", new Vector3(0f, 0.012f, 15.5f), new Vector3(4.2f, 0.03f, 0.16f), "M_DangerStripe", new Color(1f, 0.72f, 0.1f));
+
+        CreateOverheadLight(root.transform, new Vector3(0f, 5f, -22f));
+        CreateOverheadLight(root.transform, new Vector3(0f, 5f, -7f));
+        CreateOverheadLight(root.transform, new Vector3(0f, 5f, 8f));
+        CreateOverheadLight(root.transform, new Vector3(0f, 5f, 23f));
+
+        Vector3 startPosition = new Vector3(0f, 1f, -26.2f);
+        GameObject player = CreatePlayer(root.transform, startPosition);
+
+        Text statusText;
+        Text hintText;
+        CreateGameUi(out statusText, out hintText);
+
+        GameObject gameManagerObject = new GameObject("Stealth_Game_Manager");
+        gameManagerObject.transform.SetParent(root.transform);
+        StealthGameManager gameManager = gameManagerObject.AddComponent<StealthGameManager>();
+        gameManager.Configure(player.transform, player.GetComponent<SimplePlayerController>(), statusText, hintText, startPosition);
+
+        CreateGoal(root.transform, gameManager);
+
+        CctvDetectionTarget target = player.GetComponent<CctvDetectionTarget>();
+        CreateCctv(root.transform, "CCTV_Entrance_Left", new Vector3(-11.8f, 3.1f, -21.8f), new Vector3(0.95f, -0.1f, 0.7f), 12.5f, 62f, 0.45f, 75f, 38f, target, gameManager);
+        CreateCctv(root.transform, "CCTV_Entrance_Right", new Vector3(11.8f, 3.1f, -14.5f), new Vector3(-0.95f, -0.1f, 0.5f), 12f, 58f, 0.48f, 70f, 42f, target, gameManager);
+        CreateCctv(root.transform, "CCTV_Mid_Left", new Vector3(-12f, 3.1f, -3.5f), new Vector3(0.9f, -0.1f, 0.8f), 12.5f, 68f, 0.48f, 85f, 35f, target, gameManager);
+        CreateCctv(root.transform, "CCTV_Mid_Right", new Vector3(12f, 3.1f, 6f), new Vector3(-0.9f, -0.1f, 0.75f), 13f, 66f, 0.45f, 80f, 40f, target, gameManager);
+        CreateCctv(root.transform, "CCTV_Exit_Left", new Vector3(-11.8f, 3.1f, 17f), new Vector3(0.95f, -0.1f, 0.6f), 12.5f, 60f, 0.42f, 72f, 44f, target, gameManager);
+        CreateCctv(root.transform, "CCTV_Exit_Right", new Vector3(11.8f, 3.1f, 23.5f), new Vector3(-0.95f, -0.1f, 0.5f), 11.5f, 56f, 0.42f, 65f, 46f, target, gameManager);
+        CreateCctv(root.transform, "CCTV_Center_Cross_A", new Vector3(0f, 3.25f, -8.2f), new Vector3(1f, -0.1f, 0.25f), 10.5f, 54f, 0.4f, 95f, 48f, target, gameManager);
+        CreateCctv(root.transform, "CCTV_Center_Cross_B", new Vector3(0f, 3.25f, 8.8f), new Vector3(-1f, -0.1f, 0.25f), 10.5f, 54f, 0.4f, 95f, 52f, target, gameManager);
+        CreateCctv(root.transform, "CCTV_Final_Gate_Left", new Vector3(-5.2f, 3.15f, 25.8f), new Vector3(0.7f, -0.1f, 0.25f), 8.8f, 52f, 0.38f, 70f, 55f, target, gameManager);
+        CreateCctv(root.transform, "CCTV_Final_Gate_Right", new Vector3(5.2f, 3.15f, 25.8f), new Vector3(-0.7f, -0.1f, 0.25f), 8.8f, 52f, 0.38f, 70f, 55f, target, gameManager);
+
+        Camera mainCamera = Camera.main;
+        if (mainCamera != null)
+        {
+            mainCamera.transform.SetParent(player.transform, false);
+            mainCamera.transform.localPosition = new Vector3(0f, 0.75f, 0.08f);
+            mainCamera.transform.localRotation = Quaternion.identity;
+            mainCamera.fieldOfView = 70f;
+            mainCamera.nearClipPlane = 0.05f;
+        }
+
+        Selection.activeGameObject = player;
+        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+    }
+
+    [MenuItem("Tools/CCTV Starter/Create Demo Scene")]
+    public static void CreateDemoScene()
+    {
+        GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        floor.name = "Floor";
+        floor.transform.position = new Vector3(0f, -0.05f, 0f);
+        floor.transform.localScale = new Vector3(16f, 0.1f, 16f);
+        floor.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_Floor", new Color(0.25f, 0.28f, 0.3f));
+
+        GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        wall.name = "Wall_Blocking_Line_Of_Sight";
+        wall.transform.position = new Vector3(2.25f, 1f, -0.5f);
+        wall.transform.localScale = new Vector3(0.35f, 2f, 4f);
+        wall.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_Wall", new Color(0.55f, 0.55f, 0.55f));
+
+        GameObject player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+        player.name = "Player";
+        player.tag = "Player";
+        player.transform.position = new Vector3(0f, 1f, 3.5f);
+        Renderer playerRenderer = player.GetComponent<Renderer>();
+        playerRenderer.sharedMaterial = CreateMaterial("M_Player", new Color(0.2f, 0.55f, 1f));
+        playerRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+
+        Rigidbody playerBody = player.AddComponent<Rigidbody>();
+        playerBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        player.AddComponent<CctvDetectionTarget>();
+        player.AddComponent<SimplePlayerController>();
+        DetectionAlertExample alert = player.AddComponent<DetectionAlertExample>();
+        Text alertText = CreateDetectionUi();
+        alert.Configure(alertText);
+
+        GameObject cctvRoot = new GameObject("CCTV");
+        cctvRoot.transform.position = new Vector3(0f, 2.5f, -5f);
+        cctvRoot.transform.rotation = Quaternion.LookRotation(Vector3.forward);
+
+        GameObject body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        body.name = "Camera_Body";
+        body.transform.SetParent(cctvRoot.transform, false);
+        body.transform.localScale = new Vector3(0.7f, 0.35f, 0.55f);
+        body.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_CCTV", new Color(0.08f, 0.09f, 0.1f));
+        Object.DestroyImmediate(body.GetComponent<Collider>());
+
+        GameObject lens = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        lens.name = "Lens";
+        lens.transform.SetParent(cctvRoot.transform, false);
+        lens.transform.localPosition = new Vector3(0f, 0f, 0.32f);
+        lens.transform.localScale = Vector3.one * 0.22f;
+        lens.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_Lens", new Color(0.05f, 0.45f, 0.65f));
+        Object.DestroyImmediate(lens.GetComponent<Collider>());
+
+        GameObject origin = new GameObject("Detection_Origin");
+        origin.transform.SetParent(cctvRoot.transform, false);
+        origin.transform.localPosition = new Vector3(0f, 0f, 0.45f);
+        origin.transform.localRotation = Quaternion.identity;
+
+        Light spot = new GameObject("View_Light").AddComponent<Light>();
+        spot.type = LightType.Spot;
+        spot.range = 12f;
+        spot.spotAngle = 65f;
+        spot.intensity = 2.5f;
+        spot.color = new Color(1f, 0.92f, 0.65f);
+        spot.transform.SetParent(origin.transform, false);
+
+        CctvDetector detector = cctvRoot.AddComponent<CctvDetector>();
+        detector.Configure(player.GetComponent<CctvDetectionTarget>(), LayerMask.GetMask("Default"), origin.transform);
+        cctvRoot.AddComponent<CctvViewVisualizer>();
+        cctvRoot.AddComponent<CctvPatrol>();
+
+        UnityEventTools.AddPersistentListener(detector.onDetected, alert.SetDetected);
+        UnityEventTools.AddPersistentListener(detector.onLost, alert.SetLost);
+
+        Camera mainCamera = Camera.main;
+        if (mainCamera != null)
+        {
+            mainCamera.transform.SetParent(player.transform, false);
+            mainCamera.transform.localPosition = new Vector3(0f, 0.75f, 0.08f);
+            mainCamera.transform.localRotation = Quaternion.identity;
+            mainCamera.fieldOfView = 70f;
+            mainCamera.nearClipPlane = 0.05f;
+        }
+
+        Selection.activeGameObject = cctvRoot;
+        EditorUtility.SetDirty(detector);
+        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+    }
+
+    private static void CleanupGeneratedObjects()
+    {
+        string[] names =
+        {
+            "StealthMiniGame",
+            "Floor",
+            "Wall_Blocking_Line_Of_Sight",
+            "Player",
+            "CCTV",
+            "Detection_UI",
+            "Stealth_Game_UI",
+            "Stealth_Game_Manager"
+        };
+
+        foreach (string objectName in names)
+        {
+            GameObject found = GameObject.Find(objectName);
+            if (found != null)
+            {
+                Object.DestroyImmediate(found);
+            }
+        }
+    }
+
+    private static GameObject CreatePlayer(Transform parent, Vector3 position)
+    {
+        GameObject player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+        player.name = "Player";
+        player.tag = "Player";
+        player.transform.SetParent(parent);
+        player.transform.position = position;
+
+        Renderer playerRenderer = player.GetComponent<Renderer>();
+        playerRenderer.sharedMaterial = CreateMaterial("M_Player", new Color(0.2f, 0.55f, 1f));
+        playerRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+
+        Rigidbody playerBody = player.AddComponent<Rigidbody>();
+        playerBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+
+        player.AddComponent<CctvDetectionTarget>();
+        player.AddComponent<SimplePlayerController>();
+
+        return player;
+    }
+
+    private static void CreateGoal(Transform parent, StealthGameManager gameManager)
+    {
+        GameObject goal = CreateCube("Goal_Zone", new Vector3(0f, 0.08f, 27f), new Vector3(7f, 0.16f, 2.8f), "M_Goal", new Color(0.1f, 0.85f, 0.35f));
+        goal.transform.SetParent(parent);
+
+        Collider goalCollider = goal.GetComponent<Collider>();
+        goalCollider.isTrigger = true;
+
+        GoalZone goalZone = goal.AddComponent<GoalZone>();
+        goalZone.Configure(gameManager);
+
+        GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        marker.name = "Goal_Marker";
+        marker.transform.SetParent(goal.transform, false);
+        marker.transform.localPosition = new Vector3(0f, 0.08f, 0f);
+        marker.transform.localScale = new Vector3(1.8f, 0.08f, 1.8f);
+        marker.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_Goal", new Color(0.1f, 0.85f, 0.35f));
+        Object.DestroyImmediate(marker.GetComponent<Collider>());
+    }
+
+    private static void CreateCctv(Transform parent, string name, Vector3 position, Vector3 lookDirection, float distance, float angle, float detectTime, float patrolRange, float patrolSpeed, CctvDetectionTarget target, StealthGameManager gameManager)
+    {
+        GameObject cctvRoot = new GameObject(name);
+        cctvRoot.transform.SetParent(parent);
+        cctvRoot.transform.position = position;
+        cctvRoot.transform.rotation = Quaternion.LookRotation(lookDirection.normalized, Vector3.up);
+
+        GameObject body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        body.name = "Camera_Body";
+        body.transform.SetParent(cctvRoot.transform, false);
+        body.transform.localScale = new Vector3(0.75f, 0.34f, 0.55f);
+        body.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_CCTV", new Color(0.08f, 0.09f, 0.1f));
+        Object.DestroyImmediate(body.GetComponent<Collider>());
+
+        GameObject lens = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        lens.name = "Lens";
+        lens.transform.SetParent(cctvRoot.transform, false);
+        lens.transform.localPosition = new Vector3(0f, 0f, 0.35f);
+        lens.transform.localScale = Vector3.one * 0.24f;
+        lens.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_Lens", new Color(0.05f, 0.45f, 0.65f));
+        Object.DestroyImmediate(lens.GetComponent<Collider>());
+
+        GameObject origin = new GameObject("Detection_Origin");
+        origin.transform.SetParent(cctvRoot.transform, false);
+        origin.transform.localPosition = new Vector3(0f, 0f, 0.5f);
+        origin.transform.localRotation = Quaternion.identity;
+
+        Light spot = new GameObject("View_Light").AddComponent<Light>();
+        spot.type = LightType.Spot;
+        spot.range = distance;
+        spot.spotAngle = angle;
+        spot.intensity = 2.4f;
+        spot.color = new Color(1f, 0.9f, 0.55f);
+        spot.transform.SetParent(origin.transform, false);
+
+        CctvDetector detector = cctvRoot.AddComponent<CctvDetector>();
+        detector.Configure(target, LayerMask.GetMask("Default"), origin.transform);
+        detector.ConfigureView(distance, angle, detectTime);
+        cctvRoot.AddComponent<CctvViewVisualizer>();
+
+        if (detector.onDetected != null && gameManager != null)
+        {
+            UnityEventTools.AddPersistentListener(detector.onDetected, gameManager.OnPlayerDetected);
+        }
+
+        CctvPatrol patrol = cctvRoot.AddComponent<CctvPatrol>();
+        patrol.Configure(patrolRange, patrolSpeed);
+
+    }
+
+    private static void CreateWall(Transform parent, string name, Vector3 position, Vector3 scale)
+    {
+        GameObject wall = CreateCube(name, position, scale, "M_Wall", new Color(0.55f, 0.55f, 0.55f));
+        wall.transform.SetParent(parent);
+    }
+
+    private static void CreatePillar(Transform parent, string name, Vector3 position)
+    {
+        GameObject pillar = CreateCube(name, position, new Vector3(1.5f, 2.5f, 1.5f), "M_Pillar", new Color(0.38f, 0.41f, 0.43f));
+        pillar.transform.SetParent(parent);
+    }
+
+    private static void CreateCrateStack(Transform parent, Vector3 basePosition, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            float xOffset = (i % 2) * 1.05f;
+            float zOffset = (i / 2) * 1.05f;
+            Vector3 position = basePosition + new Vector3(xOffset, i >= 2 ? 1f : 0f, zOffset);
+            GameObject crate = CreateCube($"Crate_{basePosition.x}_{basePosition.z}_{i}", position, Vector3.one, "M_Crate", new Color(0.42f, 0.32f, 0.2f));
+            crate.transform.SetParent(parent);
+        }
+    }
+
+    private static void CreateFloorStripe(Transform parent, string name, Vector3 position, Vector3 scale, string materialName, Color color)
+    {
+        GameObject stripe = CreateCube(name, position, scale, materialName, color);
+        stripe.transform.SetParent(parent);
+        Object.DestroyImmediate(stripe.GetComponent<Collider>());
+    }
+
+    private static void CreateOverheadLight(Transform parent, Vector3 position)
+    {
+        GameObject lamp = CreateCube($"Lamp_{position.z}", position + Vector3.down * 0.15f, new Vector3(3.5f, 0.12f, 0.45f), "M_Lamp", new Color(0.9f, 0.88f, 0.72f));
+        lamp.transform.SetParent(parent);
+        Object.DestroyImmediate(lamp.GetComponent<Collider>());
+
+        Light light = new GameObject($"Area_Light_{position.z}").AddComponent<Light>();
+        light.transform.SetParent(parent);
+        light.transform.position = position;
+        light.type = LightType.Point;
+        light.range = 11f;
+        light.intensity = 2.1f;
+        light.color = new Color(1f, 0.92f, 0.72f);
+    }
+
+    private static GameObject CreateCube(string name, Vector3 position, Vector3 scale, string materialName, Color color)
+    {
+        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        cube.name = name;
+        cube.transform.position = position;
+        cube.transform.localScale = scale;
+        cube.GetComponent<Renderer>().sharedMaterial = CreateMaterial(materialName, color);
+        return cube;
+    }
+
+    private static void CreateGameUi(out Text statusText, out Text hintText)
+    {
+        GameObject canvasObject = new GameObject("Stealth_Game_UI");
+        Canvas canvas = canvasObject.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvasObject.AddComponent<CanvasScaler>();
+        canvasObject.AddComponent<GraphicRaycaster>();
+
+        statusText = CreateUiText(canvasObject.transform, "Status_Text", "목적지까지 들키지 말고 이동", 34, new Vector2(0f, -34f), new Color(1f, 0.95f, 0.72f));
+        hintText = CreateUiText(canvasObject.transform, "Hint_Text", "WASD 이동 | 마우스 시점 | 초록 구역에 도착", 21, new Vector2(0f, -78f), Color.white);
+    }
+
+    private static Text CreateUiText(Transform parent, string name, string textValue, int size, Vector2 anchoredPosition, Color color)
+    {
+        GameObject textObject = new GameObject(name);
+        textObject.transform.SetParent(parent, false);
+
+        Text text = textObject.AddComponent<Text>();
+        text.text = textValue;
+        text.alignment = TextAnchor.MiddleCenter;
+        text.font = CreateUiFont();
+        text.fontSize = size;
+        text.fontStyle = FontStyle.Bold;
+        text.color = color;
+        text.horizontalOverflow = HorizontalWrapMode.Overflow;
+
+        RectTransform rect = text.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(0.5f, 1f);
+        rect.anchorMax = new Vector2(0.5f, 1f);
+        rect.pivot = new Vector2(0.5f, 1f);
+        rect.anchoredPosition = anchoredPosition;
+        rect.sizeDelta = new Vector2(900f, 44f);
+
+        return text;
+    }
+
+    private static Text CreateDetectionUi()
+    {
+        GameObject canvasObject = new GameObject("Detection_UI");
+        Canvas canvas = canvasObject.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvasObject.AddComponent<CanvasScaler>();
+        canvasObject.AddComponent<GraphicRaycaster>();
+
+        GameObject textObject = new GameObject("Detection_Text");
+        textObject.transform.SetParent(canvasObject.transform, false);
+
+        Text text = textObject.AddComponent<Text>();
+        text.text = "감지됨";
+        text.alignment = TextAnchor.MiddleCenter;
+        text.font = CreateUiFont();
+        text.fontSize = 54;
+        text.fontStyle = FontStyle.Bold;
+        text.color = new Color(1f, 0.12f, 0.08f);
+        text.gameObject.SetActive(false);
+
+        RectTransform rect = text.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(0.5f, 1f);
+        rect.anchorMax = new Vector2(0.5f, 1f);
+        rect.pivot = new Vector2(0.5f, 1f);
+        rect.anchoredPosition = new Vector2(0f, -48f);
+        rect.sizeDelta = new Vector2(420f, 90f);
+
+        Selection.activeGameObject = textObject;
+        return text;
+    }
+
+    private static Font CreateUiFont()
+    {
+        Font font = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 54);
+        if (font != null)
+        {
+            return font;
+        }
+
+        return Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+    }
+
+    private static Material CreateMaterial(string materialName, Color color)
+    {
+        const string folderPath = "Assets/CCTVStarter";
+        string assetPath = $"{folderPath}/{materialName}.mat";
+        Material material = AssetDatabase.LoadAssetAtPath<Material>(assetPath);
+
+        if (material == null)
+        {
+            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (shader == null)
+            {
+                shader = Shader.Find("Standard");
+            }
+
+            material = new Material(shader);
+            AssetDatabase.CreateAsset(material, assetPath);
+        }
+
+        material.color = color;
+        EditorUtility.SetDirty(material);
+        return material;
+    }
+}
