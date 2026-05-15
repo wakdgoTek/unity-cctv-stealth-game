@@ -1,11 +1,15 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CctvPatrol : MonoBehaviour
 {
-    private const string ViewPivotName = "View_Pivot";
+    private const string HeadPivotName = "Head_Pivot";
+    private const string LegacyViewPivotName = "View_Pivot";
     private const string LegacyYawPivotName = "Yaw_Pivot";
 
-    [SerializeField] private Transform viewPivot;
+    [FormerlySerializedAs("viewPivot")]
+    [FormerlySerializedAs("yawPivot")]
+    [SerializeField] private Transform headPivot;
     [SerializeField] private float yawRange = 80f;
     [SerializeField] private float yawSpeed = 35f;
 
@@ -13,15 +17,15 @@ public class CctvPatrol : MonoBehaviour
 
     private void Awake()
     {
-        if (viewPivot == null)
+        if (headPivot == null)
         {
-            viewPivot = transform.Find(ViewPivotName);
+            headPivot = FindHeadPivot();
         }
     }
 
     private void Start()
     {
-        EnsureViewPivot();
+        EnsureHeadPivot();
         CaptureHomeTransform();
     }
 
@@ -31,119 +35,137 @@ public class CctvPatrol : MonoBehaviour
         yawSpeed = newYawSpeed;
     }
 
-    public void Configure(float newYawRange, float newYawSpeed, Transform newViewPivot)
+    public void Configure(float newYawRange, float newYawSpeed, Transform newHeadPivot)
     {
         yawRange = newYawRange;
         yawSpeed = newYawSpeed;
-        SetViewPivot(newViewPivot);
+        SetHeadPivot(newHeadPivot);
+    }
+
+    public void SetHeadPivot(Transform newHeadPivot)
+    {
+        headPivot = newHeadPivot;
+        CaptureHomeTransform();
     }
 
     public void SetViewPivot(Transform newViewPivot)
     {
-        viewPivot = newViewPivot;
-        CaptureHomeTransform();
+        SetHeadPivot(newViewPivot);
     }
 
     public void CaptureHomeTransform()
     {
-        Transform pivot = viewPivot != null ? viewPivot : transform;
+        Transform pivot = headPivot != null ? headPivot : transform;
         homeLocalRotation = pivot.localRotation;
     }
 
     private void Update()
     {
-        EnsureViewPivot();
+        EnsureHeadPivot();
 
         float yaw = Mathf.PingPong(Time.time * yawSpeed, yawRange) - yawRange * 0.5f;
-        viewPivot.localRotation = homeLocalRotation * Quaternion.Euler(0f, yaw, 0f);
+        headPivot.localRotation = homeLocalRotation * Quaternion.Euler(0f, yaw, 0f);
     }
 
-    private void EnsureViewPivot()
+    private Transform FindHeadPivot()
     {
-        if (viewPivot == null)
+        Transform pivot = transform.Find(HeadPivotName);
+        if (pivot != null)
         {
-            viewPivot = transform.Find(ViewPivotName);
-            if (viewPivot == null)
+            return pivot;
+        }
+
+        pivot = transform.Find(LegacyViewPivotName);
+        if (pivot != null)
+        {
+            return pivot;
+        }
+
+        return transform.Find(LegacyYawPivotName);
+    }
+
+    private void EnsureHeadPivot()
+    {
+        if (headPivot == null)
+        {
+            Transform existing = FindHeadPivot();
+            if (existing != null)
             {
-                Transform detectionOrigin = FindDetectionOrigin();
-                GameObject pivotObject = new GameObject(ViewPivotName);
-                viewPivot = pivotObject.transform;
-                viewPivot.SetParent(transform, false);
-
-                if (detectionOrigin != null)
-                {
-                    viewPivot.position = detectionOrigin.position;
-                    viewPivot.rotation = detectionOrigin.rotation;
-                }
-                else
-                {
-                    viewPivot.localPosition = Vector3.zero;
-                    viewPivot.localRotation = Quaternion.identity;
-                }
-
-                viewPivot.localScale = Vector3.one;
+                headPivot = existing;
+                headPivot.name = HeadPivotName;
+            }
+            else
+            {
+                GameObject pivotObject = new GameObject(HeadPivotName);
+                headPivot = pivotObject.transform;
+                headPivot.SetParent(transform, false);
+                headPivot.localPosition = Vector3.zero;
+                headPivot.localRotation = Quaternion.identity;
+                headPivot.localScale = Vector3.one;
             }
         }
 
-        MoveChildBackToRoot("Camera_Body");
-        MoveChildBackToRoot("Lens");
-        MoveDetectionOriginUnderViewPivot();
+        if (headPivot.name != HeadPivotName)
+        {
+            headPivot.name = HeadPivotName;
+        }
+
+        MoveChildUnderHead("Camera_Body");
+        MoveChildUnderHead("Lens");
+        MoveChildUnderHead("Detection_Origin");
+        UpdateDetectorOrigin();
     }
 
-    private Transform FindDetectionOrigin()
+    private Transform FindChildInRig(string childName)
     {
-        Transform direct = transform.Find("Detection_Origin");
+        Transform direct = transform.Find(childName);
         if (direct != null)
         {
             return direct;
         }
 
-        if (viewPivot != null)
+        if (headPivot != null)
         {
-            Transform viewOrigin = viewPivot.Find("Detection_Origin");
-            if (viewOrigin != null)
+            Transform underHead = headPivot.Find(childName);
+            if (underHead != null)
             {
-                return viewOrigin;
+                return underHead;
             }
         }
 
-        Transform legacyPivot = transform.Find(LegacyYawPivotName);
-        return legacyPivot != null ? legacyPivot.Find("Detection_Origin") : null;
+        Transform legacyViewPivot = transform.Find(LegacyViewPivotName);
+        Transform underView = legacyViewPivot != null ? legacyViewPivot.Find(childName) : null;
+        if (underView != null)
+        {
+            return underView;
+        }
+
+        Transform legacyYawPivot = transform.Find(LegacyYawPivotName);
+        return legacyYawPivot != null ? legacyYawPivot.Find(childName) : null;
     }
 
-    private void MoveChildBackToRoot(string childName)
+    private void MoveChildUnderHead(string childName)
     {
-        Transform direct = transform.Find(childName);
-        if (direct != null)
+        Transform child = FindChildInRig(childName);
+        if (child == null || child.parent == headPivot)
         {
             return;
         }
 
-        Transform child = viewPivot != null ? viewPivot.Find(childName) : null;
-        if (child == null)
-        {
-            Transform legacyPivot = transform.Find(LegacyYawPivotName);
-            child = legacyPivot != null ? legacyPivot.Find(childName) : null;
-        }
-
-        if (child != null)
-        {
-            child.SetParent(transform, true);
-        }
+        child.SetParent(headPivot, true);
     }
 
-    private void MoveDetectionOriginUnderViewPivot()
+    private void UpdateDetectorOrigin()
     {
-        Transform detectionOrigin = FindDetectionOrigin();
+        Transform detectionOrigin = FindChildInRig("Detection_Origin");
         if (detectionOrigin == null)
         {
             GameObject originObject = new GameObject("Detection_Origin");
             detectionOrigin = originObject.transform;
+            detectionOrigin.SetParent(headPivot, false);
+            detectionOrigin.localPosition = new Vector3(0f, 0f, 0.5f);
+            detectionOrigin.localRotation = Quaternion.identity;
         }
-
-        detectionOrigin.SetParent(viewPivot, true);
-        detectionOrigin.localPosition = Vector3.zero;
-        detectionOrigin.localRotation = Quaternion.identity;
 
         CctvDetector detector = GetComponent<CctvDetector>();
         if (detector != null)
