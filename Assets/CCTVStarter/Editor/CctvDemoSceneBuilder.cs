@@ -9,6 +9,13 @@ public static class CctvDemoSceneBuilder
     private const string CctvHeadPivotName = "Head_Pivot";
     private const string LegacyCctvViewPivotName = "View_Pivot";
     private const string LegacyCctvYawPivotName = "Yaw_Pivot";
+    private const float SecurityWallHeight = 6.2f;
+    private const float WallTopTrimY = 6.42f;
+    private const float CeilingBeamY = 6.75f;
+    private const float CeilingLightY = 7f;
+    private const float DoorHeaderY = 4.95f;
+    private const float ServicePipeY = 5.05f;
+    private const float WallSignY = 3.55f;
 
     [MenuItem("Tools/CCTV Starter/Create Stealth Mini Game")]
     public static void CreateStealthMiniGame()
@@ -280,10 +287,10 @@ public static class CctvDemoSceneBuilder
         CreateWall(parent, "Outer_Wall_West", new Vector3(-42f, 2.25f, 0f), new Vector3(0.55f, 4.5f, 156f));
         CreateWall(parent, "Outer_Wall_East", new Vector3(42f, 2.25f, 0f), new Vector3(0.55f, 4.5f, 156f));
 
-        CreateDecorCube(parent, "North_Top_Service_Rail", new Vector3(0f, 4.72f, 77.55f), new Vector3(82f, 0.18f, 0.28f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
-        CreateDecorCube(parent, "South_Top_Service_Rail", new Vector3(0f, 4.72f, -77.55f), new Vector3(82f, 0.18f, 0.28f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
-        CreateDecorCube(parent, "West_Top_Service_Rail", new Vector3(-41.55f, 4.72f, 0f), new Vector3(0.28f, 0.18f, 154f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
-        CreateDecorCube(parent, "East_Top_Service_Rail", new Vector3(41.55f, 4.72f, 0f), new Vector3(0.28f, 0.18f, 154f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
+        CreateDecorCube(parent, "North_Top_Service_Rail", new Vector3(0f, WallTopTrimY, 77.55f), new Vector3(82f, 0.18f, 0.28f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
+        CreateDecorCube(parent, "South_Top_Service_Rail", new Vector3(0f, WallTopTrimY, -77.55f), new Vector3(82f, 0.18f, 0.28f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
+        CreateDecorCube(parent, "West_Top_Service_Rail", new Vector3(-41.55f, WallTopTrimY, 0f), new Vector3(0.28f, 0.18f, 154f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
+        CreateDecorCube(parent, "East_Top_Service_Rail", new Vector3(41.55f, WallTopTrimY, 0f), new Vector3(0.28f, 0.18f, 154f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
     }
 
     private static void CreateFloorPanelGrid(Transform parent)
@@ -376,31 +383,31 @@ public static class CctvDemoSceneBuilder
     {
         for (float z = -72f; z <= 72f; z += 12f)
         {
-            CreateDecorCube(parent, $"Ceiling_Beam_{z}", new Vector3(0f, 4.9f, z), new Vector3(82f, 0.18f, 0.32f), "M_CeilingBeam", new Color(0.09f, 0.1f, 0.105f));
+            CreateDecorCube(parent, $"Ceiling_Beam_{z}", new Vector3(0f, CeilingBeamY, z), new Vector3(82f, 0.18f, 0.32f), "M_CeilingBeam", new Color(0.09f, 0.1f, 0.105f));
         }
 
         for (float z = -66f; z <= 66f; z += 18f)
         {
-            CreateOverheadLight(parent, new Vector3(-18f, 5.15f, z));
-            CreateOverheadLight(parent, new Vector3(18f, 5.15f, z + 9f));
+            CreateOverheadLight(parent, new Vector3(-18f, CeilingLightY, z));
+            CreateOverheadLight(parent, new Vector3(18f, CeilingLightY, z + 9f));
         }
 
         for (float z = -65f; z <= 65f; z += 26f)
         {
-            CreatePipe(parent, $"Red_Service_Pipe_{z}", new Vector3(-40.8f, 3.25f, z), new Vector3(-40.8f, 3.25f, z + 18f), 0.08f, "M_RedPipe", new Color(0.65f, 0.08f, 0.06f));
-            CreatePipe(parent, $"Blue_Service_Pipe_{z}", new Vector3(40.8f, 3.05f, z), new Vector3(40.8f, 3.05f, z + 18f), 0.07f, "M_BluePipe", new Color(0.05f, 0.24f, 0.72f));
+            CreatePipe(parent, $"Red_Service_Pipe_{z}", new Vector3(-40.8f, ServicePipeY, z), new Vector3(-40.8f, ServicePipeY, z + 18f), 0.08f, "M_RedPipe", new Color(0.65f, 0.08f, 0.06f));
+            CreatePipe(parent, $"Blue_Service_Pipe_{z}", new Vector3(40.8f, ServicePipeY - 0.2f, z), new Vector3(40.8f, ServicePipeY - 0.2f, z + 18f), 0.07f, "M_BluePipe", new Color(0.05f, 0.24f, 0.72f));
         }
     }
 
     private static void CreateEnvironmentalStoryDetails(Transform parent)
     {
-        CreateDecorCube(parent, "Loading_Dock_Door", new Vector3(0f, 2.1f, -77.35f), new Vector3(16f, 3.2f, 0.18f), "M_Door", new Color(0.18f, 0.2f, 0.21f));
-        CreateDecorCube(parent, "Final_Vault_Door", new Vector3(0f, 2.1f, 77.35f), new Vector3(14f, 3.2f, 0.18f), "M_GoalDoor", new Color(0.11f, 0.24f, 0.18f));
+        CreateDecorCube(parent, "Loading_Dock_Door", new Vector3(0f, 2.65f, -77.35f), new Vector3(16f, 4.3f, 0.18f), "M_Door", new Color(0.18f, 0.2f, 0.21f));
+        CreateDecorCube(parent, "Final_Vault_Door", new Vector3(0f, 2.65f, 77.35f), new Vector3(14f, 4.3f, 0.18f), "M_GoalDoor", new Color(0.11f, 0.24f, 0.18f));
 
         for (float z = -61f; z <= 61f; z += 24f)
         {
-            CreateDecorCube(parent, $"Warning_Sign_W_{z}", new Vector3(-41.68f, 2.6f, z), new Vector3(0.04f, 0.7f, 2.2f), "M_SignYellow", new Color(1f, 0.75f, 0.08f));
-            CreateDecorCube(parent, $"Warning_Sign_E_{z}", new Vector3(41.68f, 2.6f, z + 10f), new Vector3(0.04f, 0.7f, 2.2f), "M_SignRed", new Color(0.85f, 0.1f, 0.08f));
+            CreateDecorCube(parent, $"Warning_Sign_W_{z}", new Vector3(-41.68f, WallSignY, z), new Vector3(0.04f, 0.8f, 2.2f), "M_SignYellow", new Color(1f, 0.75f, 0.08f));
+            CreateDecorCube(parent, $"Warning_Sign_E_{z}", new Vector3(41.68f, WallSignY, z + 10f), new Vector3(0.04f, 0.8f, 2.2f), "M_SignRed", new Color(0.85f, 0.1f, 0.08f));
         }
     }
 
@@ -444,7 +451,7 @@ public static class CctvDemoSceneBuilder
             CreateWall(parent, $"{name}_Right", new Vector3(gapCenterX + gapWidth * 0.5f + rightWidth * 0.5f, 1.9f, z), new Vector3(rightWidth, 3.8f, 0.45f));
         }
 
-        CreateDecorCube(parent, $"{name}_Door_Frame", new Vector3(gapCenterX, 2.55f, z), new Vector3(gapWidth + 0.8f, 0.28f, 0.62f), "M_DoorFrame", new Color(0.08f, 0.09f, 0.1f));
+        CreateDecorCube(parent, $"{name}_Door_Frame", new Vector3(gapCenterX, DoorHeaderY, z), new Vector3(gapWidth + 0.8f, 0.28f, 0.62f), "M_DoorFrame", new Color(0.08f, 0.09f, 0.1f));
         CreateDecorCube(parent, $"{name}_Warning_Bar", new Vector3(gapCenterX, 0.09f, z), new Vector3(gapWidth, 0.04f, 0.22f), "M_DangerStripe", new Color(1f, 0.68f, 0.08f));
     }
 
@@ -463,7 +470,7 @@ public static class CctvDemoSceneBuilder
             CreateWall(parent, $"{name}_Upper", new Vector3(x, 1.9f, gapCenterZ + gapDepth * 0.5f + upperDepth * 0.5f), new Vector3(0.45f, 3.8f, upperDepth));
         }
 
-        CreateDecorCube(parent, $"{name}_Door_Header", new Vector3(x, 2.65f, gapCenterZ), new Vector3(0.65f, 0.3f, gapDepth + 0.8f), "M_DoorFrame", new Color(0.08f, 0.09f, 0.1f));
+        CreateDecorCube(parent, $"{name}_Door_Header", new Vector3(x, DoorHeaderY, gapCenterZ), new Vector3(0.65f, 0.3f, gapDepth + 0.8f), "M_DoorFrame", new Color(0.08f, 0.09f, 0.1f));
     }
 
     private static void CreateCoverRun(Transform parent, float x, float z, int count, int direction)
@@ -762,6 +769,10 @@ public static class CctvDemoSceneBuilder
 
     private static void CreateWall(Transform parent, string name, Vector3 position, Vector3 scale)
     {
+        float wallHeight = Mathf.Max(scale.y, SecurityWallHeight);
+        position.y = wallHeight * 0.5f;
+        scale.y = wallHeight;
+
         GameObject wall = CreateCube(name, position, scale, "M_Wall", new Color(0.55f, 0.55f, 0.55f));
         wall.transform.SetParent(parent);
     }
