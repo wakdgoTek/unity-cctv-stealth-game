@@ -364,7 +364,7 @@ public static class CctvDemoSceneBuilder
         Color roof = new Color(0.1f, 0.095f, 0.09f);
         Color trim = new Color(0.34f, 0.31f, 0.26f);
 
-        CreateBlockingDecorCube(parent, "Clean_Mansion_Front_Facade", new Vector3(-3f, 1.72f, 27.6f), new Vector3(54f, 3.35f, 0.9f), "M_StoneWall", wall);
+        CreateCleanFrontFacadeWithDoorOpening(parent, wall);
         CreateBlockingDecorCube(parent, "Clean_Mansion_Back_Facade", new Vector3(-3f, 1.72f, -8.3f), new Vector3(54f, 3.35f, 0.9f), "M_StoneWall", wall);
         CreateBlockingDecorCube(parent, "Clean_Mansion_Left_Facade", new Vector3(-30.4f, 1.72f, 9.6f), new Vector3(0.9f, 3.35f, 36.8f), "M_StoneWall", wall);
         CreateBlockingDecorCube(parent, "Clean_Mansion_Right_Facade", new Vector3(24.4f, 1.72f, 9.6f), new Vector3(0.9f, 3.35f, 36.8f), "M_StoneWall", wall);
@@ -373,7 +373,8 @@ public static class CctvDemoSceneBuilder
         CreateBlockingDecorCube(parent, "Clean_Mansion_Second_Floor_Roof", new Vector3(-3f, SecondFloorY + 3.03f, 9.5f), new Vector3(45f, 0.45f, 31f), "M_RoofDark", roof);
         CreateBlockingDecorCube(parent, "Clean_Mansion_Roof_Main_Slab", new Vector3(-3f, 3.58f, 9.5f), new Vector3(57f, 0.34f, 39f), "M_RoofDark", roof);
 
-        CreateDecorCube(parent, "Clean_Mansion_Front_Plinth", new Vector3(-3f, 0.38f, 28.1f), new Vector3(55f, 0.34f, 0.3f), "M_Stone", new Color(0.48f, 0.46f, 0.4f));
+        CreateDecorCube(parent, "Clean_Mansion_Front_Plinth_Left", new Vector3(-18.7f, 0.38f, 28.1f), new Vector3(23.6f, 0.34f, 0.3f), "M_Stone", new Color(0.48f, 0.46f, 0.4f));
+        CreateDecorCube(parent, "Clean_Mansion_Front_Plinth_Right", new Vector3(12.7f, 0.38f, 28.1f), new Vector3(23.6f, 0.34f, 0.3f), "M_Stone", new Color(0.48f, 0.46f, 0.4f));
         CreateDecorCube(parent, "Clean_Mansion_Front_First_Band", new Vector3(-3f, 3.34f, 28.12f), new Vector3(55f, 0.2f, 0.35f), "M_WoodTrim", trim);
         CreateDecorCube(parent, "Clean_Mansion_Upper_Band", new Vector3(-3f, SecondFloorY + 2.6f, 23.15f), new Vector3(42f, 0.22f, 0.35f), "M_WoodTrim", trim);
 
@@ -393,6 +394,26 @@ public static class CctvDemoSceneBuilder
 
         CreateDecorCube(parent, "Clean_Balcony_Floor", new Vector3(-3f, SecondFloorY + 0.06f, 26.7f), new Vector3(42f, 0.14f, 3f), "M_Stone", new Color(0.5f, 0.48f, 0.42f));
         CreateDecorCube(parent, "Clean_Balcony_Front_Rail", new Vector3(-3f, SecondFloorY + 0.98f, 28.15f), new Vector3(42f, 0.18f, 0.2f), "M_WoodTrim", trim);
+    }
+
+    private static void CreateCleanFrontFacadeWithDoorOpening(Transform parent, Color wall)
+    {
+        const float facadeZ = 27.6f;
+        const float facadeDepth = 0.9f;
+        const float facadeHeight = 3.35f;
+        const float doorCenterX = -3f;
+        const float doorOpeningWidth = 7.4f;
+        const float facadeMinX = -30f;
+        const float facadeMaxX = 24f;
+
+        float doorMinX = doorCenterX - doorOpeningWidth * 0.5f;
+        float doorMaxX = doorCenterX + doorOpeningWidth * 0.5f;
+        float leftWidth = doorMinX - facadeMinX;
+        float rightWidth = facadeMaxX - doorMaxX;
+
+        CreateBlockingDecorCube(parent, "Clean_Mansion_Front_Facade_Left_Of_Door", new Vector3(facadeMinX + leftWidth * 0.5f, 1.72f, facadeZ), new Vector3(leftWidth, facadeHeight, facadeDepth), "M_StoneWall", wall);
+        CreateBlockingDecorCube(parent, "Clean_Mansion_Front_Facade_Right_Of_Door", new Vector3(doorMaxX + rightWidth * 0.5f, 1.72f, facadeZ), new Vector3(rightWidth, facadeHeight, facadeDepth), "M_StoneWall", wall);
+        CreateBlockingDecorCube(parent, "Clean_Mansion_Front_Facade_Door_Lintel", new Vector3(doorCenterX, 3.32f, facadeZ), new Vector3(doorOpeningWidth, 0.42f, facadeDepth), "M_StoneWall", wall);
     }
 
     private static void CreateCleanMainDoorAssembly(Transform parent, Vector3 basePosition)
