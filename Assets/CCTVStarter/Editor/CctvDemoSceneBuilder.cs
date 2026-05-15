@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public static class CctvDemoSceneBuilder
 {
+    private const string CctvYawPivotName = "Yaw_Pivot";
+
     [MenuItem("Tools/CCTV Starter/Create Stealth Mini Game")]
     public static void CreateStealthMiniGame()
     {
@@ -91,6 +93,38 @@ public static class CctvDemoSceneBuilder
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
     }
 
+    [MenuItem("Tools/CCTV Starter/Organize Existing CCTVs")]
+    public static void OrganizeExistingCctvs()
+    {
+#if UNITY_2023_1_OR_NEWER
+        CctvDetector[] detectors = Object.FindObjectsByType<CctvDetector>(FindObjectsSortMode.None);
+#else
+        CctvDetector[] detectors = Object.FindObjectsOfType<CctvDetector>();
+#endif
+
+        foreach (CctvDetector detector in detectors)
+        {
+            if (detector == null)
+            {
+                continue;
+            }
+
+            Transform pivot = EnsureCctvYawPivot(detector.transform);
+            CctvPatrol patrol = detector.GetComponent<CctvPatrol>();
+            if (patrol == null)
+            {
+                patrol = detector.gameObject.AddComponent<CctvPatrol>();
+            }
+
+            patrol.SetYawPivot(pivot);
+            EditorUtility.SetDirty(detector);
+            EditorUtility.SetDirty(patrol);
+            EditorUtility.SetDirty(detector.gameObject);
+        }
+
+        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+    }
+
     [MenuItem("Tools/CCTV Starter/Create Demo Scene")]
     public static void CreateDemoScene()
     {
@@ -126,23 +160,25 @@ public static class CctvDemoSceneBuilder
         cctvRoot.transform.position = new Vector3(0f, 2.5f, -5f);
         cctvRoot.transform.rotation = Quaternion.LookRotation(Vector3.forward);
 
+        Transform yawPivot = CreateYawPivot(cctvRoot.transform);
+
         GameObject body = GameObject.CreatePrimitive(PrimitiveType.Cube);
         body.name = "Camera_Body";
-        body.transform.SetParent(cctvRoot.transform, false);
+        body.transform.SetParent(yawPivot, false);
         body.transform.localScale = new Vector3(0.7f, 0.35f, 0.55f);
         body.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_CCTV", new Color(0.08f, 0.09f, 0.1f));
         Object.DestroyImmediate(body.GetComponent<Collider>());
 
         GameObject lens = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         lens.name = "Lens";
-        lens.transform.SetParent(cctvRoot.transform, false);
+        lens.transform.SetParent(yawPivot, false);
         lens.transform.localPosition = new Vector3(0f, 0f, 0.32f);
         lens.transform.localScale = Vector3.one * 0.22f;
         lens.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_Lens", new Color(0.05f, 0.45f, 0.65f));
         Object.DestroyImmediate(lens.GetComponent<Collider>());
 
         GameObject origin = new GameObject("Detection_Origin");
-        origin.transform.SetParent(cctvRoot.transform, false);
+        origin.transform.SetParent(yawPivot, false);
         origin.transform.localPosition = new Vector3(0f, 0f, 0.45f);
         origin.transform.localRotation = Quaternion.identity;
 
@@ -157,7 +193,8 @@ public static class CctvDemoSceneBuilder
         CctvDetector detector = cctvRoot.AddComponent<CctvDetector>();
         detector.Configure(player.GetComponent<CctvDetectionTarget>(), LayerMask.GetMask("Default"), origin.transform);
         cctvRoot.AddComponent<CctvViewVisualizer>();
-        cctvRoot.AddComponent<CctvPatrol>();
+        CctvPatrol patrol = cctvRoot.AddComponent<CctvPatrol>();
+        patrol.SetYawPivot(yawPivot);
 
         UnityEventTools.AddPersistentListener(detector.onDetected, alert.SetDetected);
         UnityEventTools.AddPersistentListener(detector.onLost, alert.SetLost);
@@ -241,23 +278,25 @@ public static class CctvDemoSceneBuilder
         cctvRoot.transform.position = position;
         cctvRoot.transform.rotation = Quaternion.LookRotation(lookDirection.normalized, Vector3.up);
 
+        Transform yawPivot = CreateYawPivot(cctvRoot.transform);
+
         GameObject body = GameObject.CreatePrimitive(PrimitiveType.Cube);
         body.name = "Camera_Body";
-        body.transform.SetParent(cctvRoot.transform, false);
+        body.transform.SetParent(yawPivot, false);
         body.transform.localScale = new Vector3(0.75f, 0.34f, 0.55f);
         body.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_CCTV", new Color(0.08f, 0.09f, 0.1f));
         Object.DestroyImmediate(body.GetComponent<Collider>());
 
         GameObject lens = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         lens.name = "Lens";
-        lens.transform.SetParent(cctvRoot.transform, false);
+        lens.transform.SetParent(yawPivot, false);
         lens.transform.localPosition = new Vector3(0f, 0f, 0.35f);
         lens.transform.localScale = Vector3.one * 0.24f;
         lens.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_Lens", new Color(0.05f, 0.45f, 0.65f));
         Object.DestroyImmediate(lens.GetComponent<Collider>());
 
         GameObject origin = new GameObject("Detection_Origin");
-        origin.transform.SetParent(cctvRoot.transform, false);
+        origin.transform.SetParent(yawPivot, false);
         origin.transform.localPosition = new Vector3(0f, 0f, 0.5f);
         origin.transform.localRotation = Quaternion.identity;
 
@@ -280,8 +319,45 @@ public static class CctvDemoSceneBuilder
         }
 
         CctvPatrol patrol = cctvRoot.AddComponent<CctvPatrol>();
-        patrol.Configure(patrolRange, patrolSpeed);
+        patrol.Configure(patrolRange, patrolSpeed, yawPivot);
 
+    }
+
+    private static Transform CreateYawPivot(Transform cctvRoot)
+    {
+        GameObject pivotObject = new GameObject(CctvYawPivotName);
+        Transform pivot = pivotObject.transform;
+        pivot.SetParent(cctvRoot, false);
+        pivot.localPosition = Vector3.zero;
+        pivot.localRotation = Quaternion.identity;
+        pivot.localScale = Vector3.one;
+        return pivot;
+    }
+
+    private static Transform EnsureCctvYawPivot(Transform cctvRoot)
+    {
+        Transform pivot = cctvRoot.Find(CctvYawPivotName);
+        if (pivot == null)
+        {
+            pivot = CreateYawPivot(cctvRoot);
+        }
+
+        MoveDirectChildUnderPivot(cctvRoot, pivot, "Camera_Body");
+        MoveDirectChildUnderPivot(cctvRoot, pivot, "Lens");
+        MoveDirectChildUnderPivot(cctvRoot, pivot, "Detection_Origin");
+        return pivot;
+    }
+
+    private static void MoveDirectChildUnderPivot(Transform cctvRoot, Transform pivot, string childName)
+    {
+        Transform child = cctvRoot.Find(childName);
+        if (child == null || child == pivot || child.IsChildOf(pivot))
+        {
+            return;
+        }
+
+        child.SetParent(pivot, true);
+        EditorUtility.SetDirty(child);
     }
 
     private static void CreateWall(Transform parent, string name, Vector3 position, Vector3 scale)
