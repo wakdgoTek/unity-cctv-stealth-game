@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[ExecuteAlways]
 [RequireComponent(typeof(CctvDetector))]
 public class CctvViewVisualizer : MonoBehaviour
 {
@@ -23,31 +24,52 @@ public class CctvViewVisualizer : MonoBehaviour
 
     private void Start()
     {
-        EnsureVisualObjects();
-        RebuildMesh();
+        RefreshVisual();
+    }
+
+    private void Update()
+    {
+        if (!Application.isPlaying)
+        {
+            RefreshVisual();
+        }
     }
 
     private void LateUpdate()
     {
-        if (detector == null)
+        if (Application.isPlaying)
         {
-            return;
+            RefreshVisual();
         }
-
-        if (visualTransform == null)
-        {
-            EnsureVisualObjects();
-        }
-
-        Transform origin = detector.DetectionOrigin;
-        visualTransform.position = new Vector3(origin.position.x, groundOffset, origin.position.z);
-        visualTransform.rotation = Quaternion.Euler(0f, origin.eulerAngles.y, 0f);
-        RebuildMesh();
     }
 
     private void OnValidate()
     {
         segments = Mathf.Clamp(segments, 8, 96);
+    }
+
+    private void RefreshVisual()
+    {
+        if (detector == null)
+        {
+            detector = GetComponent<CctvDetector>();
+        }
+
+        if (detector == null)
+        {
+            return;
+        }
+
+        EnsureVisualObjects();
+        ApplyVisualTransform();
+        RebuildMesh();
+    }
+
+    private void ApplyVisualTransform()
+    {
+        Transform origin = detector.DetectionOrigin;
+        visualTransform.position = new Vector3(origin.position.x, groundOffset, origin.position.z);
+        visualTransform.rotation = Quaternion.Euler(0f, origin.eulerAngles.y, 0f);
     }
 
     private void EnsureVisualObjects()
