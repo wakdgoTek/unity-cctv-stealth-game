@@ -302,6 +302,7 @@ public static class CctvDemoSceneBuilder
         CreateEstateBuildings(parent);
         CreateEstateLandscapeAndProps(parent);
         CreateImportedAssetEnhancements(parent);
+        CreateHighQualityImportedEstate(parent);
         CreateBlueprintFoundation(parent);
         CreateBlueprintRoomShells(parent);
         CreateBlueprintDoorAndSeamFillers(parent);
@@ -588,6 +589,228 @@ public static class CctvDemoSceneBuilder
         InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_03.prefab", "Asset_Hangar_Right_Wall", new Vector3(68f, 0f, -34f), new Vector3(0f, 180f, 0f), new Vector3(1.6f, 1.55f, 1.6f), true, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f));
         InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_04.prefab", "Asset_Hangar_Door_Frame", new Vector3(51.5f, 0f, -47f), new Vector3(0f, 90f, 0f), new Vector3(1.6f, 1.55f, 1.6f), true, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f));
         InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_05.prefab", "Asset_Hangar_Roof", new Vector3(68f, 0f, -47f), Vector3.zero, new Vector3(1.6f, 1.55f, 1.6f), true, "M_ImportedRoof", new Color(0.13f, 0.13f, 0.14f));
+    }
+
+    private static void CreateHighQualityImportedEstate(Transform parent)
+    {
+        GameObject root = new GameObject("High_Quality_Imported_Estate");
+        root.transform.SetParent(parent, false);
+
+        CreateModularHouseExteriorLayer(root.transform);
+        CreateHouseInteriorLayer(root.transform);
+        CreateGardenAssetLayer(root.transform);
+        CreateAirfieldAssetLayer(root.transform);
+        CreateSecurityAndRouteAssetLayer(root.transform);
+
+        if (root.transform.childCount == 0)
+        {
+            Object.DestroyImmediate(root);
+        }
+    }
+
+    private static void CreateModularHouseExteriorLayer(Transform parent)
+    {
+        const string houseRoot = "Assets/ModularHousePack1/Prefabs/Modules/";
+        string door = houseRoot + "Doors/Door_1A.prefab";
+        string windowA = houseRoot + "Window/Window_1A.prefab";
+        string windowB = houseRoot + "Window/Window_1B.prefab";
+        string curtain = houseRoot + "Curtains/Curtain_2.prefab";
+        string roofA = houseRoot + "Roofs/RoofA.prefab";
+        string roofFlat = houseRoot + "Roofs/RoofFlat.prefab";
+        string corner = houseRoot + "Corners/Corner_4A.prefab";
+        string fence = houseRoot + "Fences/Fence_4.prefab";
+        string streetlight = houseRoot + "Roads/Streetlight.prefab";
+        string pavement = houseRoot + "Roads/Parts/Pavement_3.prefab";
+        string road = houseRoot + "Roads/Road_2.prefab";
+        string stair = houseRoot + "Stairs/Stairs_1A.prefab";
+
+        InstantiateDetailPrefab(parent, door, "HQ_Main_Entrance_Door_Module", new Vector3(-3f, 0.05f, 26.4f), Vector3.zero, new Vector3(2.2f, 2.2f, 2.2f), true, "M_ImportedDoor", new Color(0.18f, 0.11f, 0.06f), false);
+        InstantiateDetailPrefab(parent, stair, "HQ_Main_Entrance_Stairs_Module", new Vector3(-3f, 0.05f, 18.2f), Vector3.zero, new Vector3(2.5f, 1.2f, 2.5f), true, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f), false);
+
+        float[] mansionWindowX = { -24f, -18f, -12f, -6f, 0f, 6f, 12f, 18f };
+        for (int i = 0; i < mansionWindowX.Length; i++)
+        {
+            string path = i % 2 == 0 ? windowA : windowB;
+            InstantiateDetailPrefab(parent, path, $"HQ_Mansion_Window_Lower_{i:00}", new Vector3(mansionWindowX[i], 1.15f, 26.35f), Vector3.zero, new Vector3(1.45f, 1.45f, 1.45f), false, "M_ImportedTrim", new Color(0.55f, 0.48f, 0.38f), false);
+            InstantiateDetailPrefab(parent, curtain, $"HQ_Mansion_Curtain_Lower_{i:00}", new Vector3(mansionWindowX[i], 1.2f, 26.42f), Vector3.zero, new Vector3(1.2f, 1.2f, 1.2f), false, "M_ImportedWood", new Color(0.22f, 0.16f, 0.1f), false);
+            InstantiateDetailPrefab(parent, path, $"HQ_Mansion_Window_Upper_{i:00}", new Vector3(mansionWindowX[i], SecondFloorY + 1.15f, 22.65f), Vector3.zero, new Vector3(1.25f, 1.25f, 1.25f), false, "M_ImportedTrim", new Color(0.55f, 0.48f, 0.38f), false);
+        }
+
+        for (float z = -2f; z <= 18f; z += 6f)
+        {
+            InstantiateDetailPrefab(parent, windowA, $"HQ_Left_Wing_Window_{z:00}", new Vector3(-43.5f, 1.25f, z), new Vector3(0f, 90f, 0f), new Vector3(1.25f, 1.25f, 1.25f), false, "M_ImportedTrim", new Color(0.55f, 0.48f, 0.38f), false);
+            InstantiateDetailPrefab(parent, windowB, $"HQ_Right_Wing_Window_{z:00}", new Vector3(29.5f, 1.25f, z), new Vector3(0f, -90f, 0f), new Vector3(1.25f, 1.25f, 1.25f), false, "M_ImportedTrim", new Color(0.55f, 0.48f, 0.38f), false);
+        }
+
+        for (int i = 0; i < 8; i++)
+        {
+            float x = -29f + i * 8f;
+            InstantiateDetailPrefab(parent, roofA, $"HQ_Mansion_Roof_Module_{i:00}", new Vector3(x, SecondFloorY + 3.62f, 12f), Vector3.zero, new Vector3(1.45f, 1.1f, 1.3f), true, "M_ImportedRoof", new Color(0.13f, 0.13f, 0.14f), false);
+        }
+
+        Vector3[] cornerPositions =
+        {
+            new Vector3(-29f, SecondFloorY + 3.35f, 23.5f),
+            new Vector3(23f, SecondFloorY + 3.35f, 23.5f),
+            new Vector3(-29f, SecondFloorY + 3.35f, 0.5f),
+            new Vector3(23f, SecondFloorY + 3.35f, 0.5f),
+            new Vector3(-84f, SecondFloorY + 2.9f, -4f),
+            new Vector3(-60f, SecondFloorY + 2.9f, -28f),
+            new Vector3(64f, SecondFloorY + 2.9f, 37f),
+            new Vector3(90f, SecondFloorY + 2.9f, -23f)
+        };
+
+        for (int i = 0; i < cornerPositions.Length; i++)
+        {
+            InstantiateDetailPrefab(parent, corner, $"HQ_Roof_Corner_Detail_{i:00}", cornerPositions[i], new Vector3(0f, i % 2 == 0 ? 0f : 180f, 0f), Vector3.one * 1.15f, true, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f), false);
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            float x = -42f + i * 9f;
+            InstantiateDetailPrefab(parent, fence, $"HQ_Front_Garden_Fence_{i:00}", new Vector3(x, 0.08f, -28f), Vector3.zero, Vector3.one * 1.55f, false, "M_ImportedTrim", new Color(0.55f, 0.48f, 0.38f), false);
+            InstantiateDetailPrefab(parent, pavement, $"HQ_Promenade_Pavement_{i:00}", new Vector3(x, 0.1f, -34.5f), Vector3.zero, Vector3.one * 1.8f, false, "M_ImportedConcrete", new Color(0.42f, 0.42f, 0.4f), false);
+        }
+
+        for (int i = 0; i < 9; i++)
+        {
+            float z = -48f + i * 10f;
+            InstantiateDetailPrefab(parent, streetlight, $"HQ_Service_Road_Light_{i:00}", new Vector3(51f, 0.05f, z), Vector3.zero, Vector3.one * 1.8f, false, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f), false);
+            InstantiateDetailPrefab(parent, road, $"HQ_Service_Road_Surface_{i:00}", new Vector3(61f, 0.09f, z), new Vector3(0f, 90f, 0f), new Vector3(2.1f, 1f, 2.1f), false, "M_ImportedConcrete", new Color(0.42f, 0.42f, 0.4f), false);
+        }
+
+        InstantiateDetailPrefab(parent, roofFlat, "HQ_Right_Building_Flat_Roof_Module", new Vector3(77f, SecondFloorY + 3.4f, 7f), Vector3.zero, new Vector3(3.6f, 1f, 7.3f), true, "M_ImportedRoof", new Color(0.13f, 0.13f, 0.14f), false);
+    }
+
+    private static void CreateHouseInteriorLayer(Transform parent)
+    {
+        const string interior = "Assets/nappin/HouseInteriorPack/Prefabs/";
+
+        PlaceInteriorPrefab(parent, interior + "(Prb)CornerSofa.prefab", "HQ_Lounge_Corner_Sofa", new Vector3(-72f, 0.15f, -20f), new Vector3(0f, 90f, 0f), Vector3.one * 1.25f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)CoffeTable_smallPlant.prefab", "HQ_Lounge_Coffee_Table", new Vector3(-72f, 0.15f, -15f), Vector3.zero, Vector3.one * 1.3f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)MediaConsole.prefab", "HQ_Lounge_Media_Console", new Vector3(-62.5f, 0.15f, -14f), new Vector3(0f, -90f, 0f), Vector3.one * 1.25f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)Lamp.prefab", "HQ_Lounge_Floor_Lamp", new Vector3(-81f, 0.15f, -6.8f), Vector3.zero, Vector3.one * 1.3f);
+
+        PlaceInteriorPrefab(parent, interior + "(Prb)Desk.prefab", "HQ_Security_Desk", new Vector3(74f, 0.12f, -8f), new Vector3(0f, 180f, 0f), Vector3.one * 1.25f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)DeskLight.prefab", "HQ_Security_Desk_Light", new Vector3(74f, 0.92f, -8f), Vector3.zero, Vector3.one * 1.25f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)Shelf1.prefab", "HQ_Security_Shelf", new Vector3(88.2f, 0.12f, -16f), new Vector3(0f, -90f, 0f), Vector3.one * 1.4f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)Storage1.prefab", "HQ_Security_Storage_A", new Vector3(66.5f, 0.12f, -17f), new Vector3(0f, 90f, 0f), Vector3.one * 1.35f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)Storage2.prefab", "HQ_Security_Storage_B", new Vector3(66.5f, 0.12f, -11f), new Vector3(0f, 90f, 0f), Vector3.one * 1.35f);
+
+        PlaceInteriorPrefab(parent, interior + "(Prb)KitchenIsland.prefab", "HQ_Kitchen_Island", new Vector3(17f, 0.14f, 7f), Vector3.zero, Vector3.one * 1.35f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)KitchenSink.prefab", "HQ_Kitchen_Sink", new Vector3(25.5f, 0.14f, 9f), new Vector3(0f, -90f, 0f), Vector3.one * 1.25f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)Fridge.prefab", "HQ_Kitchen_Fridge", new Vector3(25.5f, 0.14f, 16f), new Vector3(0f, -90f, 0f), Vector3.one * 1.15f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)Stove.prefab", "HQ_Kitchen_Stove", new Vector3(25.5f, 0.14f, 2f), new Vector3(0f, -90f, 0f), Vector3.one * 1.18f);
+
+        PlaceInteriorPrefab(parent, interior + "(Prb)DoubleBed.prefab", "HQ_Master_Bed", new Vector3(-32f, 0.12f, 6f), new Vector3(0f, 180f, 0f), Vector3.one * 1.25f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)Wardrobe.prefab", "HQ_Master_Wardrobe", new Vector3(-42.1f, 0.12f, 17f), new Vector3(0f, 90f, 0f), Vector3.one * 1.3f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)BedsideTable.prefab", "HQ_Master_Bedside_Left", new Vector3(-36f, 0.12f, 3f), Vector3.zero, Vector3.one * 1.2f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)BedsideTable.prefab", "HQ_Master_Bedside_Right", new Vector3(-28f, 0.12f, 3f), Vector3.zero, Vector3.one * 1.2f);
+
+        PlaceInteriorPrefab(parent, interior + "(Prb)BathroomSink.prefab", "HQ_Bathroom_Sink", new Vector3(-18f, 0.12f, 0f), new Vector3(0f, 180f, 0f), Vector3.one * 1.15f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)Toilet.prefab", "HQ_Bathroom_Toilet", new Vector3(-13f, 0.12f, 0f), new Vector3(0f, 180f, 0f), Vector3.one * 1.15f);
+        PlaceInteriorPrefab(parent, interior + "(Prb)ShowerFace.prefab", "HQ_Bathroom_Shower", new Vector3(-8f, 0.12f, 0f), new Vector3(0f, 180f, 0f), Vector3.one * 1.15f);
+
+        for (int i = 0; i < 8; i++)
+        {
+            float x = -24f + i * 7f;
+            PlaceInteriorPrefab(parent, interior + "(Prb)CeilingLight.prefab", $"HQ_Mansion_Ceiling_Light_{i:00}", new Vector3(x, 2.85f, 8f), Vector3.zero, Vector3.one * 1.2f);
+            PlaceInteriorPrefab(parent, interior + "(Prb)RoomLight.prefab", $"HQ_Second_Floor_Room_Light_{i:00}", new Vector3(x, SecondFloorY + 2.45f, 10f), Vector3.zero, Vector3.one * 1.1f);
+        }
+    }
+
+    private static void PlaceInteriorPrefab(Transform parent, string path, string name, Vector3 position, Vector3 eulerAngles, Vector3 scale)
+    {
+        InstantiateDetailPrefab(parent, path, name, position, eulerAngles, scale, false, "M_ImportedWood", new Color(0.22f, 0.16f, 0.1f), false);
+    }
+
+    private static void CreateGardenAssetLayer(Transform parent)
+    {
+        const string garden = "Assets/MamkinEnthusiast/3D Mini Garden Props/Prefabs/";
+        const string fountain = "Assets/GVOZDY/Round Four-Tier Water Fountain/Prefabs/";
+
+        InstantiateDetailPrefab(parent, fountain + "fountain_4_light.prefab", "HQ_Main_Courtyard_Fountain", new Vector3(0f, 0.12f, 26.5f), Vector3.zero, Vector3.one * 2.6f, false, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f), false);
+        InstantiateDetailPrefab(parent, fountain + "fountain_4_dark.prefab", "HQ_Garden_Fountain", new Vector3(-3f, 0.12f, -37f), Vector3.zero, Vector3.one * 1.7f, false, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f), false);
+
+        string[] flowerPaths =
+        {
+            garden + "Hydrangea.prefab",
+            garden + "TulipRed.prefab",
+            garden + "TulipYellow.prefab",
+            garden + "Mint.prefab",
+            garden + "GrassTall.prefab",
+            garden + "GrassSmall.prefab"
+        };
+
+        int index = 0;
+        for (int row = 0; row < 5; row++)
+        {
+            for (int col = 0; col < 10; col++)
+            {
+                float x = -45f + col * 9.5f;
+                float z = -31f + row * 5.5f;
+                string path = flowerPaths[(row + col) % flowerPaths.Length];
+                InstantiateDetailPrefab(parent, path, $"HQ_Formal_Garden_Plant_{index:00}", new Vector3(x, 0.08f, z), Vector3.zero, Vector3.one * (0.9f + (col % 3) * 0.18f), false, "M_PlantLeaves", new Color(0.08f, 0.34f, 0.15f), false);
+                index++;
+            }
+        }
+
+        for (int i = 0; i < 16; i++)
+        {
+            float x = -82f + i * 10f;
+            InstantiateDetailPrefab(parent, garden + "PotRectangle.prefab", $"HQ_North_Planter_{i:00}", new Vector3(x, 0.08f, 44f), Vector3.zero, Vector3.one * 1.5f, false, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f), false);
+        }
+
+        for (int i = 0; i < 16; i++)
+        {
+            float z = -56f + i * 7f;
+            InstantiateDetailPrefab(parent, garden + "Fence.prefab", $"HQ_West_Garden_Fence_{i:00}", new Vector3(-89f, 0.06f, z), new Vector3(0f, 90f, 0f), Vector3.one * 1.55f, false, "M_ImportedWood", new Color(0.22f, 0.16f, 0.1f), false);
+            InstantiateDetailPrefab(parent, garden + "Fence.prefab", $"HQ_East_Garden_Fence_{i:00}", new Vector3(89f, 0.06f, z), new Vector3(0f, 90f, 0f), Vector3.one * 1.55f, false, "M_ImportedWood", new Color(0.22f, 0.16f, 0.1f), false);
+        }
+
+        InstantiateDetailPrefab(parent, garden + "WateringCup.prefab", "HQ_Garden_Watering_Cup", new Vector3(-25f, 0.1f, -28f), new Vector3(0f, 35f, 0f), Vector3.one * 1.4f, false, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f), false);
+        InstantiateDetailPrefab(parent, garden + "Rake.prefab", "HQ_Garden_Rake", new Vector3(-19f, 0.1f, -27f), new Vector3(0f, 115f, 0f), Vector3.one * 1.25f, false, "M_ImportedWood", new Color(0.22f, 0.16f, 0.1f), false);
+        InstantiateDetailPrefab(parent, garden + "Shovel.prefab", "HQ_Garden_Shovel", new Vector3(-16f, 0.1f, -29f), new Vector3(0f, -25f, 0f), Vector3.one * 1.25f, false, "M_ImportedWood", new Color(0.22f, 0.16f, 0.1f), false);
+    }
+
+    private static void CreateAirfieldAssetLayer(Transform parent)
+    {
+        const string aircraft = "Assets/Generic Aircraft Models/Prefabs/";
+
+        InstantiateDetailPrefab(parent, aircraft + "Structures/runway-a.prefab", "HQ_Airfield_Runway_Model", new Vector3(10f, 0.12f, -58f), new Vector3(0f, 90f, 0f), new Vector3(4.8f, 1f, 4.8f), false, "M_ImportedConcrete", new Color(0.42f, 0.42f, 0.4f), false);
+        InstantiateDetailPrefab(parent, aircraft + "Aircrafts/aircraft-k.prefab", "HQ_Private_Jet_Model", new Vector3(-35f, 0.2f, -50f), new Vector3(0f, 82f, 0f), Vector3.one * 3.1f, false, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f), false);
+        InstantiateDetailPrefab(parent, aircraft + "Aircrafts/aircraft-i.prefab", "HQ_Helicopter_Model", new Vector3(73f, 0.2f, -46f), new Vector3(0f, -15f, 0f), Vector3.one * 2.2f, false, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f), false);
+        InstantiateDetailPrefab(parent, aircraft + "Structures/hangar-a.prefab", "HQ_Airfield_Hangar_Model", new Vector3(68f, 0.1f, -47f), new Vector3(0f, 90f, 0f), Vector3.one * 2.9f, true, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f), false);
+
+        for (int i = 0; i < 7; i++)
+        {
+            InstantiateDetailPrefab(parent, aircraft + "Parts/aircraft-wheel.prefab", $"HQ_Airfield_Wheel_Chock_{i:00}", new Vector3(-12f + i * 5f, 0.1f, -42f), new Vector3(0f, i * 23f, 0f), Vector3.one * 1.4f, false, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f), false);
+        }
+    }
+
+    private static void CreateSecurityAndRouteAssetLayer(Transform parent)
+    {
+        const string modular = "Assets/Barking_Dog/3D Free Modular Kit/Prefabs/";
+        string arch = modular + "Door_Arch_01.prefab";
+        string column = modular + "Column_01_Top.prefab";
+        string wall = modular + "Wall_Simple_01.prefab";
+        string fan = modular + "Fan_01.prefab";
+        string light = modular + "Light_01.prefab";
+
+        InstantiateDetailPrefab(parent, arch, "HQ_Security_Gate_Arch_Model", new Vector3(0f, 0.1f, 64.3f), Vector3.zero, Vector3.one * 3.1f, true, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f), false);
+        InstantiateDetailPrefab(parent, column, "HQ_Security_Gate_Left_Cap_Model", new Vector3(-10f, 4.9f, 64.4f), Vector3.zero, Vector3.one * 2.3f, true, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f), false);
+        InstantiateDetailPrefab(parent, column, "HQ_Security_Gate_Right_Cap_Model", new Vector3(10f, 4.9f, 64.4f), Vector3.zero, Vector3.one * 2.3f, true, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f), false);
+
+        for (int i = 0; i < 12; i++)
+        {
+            InstantiateDetailPrefab(parent, wall, $"HQ_Service_Barrier_Wall_{i:00}", new Vector3(55f + i * 3f, 0.08f, -29f), new Vector3(0f, 90f, 0f), Vector3.one * 1.2f, true, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f), false);
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            InstantiateDetailPrefab(parent, fan, $"HQ_Control_Room_Ceiling_Fan_{i:00}", new Vector3(69f + i * 3f, 2.9f, -8f + (i % 2) * 9f), Vector3.zero, Vector3.one * 1.45f, false, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f), false);
+            InstantiateDetailPrefab(parent, light, $"HQ_Control_Room_Modular_Light_{i:00}", new Vector3(69f + i * 3f, 2.75f, -13f + (i % 2) * 12f), Vector3.zero, Vector3.one * 1.3f, false, "M_Lamp", new Color(1f, 0.83f, 0.48f), false);
+        }
     }
 
     private static void CreateEstateWallX(Transform parent, string name, float xMin, float xMax, float z)
@@ -1826,7 +2049,7 @@ public static class CctvDemoSceneBuilder
         return cube;
     }
 
-    private static GameObject InstantiateDetailPrefab(Transform parent, string assetPath, string name, Vector3 position, Vector3 eulerAngles, Vector3 scale, bool blocksCctv, string fallbackMaterialName = null, Color fallbackColor = default)
+    private static GameObject InstantiateDetailPrefab(Transform parent, string assetPath, string name, Vector3 position, Vector3 eulerAngles, Vector3 scale, bool blocksCctv, string fallbackMaterialName = null, Color fallbackColor = default, bool replaceAllMaterials = true)
     {
         GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
         if (prefab == null)
@@ -1846,9 +2069,13 @@ public static class CctvDemoSceneBuilder
         instance.transform.localRotation = Quaternion.Euler(eulerAngles);
         instance.transform.localScale = scale;
 
-        if (!string.IsNullOrEmpty(fallbackMaterialName))
+        if (!string.IsNullOrEmpty(fallbackMaterialName) && replaceAllMaterials)
         {
             ReplacePrefabMaterials(instance.transform, fallbackMaterialName, fallbackColor);
+        }
+        else if (!string.IsNullOrEmpty(fallbackMaterialName))
+        {
+            RepairBrokenPrefabMaterials(instance.transform, fallbackMaterialName, fallbackColor);
         }
 
         if (blocksCctv)
@@ -1857,6 +2084,56 @@ public static class CctvDemoSceneBuilder
         }
 
         return instance;
+    }
+
+    private static void RepairBrokenPrefabMaterials(Transform root, string materialName, Color color)
+    {
+        Material fallback = null;
+        Renderer[] renderers = root.GetComponentsInChildren<Renderer>(true);
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer == null || renderer.sharedMaterials.Length == 0)
+            {
+                continue;
+            }
+
+            Material[] repaired = renderer.sharedMaterials;
+            bool changed = false;
+            for (int i = 0; i < repaired.Length; i++)
+            {
+                if (!IsBrokenMaterial(repaired[i]))
+                {
+                    continue;
+                }
+
+                if (fallback == null)
+                {
+                    fallback = CreateMaterial(materialName, color);
+                }
+                repaired[i] = fallback;
+                changed = true;
+            }
+
+            if (changed)
+            {
+                renderer.sharedMaterials = repaired;
+            }
+        }
+    }
+
+    private static bool IsBrokenMaterial(Material material)
+    {
+        if (material == null || material.shader == null)
+        {
+            return true;
+        }
+
+        if (material.shader.name == "Hidden/InternalErrorShader")
+        {
+            return true;
+        }
+
+        return ShouldReplaceMaterialShader(material.shader);
     }
 
     private static void ReplacePrefabMaterials(Transform root, string materialName, Color color)
