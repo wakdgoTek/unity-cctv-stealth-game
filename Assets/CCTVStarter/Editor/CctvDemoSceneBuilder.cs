@@ -297,19 +297,154 @@ public static class CctvDemoSceneBuilder
 
     private static void BuildSecurityComplex(Transform parent)
     {
-        CreateEstateGrounds(parent);
-        CreateEstatePerimeter(parent);
-        CreateEstateRoadsAndCourtyards(parent);
-        CreateEstateBuildings(parent);
-        CreateEstateLandscapeAndProps(parent);
-        CreateImportedAssetEnhancements(parent);
-        CreateHighQualityImportedEstate(parent);
+        CreateCleanEstateGrounds(parent);
+        CreateCleanEstatePerimeter(parent);
+        CreateCleanEstateRoutes(parent);
         CreateBlueprintFoundation(parent);
         CreateBlueprintRoomShells(parent);
         CreateBlueprintDoorAndSeamFillers(parent);
+        CreateCleanMansionEnvelope(parent);
+        CreateCleanExteriorZones(parent);
+        CreateCleanEstateProps(parent);
         CreateBlueprintEquipment(parent);
         CreateBlueprintLighting(parent);
         EnsureBlockingCollidersForArchitecture(parent);
+    }
+
+    private static void CreateCleanEstateGrounds(Transform parent)
+    {
+        CreateDecorCube(parent, "Clean_Main_Lawn_North", new Vector3(0f, 0.006f, 47f), new Vector3(170f, 0.04f, 30f), "M_LawnDark", new Color(0.14f, 0.25f, 0.09f));
+        CreateDecorCube(parent, "Clean_Main_Estate_Plaza", new Vector3(0f, 0.008f, -14f), new Vector3(120f, 0.04f, 86f), "M_Stone", new Color(0.52f, 0.5f, 0.44f));
+        CreateDecorCube(parent, "Clean_Airfield_Apron", new Vector3(28f, 0.01f, -52f), new Vector3(115f, 0.05f, 22f), "M_Asphalt", new Color(0.18f, 0.18f, 0.17f));
+        CreateDecorCube(parent, "Clean_Left_Service_Lawn", new Vector3(-74f, 0.008f, -12f), new Vector3(30f, 0.04f, 54f), "M_EstateGrass", new Color(0.18f, 0.28f, 0.12f));
+        CreateDecorCube(parent, "Clean_Right_Service_Paving", new Vector3(72f, 0.012f, 4f), new Vector3(36f, 0.04f, 66f), "M_DarkFloor", new Color(0.16f, 0.17f, 0.18f));
+    }
+
+    private static void CreateCleanEstatePerimeter(Transform parent)
+    {
+        float halfWidth = HouseWidth * 0.5f;
+        float halfDepth = HouseDepth * 0.5f;
+
+        CreateEstateWallX(parent, "Clean_Perimeter_North_Left", -halfWidth, -11f, halfDepth);
+        CreateEstateWallX(parent, "Clean_Perimeter_North_Right", 11f, halfWidth, halfDepth);
+        CreateEstateWallX(parent, "Clean_Perimeter_South", -halfWidth, halfWidth, -halfDepth);
+        CreateEstateWallZ(parent, "Clean_Perimeter_West", -halfWidth, -halfDepth, halfDepth);
+        CreateEstateWallZ(parent, "Clean_Perimeter_East", halfWidth, -halfDepth, halfDepth);
+
+        CreateEstateCornerPost(parent, "Clean_Perimeter_NW_Post", new Vector3(-halfWidth, 2.1f, halfDepth));
+        CreateEstateCornerPost(parent, "Clean_Perimeter_NE_Post", new Vector3(halfWidth, 2.1f, halfDepth));
+        CreateEstateCornerPost(parent, "Clean_Perimeter_SW_Post", new Vector3(-halfWidth, 2.1f, -halfDepth));
+        CreateEstateCornerPost(parent, "Clean_Perimeter_SE_Post", new Vector3(halfWidth, 2.1f, -halfDepth));
+        CreateEstateCornerPost(parent, "Clean_Main_Gate_Left_Post", new Vector3(-11f, 2.1f, halfDepth));
+        CreateEstateCornerPost(parent, "Clean_Main_Gate_Right_Post", new Vector3(11f, 2.1f, halfDepth));
+
+        CreateDecorCube(parent, "Clean_Main_Gate_Header", new Vector3(0f, 4.75f, halfDepth - 0.28f), new Vector3(23f, 0.55f, 1.15f), "M_StoneWall", new Color(0.64f, 0.62f, 0.56f));
+        CreateDecorCube(parent, "Clean_Main_Gate_Left_Leaf", new Vector3(-5.3f, 1.38f, halfDepth - 0.72f), new Vector3(9.2f, 2.5f, 0.18f), "M_Door", new Color(0.2f, 0.12f, 0.07f));
+        CreateDecorCube(parent, "Clean_Main_Gate_Right_Leaf", new Vector3(5.3f, 1.38f, halfDepth - 0.72f), new Vector3(9.2f, 2.5f, 0.18f), "M_Door", new Color(0.2f, 0.12f, 0.07f));
+    }
+
+    private static void CreateCleanEstateRoutes(Transform parent)
+    {
+        CreateDecorCube(parent, "Clean_Entry_Driveway", new Vector3(0f, 0.045f, 49f), new Vector3(18f, 0.05f, 32f), "M_Asphalt", new Color(0.2f, 0.2f, 0.19f));
+        CreateDecorCube(parent, "Clean_Courtyard_Horizontal_Road", new Vector3(0f, 0.046f, 35f), new Vector3(78f, 0.05f, 9f), "M_Asphalt", new Color(0.2f, 0.2f, 0.19f));
+        CreateDecorCube(parent, "Clean_Courtyard_Vertical_Road", new Vector3(0f, 0.047f, 18f), new Vector3(14f, 0.05f, 35f), "M_Asphalt", new Color(0.2f, 0.2f, 0.19f));
+        CreateDecorCube(parent, "Clean_Right_Service_Road", new Vector3(60f, 0.048f, -10f), new Vector3(14f, 0.05f, 72f), "M_Asphalt", new Color(0.17f, 0.17f, 0.16f));
+        CreateDecorCube(parent, "Clean_Airfield_Return_Road", new Vector3(19f, 0.049f, -61f), new Vector3(118f, 0.05f, 7f), "M_Asphalt", new Color(0.16f, 0.16f, 0.15f));
+
+        CreateFountain(parent, new Vector3(0f, 0.1f, 35f), 2.5f);
+
+        CreateDecorCube(parent, "Clean_Route_Arrow_Entry_Left", new Vector3(-39f, 0.095f, 55f), new Vector3(18f, 0.04f, 0.25f), "M_StartStripe", new Color(0.05f, 0.25f, 1f));
+        CreateDecorCube(parent, "Clean_Route_Arrow_Entry_Right", new Vector3(29f, 0.095f, 55f), new Vector3(18f, 0.04f, 0.25f), "M_StartStripe", new Color(0.05f, 0.25f, 1f));
+        CreateDecorCube(parent, "Clean_Route_Arrow_Airfield", new Vector3(31f, 0.095f, -48f), new Vector3(58f, 0.04f, 0.25f), "M_StartStripe", new Color(0.05f, 0.25f, 1f));
+    }
+
+    private static void CreateCleanMansionEnvelope(Transform parent)
+    {
+        Color wall = new Color(0.62f, 0.59f, 0.52f);
+        Color roof = new Color(0.1f, 0.095f, 0.09f);
+        Color trim = new Color(0.34f, 0.31f, 0.26f);
+
+        CreateBlockingDecorCube(parent, "Clean_Mansion_Front_Facade", new Vector3(-3f, 1.72f, 27.6f), new Vector3(54f, 3.35f, 0.9f), "M_StoneWall", wall);
+        CreateBlockingDecorCube(parent, "Clean_Mansion_Back_Facade", new Vector3(-3f, 1.72f, -8.3f), new Vector3(54f, 3.35f, 0.9f), "M_StoneWall", wall);
+        CreateBlockingDecorCube(parent, "Clean_Mansion_Left_Facade", new Vector3(-30.4f, 1.72f, 9.6f), new Vector3(0.9f, 3.35f, 36.8f), "M_StoneWall", wall);
+        CreateBlockingDecorCube(parent, "Clean_Mansion_Right_Facade", new Vector3(24.4f, 1.72f, 9.6f), new Vector3(0.9f, 3.35f, 36.8f), "M_StoneWall", wall);
+
+        CreateBlockingDecorCube(parent, "Clean_Mansion_Second_Floor_Core", new Vector3(-3f, SecondFloorY + 1.45f, 9.5f), new Vector3(41f, 2.65f, 27f), "M_StoneWall", new Color(0.66f, 0.63f, 0.56f));
+        CreateBlockingDecorCube(parent, "Clean_Mansion_Second_Floor_Roof", new Vector3(-3f, SecondFloorY + 3.03f, 9.5f), new Vector3(45f, 0.45f, 31f), "M_RoofDark", roof);
+        CreateBlockingDecorCube(parent, "Clean_Mansion_Roof_Main_Slab", new Vector3(-3f, 3.58f, 9.5f), new Vector3(57f, 0.34f, 39f), "M_RoofDark", roof);
+
+        CreateDecorCube(parent, "Clean_Mansion_Front_Plinth", new Vector3(-3f, 0.38f, 28.1f), new Vector3(55f, 0.34f, 0.3f), "M_Stone", new Color(0.48f, 0.46f, 0.4f));
+        CreateDecorCube(parent, "Clean_Mansion_Front_First_Band", new Vector3(-3f, 3.34f, 28.12f), new Vector3(55f, 0.2f, 0.35f), "M_WoodTrim", trim);
+        CreateDecorCube(parent, "Clean_Mansion_Upper_Band", new Vector3(-3f, SecondFloorY + 2.6f, 23.15f), new Vector3(42f, 0.22f, 0.35f), "M_WoodTrim", trim);
+
+        CreateDecorCube(parent, "Clean_Mansion_Main_Door", new Vector3(-3f, 1.35f, 28.15f), new Vector3(5.2f, 2.35f, 0.16f), "M_Door", new Color(0.24f, 0.14f, 0.08f));
+        CreateStairs(parent, new Vector3(-3f, 0.12f, 21.2f), 5, 12f);
+
+        for (float x = -24f; x <= 18f; x += 6f)
+        {
+            CreateDecorCube(parent, $"Clean_Mansion_Front_Window_{x}", new Vector3(x, 1.95f, 28.18f), new Vector3(2.5f, 1.05f, 0.08f), "M_WindowGlass", new Color(0.25f, 0.5f, 0.68f));
+            CreateDecorCube(parent, $"Clean_Mansion_Upper_Window_{x}", new Vector3(x, SecondFloorY + 1.45f, 23.18f), new Vector3(2.3f, 1f, 0.08f), "M_WindowGlass", new Color(0.25f, 0.5f, 0.68f));
+            CreateDecorCube(parent, $"Clean_Mansion_Window_Header_{x}", new Vector3(x, 2.65f, 28.22f), new Vector3(3f, 0.16f, 0.11f), "M_WoodTrim", trim);
+        }
+
+        for (float x = -23f; x <= 17f; x += 5f)
+        {
+            CreateBlockingDecorCube(parent, $"Clean_Balcony_Post_{x}", new Vector3(x, SecondFloorY + 0.58f, 27.9f), new Vector3(0.34f, 1f, 0.34f), "M_StoneWall", wall);
+        }
+
+        CreateDecorCube(parent, "Clean_Balcony_Floor", new Vector3(-3f, SecondFloorY + 0.06f, 26.7f), new Vector3(42f, 0.14f, 3f), "M_Stone", new Color(0.5f, 0.48f, 0.42f));
+        CreateDecorCube(parent, "Clean_Balcony_Front_Rail", new Vector3(-3f, SecondFloorY + 0.98f, 28.15f), new Vector3(42f, 0.18f, 0.2f), "M_WoodTrim", trim);
+    }
+
+    private static void CreateCleanExteriorZones(Transform parent)
+    {
+        CreateBlockingDecorCube(parent, "Clean_Left_Pool_House_West_Wall", new Vector3(-86f, 1.65f, -16f), new Vector3(0.8f, 3.3f, 25f), "M_StoneWall", new Color(0.6f, 0.57f, 0.5f));
+        CreateBlockingDecorCube(parent, "Clean_Left_Pool_House_East_Wall", new Vector3(-59f, 1.65f, -16f), new Vector3(0.8f, 3.3f, 25f), "M_StoneWall", new Color(0.6f, 0.57f, 0.5f));
+        CreateBlockingDecorCube(parent, "Clean_Left_Pool_House_North_Wall", new Vector3(-72.5f, 1.65f, -3.5f), new Vector3(27f, 3.3f, 0.8f), "M_StoneWall", new Color(0.6f, 0.57f, 0.5f));
+        CreateBlockingDecorCube(parent, "Clean_Left_Pool_House_South_Wall", new Vector3(-72.5f, 1.65f, -28.5f), new Vector3(27f, 3.3f, 0.8f), "M_StoneWall", new Color(0.6f, 0.57f, 0.5f));
+        CreateBlockingDecorCube(parent, "Clean_Left_Pool_House_Roof", new Vector3(-72.5f, 3.55f, -16f), new Vector3(29f, 0.35f, 27f), "M_RoofDark", new Color(0.1f, 0.095f, 0.09f));
+        CreatePool(parent, new Vector3(-72.5f, 0.08f, -17f), new Vector3(11f, 0.12f, 7f));
+
+        CreateBlockingDecorCube(parent, "Clean_Right_Service_West_Wall", new Vector3(64f, 1.65f, 7f), new Vector3(0.8f, 3.3f, 58f), "M_StoneWall", new Color(0.6f, 0.57f, 0.5f));
+        CreateBlockingDecorCube(parent, "Clean_Right_Service_East_Wall", new Vector3(90f, 1.65f, 7f), new Vector3(0.8f, 3.3f, 58f), "M_StoneWall", new Color(0.6f, 0.57f, 0.5f));
+        CreateBlockingDecorCube(parent, "Clean_Right_Service_North_Wall", new Vector3(77f, 1.65f, 36f), new Vector3(26f, 3.3f, 0.8f), "M_StoneWall", new Color(0.6f, 0.57f, 0.5f));
+        CreateBlockingDecorCube(parent, "Clean_Right_Service_South_Wall", new Vector3(77f, 1.65f, -22f), new Vector3(26f, 3.3f, 0.8f), "M_StoneWall", new Color(0.6f, 0.57f, 0.5f));
+        CreateBlockingDecorCube(parent, "Clean_Right_Service_Second_Floor", new Vector3(77f, SecondFloorY + 1.35f, 7f), new Vector3(24f, 2.45f, 52f), "M_StoneWall", new Color(0.64f, 0.61f, 0.54f));
+        CreateBlockingDecorCube(parent, "Clean_Right_Service_Roof", new Vector3(77f, SecondFloorY + 2.85f, 7f), new Vector3(28f, 0.4f, 61f), "M_RoofDark", new Color(0.1f, 0.095f, 0.09f));
+
+        CreateDecorCube(parent, "Clean_Airplane_Body", new Vector3(-34f, 0.55f, -50f), new Vector3(14f, 0.9f, 2.1f), "M_ImportedMetal", new Color(0.36f, 0.38f, 0.39f));
+        CreateDecorCube(parent, "Clean_Airplane_Left_Wing", new Vector3(-34f, 0.5f, -46f), new Vector3(6f, 0.18f, 6f), "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f));
+        CreateDecorCube(parent, "Clean_Airplane_Right_Wing", new Vector3(-34f, 0.5f, -54f), new Vector3(6f, 0.18f, 6f), "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f));
+        CreateDecorCube(parent, "Clean_Hangar_Block", new Vector3(72f, 2.1f, -48f), new Vector3(28f, 4.2f, 18f), "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f));
+        CreateDecorCube(parent, "Clean_Hangar_Door_Cutout_Dark", new Vector3(58f, 1.9f, -48f), new Vector3(0.16f, 3.2f, 10f), "M_DarkMetal", new Color(0.04f, 0.045f, 0.05f));
+    }
+
+    private static void CreateCleanEstateProps(Transform parent)
+    {
+        for (int i = 0; i < 14; i++)
+        {
+            float x = -80f + i * 12f;
+            CreateTree(parent, new Vector3(x, 0.6f, 52f + (i % 2) * 4f));
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            float z = -50f + i * 9f;
+            CreateTree(parent, new Vector3(-88f, 0.6f, z));
+            CreateTree(parent, new Vector3(88f, 0.6f, z + 2f));
+        }
+
+        CreateTennisCourt(parent, new Vector3(-74f, 0.07f, 38f));
+        CreateParkingLot(parent, new Vector3(-72f, 0.07f, 14f));
+        CreateFurnitureCube(parent, "Clean_Right_Service_Desk", new Vector3(74f, 0.42f, -8f), new Vector3(5.5f, 0.8f, 2.5f), "M_DarkWood", new Color(0.2f, 0.12f, 0.06f));
+        CreateFurnitureCube(parent, "Clean_Right_Service_Sofa", new Vector3(78f, 0.42f, 18f), new Vector3(7f, 0.8f, 2.5f), "M_SofaFabric", new Color(0.27f, 0.31f, 0.34f));
+        CreateFurnitureCube(parent, "Clean_Left_Pool_Lounge", new Vector3(-75f, 0.34f, -9f), new Vector3(5f, 0.55f, 1.6f), "M_SofaFabric", new Color(0.7f, 0.68f, 0.58f));
+
+        for (int i = 0; i < 12; i++)
+        {
+            float x = -45f + i * 8f;
+            CreateDecorCube(parent, $"Clean_Front_Garden_Planter_{i:00}", new Vector3(x, 0.18f, -30f), new Vector3(4.5f, 0.32f, 1.2f), "M_PlantLeaves", new Color(0.08f, 0.34f, 0.15f));
+        }
     }
 
     private static void CreateEstateGrounds(Transform parent)
