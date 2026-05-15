@@ -23,6 +23,7 @@ public static class CctvDemoSceneBuilder
     private const float DoorHeaderY = 4.95f;
     private const float ServicePipeY = 5.05f;
     private const float WallSignY = 3.55f;
+    private const bool ForceSafeImportedMaterials = true;
 
     [MenuItem("Tools/CCTV Starter/Create Stealth Mini Game")]
     public static void CreateStealthMiniGame()
@@ -2069,7 +2070,7 @@ public static class CctvDemoSceneBuilder
         instance.transform.localRotation = Quaternion.Euler(eulerAngles);
         instance.transform.localScale = scale;
 
-        if (!string.IsNullOrEmpty(fallbackMaterialName) && replaceAllMaterials)
+        if (!string.IsNullOrEmpty(fallbackMaterialName) && (replaceAllMaterials || ForceSafeImportedMaterials))
         {
             ReplacePrefabMaterials(instance.transform, fallbackMaterialName, fallbackColor);
         }
@@ -2191,7 +2192,7 @@ public static class CctvDemoSceneBuilder
         Transform current = child;
         while (current != null)
         {
-            if (current.name.StartsWith("Asset_"))
+            if (current.name.StartsWith("Asset_") || current.name.StartsWith("HQ_"))
             {
                 return current;
             }
@@ -2204,6 +2205,48 @@ public static class CctvDemoSceneBuilder
 
     private static bool TryGetImportedFallbackMaterial(string objectName, out string materialName, out Color color)
     {
+        if (objectName.Contains("Plant") || objectName.Contains("Garden") || objectName.Contains("Hydrangea") || objectName.Contains("Tulip") || objectName.Contains("Grass") || objectName.Contains("Mint"))
+        {
+            materialName = "M_PlantLeaves";
+            color = new Color(0.08f, 0.34f, 0.15f);
+            return true;
+        }
+
+        if (objectName.Contains("Road") || objectName.Contains("Runway") || objectName.Contains("Pavement") || objectName.Contains("Concrete"))
+        {
+            materialName = "M_ImportedConcrete";
+            color = new Color(0.42f, 0.42f, 0.4f);
+            return true;
+        }
+
+        if (objectName.Contains("Jet") || objectName.Contains("Helicopter") || objectName.Contains("Aircraft") || objectName.Contains("Airfield") || objectName.Contains("Metal"))
+        {
+            materialName = "M_ImportedMetal";
+            color = new Color(0.33f, 0.35f, 0.36f);
+            return true;
+        }
+
+        if (objectName.Contains("Light") || objectName.Contains("Lamp"))
+        {
+            materialName = "M_Lamp";
+            color = new Color(1f, 0.83f, 0.48f);
+            return true;
+        }
+
+        if (objectName.Contains("Sofa") || objectName.Contains("Desk") || objectName.Contains("Kitchen") || objectName.Contains("Bed") || objectName.Contains("Bathroom") || objectName.Contains("Wardrobe") || objectName.Contains("Storage") || objectName.Contains("Shelf") || objectName.Contains("Table"))
+        {
+            materialName = "M_ImportedWood";
+            color = new Color(0.22f, 0.16f, 0.1f);
+            return true;
+        }
+
+        if (objectName.Contains("Fountain") || objectName.Contains("Gate") || objectName.Contains("Barrier"))
+        {
+            materialName = "M_ImportedStone";
+            color = new Color(0.47f, 0.44f, 0.38f);
+            return true;
+        }
+
         if (objectName.Contains("Roof"))
         {
             materialName = "M_ImportedRoof";
