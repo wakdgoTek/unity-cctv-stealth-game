@@ -17,53 +17,12 @@ public static class CctvDemoSceneBuilder
 
         GameObject root = new GameObject("StealthMiniGame");
 
-        GameObject floor = CreateCube("Floor", new Vector3(0f, -0.05f, 0f), new Vector3(30f, 0.1f, 58f), "M_Floor", new Color(0.18f, 0.21f, 0.23f));
+        GameObject floor = CreateCube("Security_Complex_Floor", new Vector3(0f, -0.05f, 0f), new Vector3(84f, 0.1f, 156f), "M_Floor", new Color(0.13f, 0.15f, 0.16f));
         floor.transform.SetParent(root.transform);
 
-        CreateWall(root.transform, "Back_Wall", new Vector3(0f, 1.5f, -29f), new Vector3(30f, 3f, 0.45f));
-        CreateWall(root.transform, "Front_Wall", new Vector3(0f, 1.5f, 29f), new Vector3(30f, 3f, 0.45f));
-        CreateWall(root.transform, "Left_Wall", new Vector3(-15f, 1.5f, 0f), new Vector3(0.45f, 3f, 58f));
-        CreateWall(root.transform, "Right_Wall", new Vector3(15f, 1.5f, 0f), new Vector3(0.45f, 3f, 58f));
+        BuildSecurityComplex(root.transform);
 
-        CreateWall(root.transform, "Gate_Wall_A_Left", new Vector3(-8.2f, 1.5f, -16f), new Vector3(13.6f, 3f, 0.45f));
-        CreateWall(root.transform, "Gate_Wall_A_Right", new Vector3(8.2f, 1.5f, -16f), new Vector3(7.6f, 3f, 0.45f));
-        CreateWall(root.transform, "Gate_Wall_B_Left", new Vector3(-8.2f, 1.5f, 0f), new Vector3(7.6f, 3f, 0.45f));
-        CreateWall(root.transform, "Gate_Wall_B_Right", new Vector3(8.2f, 1.5f, 0f), new Vector3(13.6f, 3f, 0.45f));
-        CreateWall(root.transform, "Gate_Wall_C_Left", new Vector3(-8.2f, 1.5f, 15.5f), new Vector3(13.6f, 3f, 0.45f));
-        CreateWall(root.transform, "Gate_Wall_C_Right", new Vector3(8.2f, 1.5f, 15.5f), new Vector3(7.6f, 3f, 0.45f));
-
-        CreateWall(root.transform, "Cover_A", new Vector3(-5.4f, 1.25f, -23f), new Vector3(7.5f, 2.5f, 0.45f));
-        CreateWall(root.transform, "Cover_B", new Vector3(6.2f, 1.25f, -20.3f), new Vector3(5.8f, 2.5f, 0.45f));
-        CreateWall(root.transform, "Cover_C", new Vector3(3.5f, 1.25f, -10.4f), new Vector3(8.4f, 2.5f, 0.45f));
-        CreateWall(root.transform, "Cover_D", new Vector3(-6.5f, 1.25f, -6.7f), new Vector3(5.2f, 2.5f, 0.45f));
-        CreateWall(root.transform, "Cover_E", new Vector3(-3.5f, 1.25f, 5.2f), new Vector3(8f, 2.5f, 0.45f));
-        CreateWall(root.transform, "Cover_F", new Vector3(6.7f, 1.25f, 8.6f), new Vector3(5.5f, 2.5f, 0.45f));
-        CreateWall(root.transform, "Cover_G", new Vector3(2.5f, 1.25f, 21f), new Vector3(9f, 2.5f, 0.45f));
-        CreateWall(root.transform, "Cover_H", new Vector3(-7.8f, 1.25f, 23.5f), new Vector3(4.8f, 2.5f, 0.45f));
-
-        CreatePillar(root.transform, "Pillar_A", new Vector3(-11f, 1.25f, -19f));
-        CreatePillar(root.transform, "Pillar_B", new Vector3(11f, 1.25f, -11f));
-        CreatePillar(root.transform, "Pillar_C", new Vector3(-11f, 1.25f, 4f));
-        CreatePillar(root.transform, "Pillar_D", new Vector3(11f, 1.25f, 18f));
-
-        CreateCrateStack(root.transform, new Vector3(-10.6f, 0.55f, -25f), 3);
-        CreateCrateStack(root.transform, new Vector3(10.2f, 0.55f, -14f), 2);
-        CreateCrateStack(root.transform, new Vector3(-10.5f, 0.55f, -2.5f), 4);
-        CreateCrateStack(root.transform, new Vector3(10.5f, 0.55f, 3.4f), 3);
-        CreateCrateStack(root.transform, new Vector3(-10.8f, 0.55f, 13f), 2);
-        CreateCrateStack(root.transform, new Vector3(10.8f, 0.55f, 24f), 4);
-
-        CreateFloorStripe(root.transform, "Start_Stripe", new Vector3(0f, 0.01f, -26.2f), new Vector3(8f, 0.03f, 0.18f), "M_StartStripe", new Color(0.1f, 0.55f, 0.9f));
-        CreateFloorStripe(root.transform, "Danger_Stripe_A", new Vector3(0f, 0.012f, -16f), new Vector3(4.2f, 0.03f, 0.16f), "M_DangerStripe", new Color(1f, 0.72f, 0.1f));
-        CreateFloorStripe(root.transform, "Danger_Stripe_B", new Vector3(0f, 0.012f, 0f), new Vector3(4.2f, 0.03f, 0.16f), "M_DangerStripe", new Color(1f, 0.72f, 0.1f));
-        CreateFloorStripe(root.transform, "Danger_Stripe_C", new Vector3(0f, 0.012f, 15.5f), new Vector3(4.2f, 0.03f, 0.16f), "M_DangerStripe", new Color(1f, 0.72f, 0.1f));
-
-        CreateOverheadLight(root.transform, new Vector3(0f, 5f, -22f));
-        CreateOverheadLight(root.transform, new Vector3(0f, 5f, -7f));
-        CreateOverheadLight(root.transform, new Vector3(0f, 5f, 8f));
-        CreateOverheadLight(root.transform, new Vector3(0f, 5f, 23f));
-
-        Vector3 startPosition = new Vector3(0f, 1f, -26.2f);
+        Vector3 startPosition = new Vector3(0f, 1f, -72f);
         GameObject player = CreatePlayer(root.transform, startPosition);
 
         Text statusText;
@@ -75,7 +34,7 @@ public static class CctvDemoSceneBuilder
         StealthGameManager gameManager = gameManagerObject.AddComponent<StealthGameManager>();
         gameManager.Configure(player.transform, player.GetComponent<SimplePlayerController>(), statusText, hintText, startPosition);
 
-        CreateGoal(root.transform, gameManager);
+        CreateGoal(root.transform, gameManager, new Vector3(0f, 0.08f, 73.5f), new Vector3(14f, 0.16f, 5f));
 
         AttachMainCameraToPlayer(player.transform);
 
@@ -146,8 +105,15 @@ public static class CctvDemoSceneBuilder
 
         Vector3 position = new Vector3(0f, 2.5f, 0f);
         Vector3 lookDirection = Vector3.forward;
+        Transform parent = null;
 
-        if (SceneView.lastActiveSceneView != null)
+        if (TryGetSelectedWallMountPose(out Vector3 wallPosition, out Vector3 wallForward, out Transform wallParent))
+        {
+            position = wallPosition;
+            lookDirection = wallForward;
+            parent = wallParent;
+        }
+        else if (SceneView.lastActiveSceneView != null)
         {
             position = SceneView.lastActiveSceneView.pivot + Vector3.up * 2f;
             lookDirection = Vector3.ProjectOnPlane(SceneView.lastActiveSceneView.camera.transform.forward, Vector3.up);
@@ -157,7 +123,7 @@ public static class CctvDemoSceneBuilder
             }
         }
 
-        GameObject cctv = CreateCctv(null, "Placeable_CCTV", position, lookDirection, 12f, 65f, 0.5f, 80f, 35f, target, gameManager);
+        GameObject cctv = CreateCctv(parent, "Placeable_CCTV", position, lookDirection, 16f, 58f, 0.45f, 85f, 32f, target, gameManager);
         Selection.activeGameObject = cctv;
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
     }
@@ -297,9 +263,155 @@ public static class CctvDemoSceneBuilder
         return player;
     }
 
+    private static void BuildSecurityComplex(Transform parent)
+    {
+        CreatePerimeterWalls(parent);
+        CreateFloorPanelGrid(parent);
+        CreateInteriorSecurityLayout(parent);
+        CreateIndustrialProps(parent);
+        CreateCeilingAndLighting(parent);
+        CreateEnvironmentalStoryDetails(parent);
+    }
+
+    private static void CreatePerimeterWalls(Transform parent)
+    {
+        CreateWall(parent, "Outer_Wall_North", new Vector3(0f, 2.25f, 78f), new Vector3(84f, 4.5f, 0.55f));
+        CreateWall(parent, "Outer_Wall_South", new Vector3(0f, 2.25f, -78f), new Vector3(84f, 4.5f, 0.55f));
+        CreateWall(parent, "Outer_Wall_West", new Vector3(-42f, 2.25f, 0f), new Vector3(0.55f, 4.5f, 156f));
+        CreateWall(parent, "Outer_Wall_East", new Vector3(42f, 2.25f, 0f), new Vector3(0.55f, 4.5f, 156f));
+
+        CreateDecorCube(parent, "North_Top_Service_Rail", new Vector3(0f, 4.72f, 77.55f), new Vector3(82f, 0.18f, 0.28f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
+        CreateDecorCube(parent, "South_Top_Service_Rail", new Vector3(0f, 4.72f, -77.55f), new Vector3(82f, 0.18f, 0.28f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
+        CreateDecorCube(parent, "West_Top_Service_Rail", new Vector3(-41.55f, 4.72f, 0f), new Vector3(0.28f, 0.18f, 154f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
+        CreateDecorCube(parent, "East_Top_Service_Rail", new Vector3(41.55f, 4.72f, 0f), new Vector3(0.28f, 0.18f, 154f), "M_WallTrim", new Color(0.11f, 0.12f, 0.13f));
+    }
+
+    private static void CreateFloorPanelGrid(Transform parent)
+    {
+        for (float x = -36f; x <= 36f; x += 6f)
+        {
+            CreateDecorCube(parent, $"Floor_Seam_X_{x}", new Vector3(x, 0.012f, 0f), new Vector3(0.035f, 0.025f, 154f), "M_FloorSeam", new Color(0.07f, 0.08f, 0.085f));
+        }
+
+        for (float z = -72f; z <= 72f; z += 6f)
+        {
+            CreateDecorCube(parent, $"Floor_Seam_Z_{z}", new Vector3(0f, 0.014f, z), new Vector3(82f, 0.025f, 0.035f), "M_FloorSeam", new Color(0.07f, 0.08f, 0.085f));
+        }
+
+        CreateFloorStripe(parent, "Start_Bay_Blue_Line", new Vector3(0f, 0.035f, -72f), new Vector3(18f, 0.03f, 0.22f), "M_StartStripe", new Color(0.05f, 0.45f, 0.95f));
+        CreateFloorStripe(parent, "Goal_Bay_Green_Line", new Vector3(0f, 0.035f, 71f), new Vector3(18f, 0.03f, 0.22f), "M_Goal", new Color(0.1f, 0.85f, 0.35f));
+
+        float[] checkpointZ = { -54f, -30f, -6f, 18f, 42f, 62f };
+        foreach (float z in checkpointZ)
+        {
+            CreateFloorStripe(parent, $"Hazard_Crossing_{z}", new Vector3(0f, 0.038f, z), new Vector3(10f, 0.03f, 0.18f), "M_DangerStripe", new Color(1f, 0.68f, 0.08f));
+        }
+    }
+
+    private static void CreateInteriorSecurityLayout(Transform parent)
+    {
+        CreateGateWall(parent, "Security_Gate_A", -54f, -10f, 8.5f);
+        CreateGateWall(parent, "Security_Gate_B", -30f, 13f, 9f);
+        CreateGateWall(parent, "Security_Gate_C", -6f, -14f, 8f);
+        CreateGateWall(parent, "Security_Gate_D", 18f, 8f, 10f);
+        CreateGateWall(parent, "Security_Gate_E", 42f, -8f, 8.5f);
+        CreateGateWall(parent, "Final_Security_Gate", 62f, 0f, 11f);
+
+        CreateVerticalPartition(parent, "West_Lab_Block_A", -24f, -64f, -38f, -4f, 7f);
+        CreateVerticalPartition(parent, "East_Storage_Block_A", 24f, -48f, -18f, 5f, 7f);
+        CreateVerticalPartition(parent, "West_Server_Block", -24f, -22f, 12f, -7f, 7f);
+        CreateVerticalPartition(parent, "East_Control_Block", 24f, 8f, 38f, 6f, 7f);
+        CreateVerticalPartition(parent, "West_Archive_Block", -24f, 34f, 66f, -5f, 8f);
+
+        for (float z = -66f; z <= 66f; z += 22f)
+        {
+            CreatePillar(parent, $"Heavy_Pillar_W_{z}", new Vector3(-35f, 1.65f, z));
+            CreatePillar(parent, $"Heavy_Pillar_E_{z}", new Vector3(35f, 1.65f, z));
+            CreatePillar(parent, $"Center_Pillar_L_{z}", new Vector3(-9f, 1.65f, z + 7f));
+            CreatePillar(parent, $"Center_Pillar_R_{z}", new Vector3(9f, 1.65f, z - 7f));
+        }
+
+        CreateCoverRun(parent, -16f, -67f, 4, 1);
+        CreateCoverRun(parent, 17f, -59f, 5, -1);
+        CreateCoverRun(parent, -30f, -36f, 4, 1);
+        CreateCoverRun(parent, 31f, -24f, 4, -1);
+        CreateCoverRun(parent, -16f, -4f, 5, 1);
+        CreateCoverRun(parent, 18f, 9f, 5, -1);
+        CreateCoverRun(parent, -31f, 33f, 4, 1);
+        CreateCoverRun(parent, 29f, 48f, 5, -1);
+    }
+
+    private static void CreateIndustrialProps(Transform parent)
+    {
+        Vector3[] crateBases =
+        {
+            new Vector3(-34f, 0.55f, -70f),
+            new Vector3(31f, 0.55f, -64f),
+            new Vector3(-33f, 0.55f, -44f),
+            new Vector3(30f, 0.55f, -10f),
+            new Vector3(-32f, 0.55f, 16f),
+            new Vector3(31f, 0.55f, 30f),
+            new Vector3(-31f, 0.55f, 55f),
+            new Vector3(26f, 0.55f, 66f)
+        };
+
+        for (int i = 0; i < crateBases.Length; i++)
+        {
+            CreateCrateStack(parent, crateBases[i], 3 + i % 3);
+        }
+
+        CreateControlConsole(parent, "Security_Console_A", new Vector3(-31f, 0.65f, -51f), 90f);
+        CreateControlConsole(parent, "Security_Console_B", new Vector3(31f, 0.65f, -28f), -90f);
+        CreateControlConsole(parent, "Server_Terminal_A", new Vector3(-31f, 0.65f, 5f), 90f);
+        CreateControlConsole(parent, "Control_Room_Terminal", new Vector3(31f, 0.65f, 28f), -90f);
+
+        for (float z = -60f; z <= 58f; z += 18f)
+        {
+            CreateDecorCube(parent, $"Cable_Tray_W_{z}", new Vector3(-39.5f, 3.65f, z), new Vector3(0.18f, 0.14f, 12f), "M_DarkMetal", new Color(0.06f, 0.065f, 0.07f));
+            CreateDecorCube(parent, $"Cable_Tray_E_{z}", new Vector3(39.5f, 3.65f, z), new Vector3(0.18f, 0.14f, 12f), "M_DarkMetal", new Color(0.06f, 0.065f, 0.07f));
+        }
+    }
+
+    private static void CreateCeilingAndLighting(Transform parent)
+    {
+        for (float z = -72f; z <= 72f; z += 12f)
+        {
+            CreateDecorCube(parent, $"Ceiling_Beam_{z}", new Vector3(0f, 4.9f, z), new Vector3(82f, 0.18f, 0.32f), "M_CeilingBeam", new Color(0.09f, 0.1f, 0.105f));
+        }
+
+        for (float z = -66f; z <= 66f; z += 18f)
+        {
+            CreateOverheadLight(parent, new Vector3(-18f, 5.15f, z));
+            CreateOverheadLight(parent, new Vector3(18f, 5.15f, z + 9f));
+        }
+
+        for (float z = -65f; z <= 65f; z += 26f)
+        {
+            CreatePipe(parent, $"Red_Service_Pipe_{z}", new Vector3(-40.8f, 3.25f, z), new Vector3(-40.8f, 3.25f, z + 18f), 0.08f, "M_RedPipe", new Color(0.65f, 0.08f, 0.06f));
+            CreatePipe(parent, $"Blue_Service_Pipe_{z}", new Vector3(40.8f, 3.05f, z), new Vector3(40.8f, 3.05f, z + 18f), 0.07f, "M_BluePipe", new Color(0.05f, 0.24f, 0.72f));
+        }
+    }
+
+    private static void CreateEnvironmentalStoryDetails(Transform parent)
+    {
+        CreateDecorCube(parent, "Loading_Dock_Door", new Vector3(0f, 2.1f, -77.35f), new Vector3(16f, 3.2f, 0.18f), "M_Door", new Color(0.18f, 0.2f, 0.21f));
+        CreateDecorCube(parent, "Final_Vault_Door", new Vector3(0f, 2.1f, 77.35f), new Vector3(14f, 3.2f, 0.18f), "M_GoalDoor", new Color(0.11f, 0.24f, 0.18f));
+
+        for (float z = -61f; z <= 61f; z += 24f)
+        {
+            CreateDecorCube(parent, $"Warning_Sign_W_{z}", new Vector3(-41.68f, 2.6f, z), new Vector3(0.04f, 0.7f, 2.2f), "M_SignYellow", new Color(1f, 0.75f, 0.08f));
+            CreateDecorCube(parent, $"Warning_Sign_E_{z}", new Vector3(41.68f, 2.6f, z + 10f), new Vector3(0.04f, 0.7f, 2.2f), "M_SignRed", new Color(0.85f, 0.1f, 0.08f));
+        }
+    }
+
     private static void CreateGoal(Transform parent, StealthGameManager gameManager)
     {
-        GameObject goal = CreateCube("Goal_Zone", new Vector3(0f, 0.08f, 27f), new Vector3(7f, 0.16f, 2.8f), "M_Goal", new Color(0.1f, 0.85f, 0.35f));
+        CreateGoal(parent, gameManager, new Vector3(0f, 0.08f, 27f), new Vector3(7f, 0.16f, 2.8f));
+    }
+
+    private static void CreateGoal(Transform parent, StealthGameManager gameManager, Vector3 position, Vector3 scale)
+    {
+        GameObject goal = CreateCube("Goal_Zone", position, scale, "M_Goal", new Color(0.1f, 0.85f, 0.35f));
         goal.transform.SetParent(parent);
 
         Collider goalCollider = goal.GetComponent<Collider>();
@@ -317,6 +429,155 @@ public static class CctvDemoSceneBuilder
         Object.DestroyImmediate(marker.GetComponent<Collider>());
     }
 
+    private static void CreateGateWall(Transform parent, string name, float z, float gapCenterX, float gapWidth)
+    {
+        float leftWidth = gapCenterX + 42f - gapWidth * 0.5f;
+        float rightWidth = 42f - gapCenterX - gapWidth * 0.5f;
+
+        if (leftWidth > 0.5f)
+        {
+            CreateWall(parent, $"{name}_Left", new Vector3(-42f + leftWidth * 0.5f, 1.9f, z), new Vector3(leftWidth, 3.8f, 0.45f));
+        }
+
+        if (rightWidth > 0.5f)
+        {
+            CreateWall(parent, $"{name}_Right", new Vector3(gapCenterX + gapWidth * 0.5f + rightWidth * 0.5f, 1.9f, z), new Vector3(rightWidth, 3.8f, 0.45f));
+        }
+
+        CreateDecorCube(parent, $"{name}_Door_Frame", new Vector3(gapCenterX, 2.55f, z), new Vector3(gapWidth + 0.8f, 0.28f, 0.62f), "M_DoorFrame", new Color(0.08f, 0.09f, 0.1f));
+        CreateDecorCube(parent, $"{name}_Warning_Bar", new Vector3(gapCenterX, 0.09f, z), new Vector3(gapWidth, 0.04f, 0.22f), "M_DangerStripe", new Color(1f, 0.68f, 0.08f));
+    }
+
+    private static void CreateVerticalPartition(Transform parent, string name, float x, float zMin, float zMax, float gapCenterZ, float gapDepth)
+    {
+        float lowerDepth = gapCenterZ - zMin - gapDepth * 0.5f;
+        float upperDepth = zMax - gapCenterZ - gapDepth * 0.5f;
+
+        if (lowerDepth > 0.5f)
+        {
+            CreateWall(parent, $"{name}_Lower", new Vector3(x, 1.9f, zMin + lowerDepth * 0.5f), new Vector3(0.45f, 3.8f, lowerDepth));
+        }
+
+        if (upperDepth > 0.5f)
+        {
+            CreateWall(parent, $"{name}_Upper", new Vector3(x, 1.9f, gapCenterZ + gapDepth * 0.5f + upperDepth * 0.5f), new Vector3(0.45f, 3.8f, upperDepth));
+        }
+
+        CreateDecorCube(parent, $"{name}_Door_Header", new Vector3(x, 2.65f, gapCenterZ), new Vector3(0.65f, 0.3f, gapDepth + 0.8f), "M_DoorFrame", new Color(0.08f, 0.09f, 0.1f));
+    }
+
+    private static void CreateCoverRun(Transform parent, float x, float z, int count, int direction)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            float offset = i * 2.2f * direction;
+            GameObject cover = CreateCube($"Modular_Cover_{x}_{z}_{i}", new Vector3(x + offset, 0.85f, z + i % 2 * 1.4f), new Vector3(1.8f, 1.7f, 0.55f), "M_CoverPanel", new Color(0.24f, 0.28f, 0.3f));
+            cover.transform.SetParent(parent);
+            CreateDecorCube(parent, $"Cover_Rim_{x}_{z}_{i}", cover.transform.position + new Vector3(0f, 0.88f, 0f), new Vector3(1.95f, 0.12f, 0.64f), "M_WallTrim", new Color(0.07f, 0.08f, 0.085f));
+        }
+    }
+
+    private static void CreateControlConsole(Transform parent, string name, Vector3 position, float yaw)
+    {
+        GameObject consoleRoot = new GameObject(name);
+        consoleRoot.transform.SetParent(parent);
+        consoleRoot.transform.position = position;
+        consoleRoot.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+
+        GameObject baseBlock = CreateCube($"{name}_Base", Vector3.zero, new Vector3(1.8f, 0.8f, 0.8f), "M_DarkMetal", new Color(0.08f, 0.09f, 0.1f));
+        baseBlock.transform.SetParent(consoleRoot.transform, false);
+
+        GameObject screen = CreateCube($"{name}_Screen", new Vector3(0f, 0.62f, 0.42f), new Vector3(1.35f, 0.48f, 0.06f), "M_Screen", new Color(0.03f, 0.42f, 0.5f));
+        screen.transform.SetParent(consoleRoot.transform, false);
+        Object.DestroyImmediate(screen.GetComponent<Collider>());
+
+        CreateSmallIndicator(consoleRoot.transform, $"{name}_Indicator_Green", new Vector3(-0.55f, 0.18f, 0.43f), new Color(0.05f, 0.9f, 0.25f));
+        CreateSmallIndicator(consoleRoot.transform, $"{name}_Indicator_Red", new Vector3(0.55f, 0.18f, 0.43f), new Color(0.9f, 0.08f, 0.05f));
+    }
+
+    private static void CreateSmallIndicator(Transform parent, string name, Vector3 localPosition, Color color)
+    {
+        GameObject lightObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        lightObject.name = name;
+        lightObject.transform.SetParent(parent, false);
+        lightObject.transform.localPosition = localPosition;
+        lightObject.transform.localScale = Vector3.one * 0.12f;
+        lightObject.GetComponent<Renderer>().sharedMaterial = CreateMaterial(name + "_Mat", color);
+        Object.DestroyImmediate(lightObject.GetComponent<Collider>());
+    }
+
+    private static void CreatePipe(Transform parent, string name, Vector3 start, Vector3 end, float radius, string materialName, Color color)
+    {
+        Vector3 direction = end - start;
+        float length = direction.magnitude;
+        if (length <= 0.01f)
+        {
+            return;
+        }
+
+        GameObject pipe = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        pipe.name = name;
+        pipe.transform.SetParent(parent);
+        pipe.transform.position = (start + end) * 0.5f;
+        pipe.transform.rotation = Quaternion.FromToRotation(Vector3.up, direction.normalized);
+        pipe.transform.localScale = new Vector3(radius, length * 0.5f, radius);
+        pipe.GetComponent<Renderer>().sharedMaterial = CreateMaterial(materialName, color);
+        Object.DestroyImmediate(pipe.GetComponent<Collider>());
+    }
+
+    private static bool TryGetSelectedWallMountPose(out Vector3 position, out Vector3 forward, out Transform parent)
+    {
+        position = Vector3.zero;
+        forward = Vector3.forward;
+        parent = null;
+
+        Transform selected = Selection.activeTransform;
+        if (selected == null)
+        {
+            return false;
+        }
+
+        Renderer selectedRenderer = selected.GetComponent<Renderer>();
+        if (selectedRenderer == null)
+        {
+            selectedRenderer = selected.GetComponentInChildren<Renderer>();
+        }
+
+        if (selectedRenderer == null)
+        {
+            return false;
+        }
+
+        Bounds bounds = selectedRenderer.bounds;
+        if (bounds.size.y < 1.2f)
+        {
+            return false;
+        }
+
+        Vector3 cameraPosition = SceneView.lastActiveSceneView != null
+            ? SceneView.lastActiveSceneView.camera.transform.position
+            : bounds.center + Vector3.back * 10f;
+
+        bool useXFace = bounds.size.x <= bounds.size.z;
+        float sign = useXFace
+            ? Mathf.Sign(cameraPosition.x - bounds.center.x)
+            : Mathf.Sign(cameraPosition.z - bounds.center.z);
+
+        if (Mathf.Approximately(sign, 0f))
+        {
+            sign = 1f;
+        }
+
+        Vector3 normal = useXFace ? new Vector3(sign, 0f, 0f) : new Vector3(0f, 0f, sign);
+        float surfaceOffset = useXFace ? bounds.extents.x : bounds.extents.z;
+        float mountHeight = Mathf.Clamp(bounds.min.y + 2.85f, bounds.min.y + 1.4f, bounds.max.y - 0.45f);
+
+        position = new Vector3(bounds.center.x, mountHeight, bounds.center.z) + normal * (surfaceOffset + 0.08f);
+        forward = normal;
+        parent = selected;
+        return true;
+    }
+
     private static GameObject CreateCctv(Transform parent, string name, Vector3 position, Vector3 lookDirection, float distance, float angle, float detectTime, float patrolRange, float patrolSpeed, CctvDetectionTarget target, StealthGameManager gameManager)
     {
         GameObject cctvRoot = new GameObject(name);
@@ -330,24 +591,29 @@ public static class CctvDemoSceneBuilder
 
         Transform headPivot = CreateHeadPivot(cctvRoot.transform);
 
-        GameObject body = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        body.name = "Camera_Body";
-        body.transform.SetParent(headPivot, false);
-        body.transform.localScale = new Vector3(0.75f, 0.34f, 0.55f);
-        body.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_CCTV", new Color(0.08f, 0.09f, 0.1f));
-        Object.DestroyImmediate(body.GetComponent<Collider>());
+        CreateCctvLocalPart(cctvRoot.transform, "Wall_Mount_Plate", new Vector3(0f, 0f, -0.08f), new Vector3(0.95f, 0.78f, 0.08f), "M_DarkMetal", new Color(0.045f, 0.05f, 0.055f));
+        CreateCctvLocalPart(cctvRoot.transform, "Mount_Arm", new Vector3(0f, 0f, 0.22f), new Vector3(0.16f, 0.16f, 0.58f), "M_CCTV", new Color(0.08f, 0.09f, 0.1f));
+        CreateCctvLocalPart(cctvRoot.transform, "Cable_Conduit", new Vector3(-0.52f, 0.18f, -0.02f), new Vector3(0.08f, 0.12f, 0.1f), "M_DarkMetal", new Color(0.025f, 0.028f, 0.03f));
+
+        CreateCctvLocalPart(headPivot, "Camera_Body", new Vector3(0f, 0f, 0.46f), new Vector3(0.72f, 0.38f, 0.75f), "M_CCTV", new Color(0.08f, 0.09f, 0.1f));
+        CreateCctvLocalPart(headPivot, "Camera_Hood", new Vector3(0f, 0.24f, 0.5f), new Vector3(0.88f, 0.08f, 0.86f), "M_DarkMetal", new Color(0.035f, 0.04f, 0.045f));
+        CreateCctvLocalPart(headPivot, "Camera_Bottom_Rail", new Vector3(0f, -0.24f, 0.46f), new Vector3(0.78f, 0.07f, 0.62f), "M_DarkMetal", new Color(0.035f, 0.04f, 0.045f));
 
         GameObject lens = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         lens.name = "Lens";
         lens.transform.SetParent(headPivot, false);
-        lens.transform.localPosition = new Vector3(0f, 0f, 0.35f);
-        lens.transform.localScale = Vector3.one * 0.24f;
-        lens.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_Lens", new Color(0.05f, 0.45f, 0.65f));
+        lens.transform.localPosition = new Vector3(0f, 0f, 0.88f);
+        lens.transform.localScale = new Vector3(0.28f, 0.28f, 0.13f);
+        lens.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_Lens", new Color(0.03f, 0.45f, 0.6f));
         Object.DestroyImmediate(lens.GetComponent<Collider>());
+
+        CreateCctvLocalPart(headPivot, "Lens_Ring", new Vector3(0f, 0f, 0.82f), new Vector3(0.42f, 0.42f, 0.08f), "M_DarkMetal", new Color(0.025f, 0.028f, 0.03f));
+        CreateCctvLocalPart(headPivot, "Left_Hinge", new Vector3(-0.46f, 0f, 0.22f), new Vector3(0.1f, 0.28f, 0.12f), "M_DarkMetal", new Color(0.035f, 0.04f, 0.045f));
+        CreateCctvLocalPart(headPivot, "Right_Hinge", new Vector3(0.46f, 0f, 0.22f), new Vector3(0.1f, 0.28f, 0.12f), "M_DarkMetal", new Color(0.035f, 0.04f, 0.045f));
 
         GameObject origin = new GameObject("Detection_Origin");
         origin.transform.SetParent(headPivot, false);
-        origin.transform.localPosition = new Vector3(0f, 0f, 0.5f);
+        origin.transform.localPosition = new Vector3(0f, 0f, 1.02f);
         origin.transform.localRotation = Quaternion.identity;
 
         Light spot = new GameObject("View_Light").AddComponent<Light>();
@@ -372,6 +638,19 @@ public static class CctvDemoSceneBuilder
         patrol.Configure(patrolRange, patrolSpeed, headPivot);
 
         return cctvRoot;
+    }
+
+    private static GameObject CreateCctvLocalPart(Transform parent, string name, Vector3 localPosition, Vector3 localScale, string materialName, Color color)
+    {
+        GameObject part = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        part.name = name;
+        part.transform.SetParent(parent, false);
+        part.transform.localPosition = localPosition;
+        part.transform.localRotation = Quaternion.identity;
+        part.transform.localScale = localScale;
+        part.GetComponent<Renderer>().sharedMaterial = CreateMaterial(materialName, color);
+        Object.DestroyImmediate(part.GetComponent<Collider>());
+        return part;
     }
 
     private static Transform CreateHeadPivot(Transform cctvRoot)
@@ -510,6 +789,14 @@ public static class CctvDemoSceneBuilder
         GameObject stripe = CreateCube(name, position, scale, materialName, color);
         stripe.transform.SetParent(parent);
         Object.DestroyImmediate(stripe.GetComponent<Collider>());
+    }
+
+    private static GameObject CreateDecorCube(Transform parent, string name, Vector3 position, Vector3 scale, string materialName, Color color)
+    {
+        GameObject cube = CreateCube(name, position, scale, materialName, color);
+        cube.transform.SetParent(parent);
+        Object.DestroyImmediate(cube.GetComponent<Collider>());
+        return cube;
     }
 
     private static void CreateOverheadLight(Transform parent, Vector3 position)

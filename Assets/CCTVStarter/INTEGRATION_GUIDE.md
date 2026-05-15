@@ -27,13 +27,15 @@ After copying the folder:
 1. Wait for Unity to compile.
 2. Open any scene.
 3. Run `Tools > CCTV Starter > Create Stealth Mini Game`.
-4. Add cameras with `Tools > CCTV Starter > Create Placeable CCTV`.
-5. Move and rotate each `Placeable_CCTV` root into your chosen position.
-6. Press Play.
+4. Select a wall, pillar, or large vertical surface.
+5. Add cameras with `Tools > CCTV Starter > Create Placeable CCTV`.
+6. Move and rotate each `Placeable_CCTV` root into your chosen position.
+7. Press Play.
 
 The map generator creates the player, goal, cover, UI, and game manager, but it does not place CCTV cameras automatically. This makes the camera layout easy to customize.
 
 Use `Tools > CCTV Starter > Delete All CCTVs` to clear all CCTV objects from the open scene.
+If a wall is selected when you create a camera, the tool places the CCTV on that wall face and aims it outward.
 
 ## Manual Setup
 
