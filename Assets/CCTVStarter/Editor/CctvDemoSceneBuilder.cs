@@ -85,15 +85,7 @@ public static class CctvDemoSceneBuilder
         CreateCctv(root.transform, "CCTV_Final_Gate_Left", new Vector3(-5.2f, 3.15f, 25.8f), new Vector3(0.7f, -0.1f, 0.25f), 8.8f, 52f, 0.38f, 70f, 55f, target, gameManager);
         CreateCctv(root.transform, "CCTV_Final_Gate_Right", new Vector3(5.2f, 3.15f, 25.8f), new Vector3(-0.7f, -0.1f, 0.25f), 8.8f, 52f, 0.38f, 70f, 55f, target, gameManager);
 
-        Camera mainCamera = Camera.main;
-        if (mainCamera != null)
-        {
-            mainCamera.transform.SetParent(player.transform, false);
-            mainCamera.transform.localPosition = new Vector3(0f, 0.75f, 0.08f);
-            mainCamera.transform.localRotation = Quaternion.identity;
-            mainCamera.fieldOfView = 70f;
-            mainCamera.nearClipPlane = 0.05f;
-        }
+        AttachMainCameraToPlayer(player.transform);
 
         Selection.activeGameObject = player;
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
@@ -170,15 +162,7 @@ public static class CctvDemoSceneBuilder
         UnityEventTools.AddPersistentListener(detector.onDetected, alert.SetDetected);
         UnityEventTools.AddPersistentListener(detector.onLost, alert.SetLost);
 
-        Camera mainCamera = Camera.main;
-        if (mainCamera != null)
-        {
-            mainCamera.transform.SetParent(player.transform, false);
-            mainCamera.transform.localPosition = new Vector3(0f, 0.75f, 0.08f);
-            mainCamera.transform.localRotation = Quaternion.identity;
-            mainCamera.fieldOfView = 70f;
-            mainCamera.nearClipPlane = 0.05f;
-        }
+        AttachMainCameraToPlayer(player.transform);
 
         Selection.activeGameObject = cctvRoot;
         EditorUtility.SetDirty(detector);
@@ -344,6 +328,56 @@ public static class CctvDemoSceneBuilder
         light.range = 11f;
         light.intensity = 2.1f;
         light.color = new Color(1f, 0.92f, 0.72f);
+    }
+
+    private static void AttachMainCameraToPlayer(Transform player)
+    {
+        Camera mainCamera = GetOrCreateMainCamera();
+        mainCamera.transform.SetParent(player, false);
+        mainCamera.transform.localPosition = new Vector3(0f, 0.75f, 0.08f);
+        mainCamera.transform.localRotation = Quaternion.identity;
+        mainCamera.fieldOfView = 70f;
+        mainCamera.nearClipPlane = 0.05f;
+        mainCamera.targetDisplay = 0;
+        mainCamera.cullingMask = ~0;
+        mainCamera.enabled = true;
+        mainCamera.gameObject.SetActive(true);
+    }
+
+    private static Camera GetOrCreateMainCamera()
+    {
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null)
+        {
+            GameObject cameraObject = GameObject.Find("Main Camera");
+            if (cameraObject == null)
+            {
+                cameraObject = new GameObject("Main Camera");
+            }
+
+            cameraObject.tag = "MainCamera";
+            mainCamera = cameraObject.GetComponent<Camera>();
+            if (mainCamera == null)
+            {
+                mainCamera = cameraObject.AddComponent<Camera>();
+            }
+        }
+
+        if (mainCamera.GetComponent<AudioListener>() == null && FindExistingAudioListener() == null)
+        {
+            mainCamera.gameObject.AddComponent<AudioListener>();
+        }
+
+        return mainCamera;
+    }
+
+    private static AudioListener FindExistingAudioListener()
+    {
+#if UNITY_2023_1_OR_NEWER
+        return Object.FindFirstObjectByType<AudioListener>();
+#else
+        return Object.FindObjectOfType<AudioListener>();
+#endif
     }
 
     private static GameObject CreateCube(string name, Vector3 position, Vector3 scale, string materialName, Color color)

@@ -150,14 +150,26 @@ public class SimplePlayerController : MonoBehaviour
 
         if (playerCamera == null)
         {
-            return;
+            GameObject cameraObject = new GameObject("Main Camera");
+            cameraObject.tag = "MainCamera";
+            playerCamera = cameraObject.AddComponent<Camera>();
         }
 
+        playerCamera.gameObject.SetActive(true);
+        playerCamera.enabled = true;
+        playerCamera.tag = "MainCamera";
+        playerCamera.targetDisplay = 0;
+        playerCamera.cullingMask = ~0;
         playerCamera.transform.SetParent(transform, false);
         playerCamera.transform.localPosition = new Vector3(0f, eyeHeight, 0.08f);
         playerCamera.transform.localRotation = Quaternion.identity;
         playerCamera.fieldOfView = 70f;
         playerCamera.nearClipPlane = 0.05f;
+
+        if (playerCamera.GetComponent<AudioListener>() == null && FindExistingAudioListener() == null)
+        {
+            playerCamera.gameObject.AddComponent<AudioListener>();
+        }
     }
 
     private static Vector2 ReadMoveInput()
@@ -228,6 +240,15 @@ public class SimplePlayerController : MonoBehaviour
         {
             Mouse.current.delta.ReadValue();
         }
+#endif
+    }
+
+    private static AudioListener FindExistingAudioListener()
+    {
+#if UNITY_2023_1_OR_NEWER
+        return FindFirstObjectByType<AudioListener>();
+#else
+        return FindObjectOfType<AudioListener>();
 #endif
     }
 }
