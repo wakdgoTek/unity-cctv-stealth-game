@@ -107,6 +107,14 @@ public static class CctvDemoSceneBuilder
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
     }
 
+    [MenuItem("Tools/CCTV Starter/Add Wall Box Colliders")]
+    public static void AddWallBoxCollidersToScene()
+    {
+        int colliderCount = EnsureBlockingCollidersForArchitecture(null);
+        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        Debug.Log($"Added or refreshed {colliderCount} wall/building BoxCollider(s) for CCTV line-of-sight blocking.");
+    }
+
     [MenuItem("Tools/CCTV Starter/Create Placeable CCTV")]
     public static void CreatePlaceableCctv()
     {
@@ -290,6 +298,7 @@ public static class CctvDemoSceneBuilder
         CreateBlueprintDoorAndSeamFillers(parent);
         CreateBlueprintEquipment(parent);
         CreateBlueprintLighting(parent);
+        EnsureBlockingCollidersForArchitecture(parent);
     }
 
     private static void CreateEstateGrounds(Transform parent)
@@ -343,6 +352,7 @@ public static class CctvDemoSceneBuilder
     private static void CreateEstateBuildings(Transform parent)
     {
         CreateMansionEnvelope(parent);
+        CreateEstateSecondFloorDetails(parent);
         CreateLeftExteriorBuilding(parent);
         CreateRightExteriorBuilding(parent);
         CreatePoolHouse(parent);
@@ -358,6 +368,60 @@ public static class CctvDemoSceneBuilder
         CreateDecorCube(parent, "Mansion_Right_Roof", new Vector3(29f, 3.55f, 8f), new Vector3(24f, 0.42f, 31f), "M_RoofDark", new Color(0.12f, 0.11f, 0.1f));
         CreateStairs(parent, new Vector3(-3f, 0.15f, 17f), 7, 17f);
         CreateDecorCube(parent, "Mansion_Entrance_Door", new Vector3(-3f, 1.45f, 22.75f), new Vector3(5.8f, 2.5f, 0.18f), "M_Door", new Color(0.24f, 0.14f, 0.08f));
+    }
+
+    private static void CreateEstateSecondFloorDetails(Transform parent)
+    {
+        float upperY = SecondFloorY;
+        Color stone = new Color(0.66f, 0.63f, 0.56f);
+        Color trim = new Color(0.28f, 0.25f, 0.2f);
+        Color glass = new Color(0.25f, 0.5f, 0.68f);
+
+        CreateBlockingDecorCube(parent, "Mansion_Second_Floor_Core_Facade", new Vector3(-3f, upperY + 1.35f, 12f), new Vector3(33f, 2.7f, 20f), "M_StoneWall", stone);
+        CreateBlockingDecorCube(parent, "Mansion_Second_Floor_Left_Tower", new Vector3(-30f, upperY + 1.28f, 8f), new Vector3(13f, 2.55f, 28f), "M_StoneWall", stone);
+        CreateBlockingDecorCube(parent, "Mansion_Second_Floor_Right_Tower", new Vector3(25f, upperY + 1.28f, 8f), new Vector3(13f, 2.55f, 28f), "M_StoneWall", stone);
+
+        CreateBlockingDecorCube(parent, "Mansion_Upper_Roof_Core", new Vector3(-3f, upperY + 2.95f, 12f), new Vector3(35f, 0.5f, 22f), "M_RoofDark", new Color(0.1f, 0.09f, 0.08f));
+        CreateBlockingDecorCube(parent, "Mansion_Upper_Roof_Left", new Vector3(-30f, upperY + 2.82f, 8f), new Vector3(15f, 0.48f, 30f), "M_RoofDark", new Color(0.1f, 0.09f, 0.08f));
+        CreateBlockingDecorCube(parent, "Mansion_Upper_Roof_Right", new Vector3(25f, upperY + 2.82f, 8f), new Vector3(15f, 0.48f, 30f), "M_RoofDark", new Color(0.1f, 0.09f, 0.08f));
+
+        CreateDecorCube(parent, "Mansion_Second_Floor_Balcony_Floor", new Vector3(-3f, upperY + 0.08f, 26.8f), new Vector3(39f, 0.18f, 4.2f), "M_Stone", new Color(0.5f, 0.48f, 0.42f));
+        CreateDecorCube(parent, "Mansion_Balcony_Front_Rail", new Vector3(-3f, upperY + 0.78f, 28.8f), new Vector3(40f, 0.18f, 0.22f), "M_WoodTrim", trim);
+        CreateDecorCube(parent, "Mansion_Balcony_Left_Rail", new Vector3(-23f, upperY + 0.78f, 26.8f), new Vector3(0.22f, 0.18f, 4f), "M_WoodTrim", trim);
+        CreateDecorCube(parent, "Mansion_Balcony_Right_Rail", new Vector3(17f, upperY + 0.78f, 26.8f), new Vector3(0.22f, 0.18f, 4f), "M_WoodTrim", trim);
+
+        for (float x = -21f; x <= 15f; x += 6f)
+        {
+            CreateBlockingDecorCube(parent, $"Mansion_Balcony_Stone_Post_{x}", new Vector3(x, upperY + 0.65f, 28.8f), new Vector3(0.45f, 1.1f, 0.45f), "M_StoneWall", stone);
+            CreateDecorCube(parent, $"Mansion_Upper_Front_Window_{x}", new Vector3(x, upperY + 1.58f, 22.05f), new Vector3(2.6f, 1.15f, 0.08f), "M_WindowGlass", glass);
+            CreateDecorCube(parent, $"Mansion_Lower_Front_Window_{x}", new Vector3(x, 2.05f, 24.22f), new Vector3(2.6f, 1.15f, 0.08f), "M_WindowGlass", glass);
+        }
+
+        for (float z = -2f; z <= 18f; z += 6.5f)
+        {
+            CreateDecorCube(parent, $"Mansion_Left_Tower_Window_{z}", new Vector3(-23.45f, upperY + 1.5f, z), new Vector3(0.08f, 1.1f, 2.4f), "M_WindowGlass", glass);
+            CreateDecorCube(parent, $"Mansion_Right_Tower_Window_{z}", new Vector3(18.45f, upperY + 1.5f, z), new Vector3(0.08f, 1.1f, 2.4f), "M_WindowGlass", glass);
+        }
+
+        CreateDecorCube(parent, "Mansion_Upper_Cornice_Front", new Vector3(-3f, upperY + 2.75f, 22.1f), new Vector3(39f, 0.28f, 0.5f), "M_WoodTrim", trim);
+        CreateDecorCube(parent, "Mansion_Upper_Cornice_Back", new Vector3(-3f, upperY + 2.75f, 1.9f), new Vector3(34f, 0.28f, 0.5f), "M_WoodTrim", trim);
+        CreateDecorCube(parent, "Mansion_Left_Tower_Cornice", new Vector3(-30f, upperY + 2.62f, -6.2f), new Vector3(15f, 0.28f, 0.5f), "M_WoodTrim", trim);
+        CreateDecorCube(parent, "Mansion_Right_Tower_Cornice", new Vector3(25f, upperY + 2.62f, -6.2f), new Vector3(15f, 0.28f, 0.5f), "M_WoodTrim", trim);
+
+        CreateBlockingDecorCube(parent, "Left_Exterior_Second_Floor_Block", new Vector3(-72f, upperY + 1.15f, -16f), new Vector3(21f, 2.3f, 20f), "M_StoneWall", new Color(0.6f, 0.57f, 0.5f));
+        CreateBlockingDecorCube(parent, "Left_Exterior_Second_Roof", new Vector3(-72f, upperY + 2.55f, -16f), new Vector3(23f, 0.42f, 22f), "M_RoofDark", new Color(0.1f, 0.09f, 0.08f));
+        CreateBlockingDecorCube(parent, "Right_Exterior_Second_Floor_Block", new Vector3(77f, upperY + 1.25f, 7f), new Vector3(22f, 2.5f, 52f), "M_StoneWall", new Color(0.6f, 0.57f, 0.5f));
+        CreateBlockingDecorCube(parent, "Right_Exterior_Second_Roof", new Vector3(77f, upperY + 2.7f, 7f), new Vector3(24f, 0.45f, 54f), "M_RoofDark", new Color(0.1f, 0.09f, 0.08f));
+
+        for (float z = -12f; z <= 26f; z += 9.5f)
+        {
+            CreateDecorCube(parent, $"Right_Exterior_Upper_Window_{z}", new Vector3(64.45f, upperY + 1.55f, z), new Vector3(0.08f, 1.1f, 3f), "M_WindowGlass", glass);
+        }
+
+        for (float x = -80f; x <= -64f; x += 5.5f)
+        {
+            CreateDecorCube(parent, $"Left_Exterior_Upper_Window_{x}", new Vector3(x, upperY + 1.5f, -4.45f), new Vector3(2.4f, 1.1f, 0.08f), "M_WindowGlass", glass);
+        }
     }
 
     private static void CreateLeftExteriorBuilding(Transform parent)
@@ -1626,6 +1690,110 @@ public static class CctvDemoSceneBuilder
         cube.transform.SetParent(parent, false);
         Object.DestroyImmediate(cube.GetComponent<Collider>());
         return cube;
+    }
+
+    private static GameObject CreateBlockingDecorCube(Transform parent, string name, Vector3 position, Vector3 scale, string materialName, Color color)
+    {
+        GameObject cube = CreateCube(name, position, scale, materialName, color);
+        cube.transform.SetParent(parent, false);
+        EnsureBoxCollider(cube);
+        return cube;
+    }
+
+    private static int EnsureBlockingCollidersForArchitecture(Transform scope)
+    {
+        Renderer[] renderers;
+        if (scope != null)
+        {
+            renderers = scope.GetComponentsInChildren<Renderer>(true);
+        }
+        else
+        {
+#if UNITY_2023_1_OR_NEWER
+            renderers = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+#else
+            renderers = Object.FindObjectsOfType<Renderer>(true);
+#endif
+        }
+
+        int colliderCount = 0;
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer == null || !ShouldHaveCctvBlockingCollider(renderer.gameObject.name))
+            {
+                continue;
+            }
+
+            EnsureBoxCollider(renderer.gameObject);
+            colliderCount++;
+        }
+
+        return colliderCount;
+    }
+
+    private static BoxCollider EnsureBoxCollider(GameObject gameObject)
+    {
+        BoxCollider boxCollider = gameObject.GetComponent<BoxCollider>();
+        if (boxCollider == null)
+        {
+            boxCollider = gameObject.AddComponent<BoxCollider>();
+        }
+
+        boxCollider.isTrigger = false;
+        return boxCollider;
+    }
+
+    private static bool ShouldHaveCctvBlockingCollider(string objectName)
+    {
+        if (ContainsToken(objectName, "Door_Leaf") ||
+            ContainsToken(objectName, "Threshold") ||
+            ContainsToken(objectName, "Window") ||
+            ContainsToken(objectName, "Water") ||
+            ContainsToken(objectName, "Route_Line") ||
+            ContainsToken(objectName, "Stripe") ||
+            ContainsToken(objectName, "Floor_Seam") ||
+            ContainsToken(objectName, "Start_Bay") ||
+            ContainsToken(objectName, "Goal_Bay"))
+        {
+            return false;
+        }
+
+        string[] blockingTokens =
+        {
+            "Wall",
+            "Facade",
+            "Roof",
+            "Pillar",
+            "Arch",
+            "Gate",
+            "Corner",
+            "_Cap",
+            "_Block",
+            "_Return",
+            "Tower",
+            "Sealed_Joint",
+            "Door_Frame",
+            "Door_Header",
+            "Building_North",
+            "Building_South",
+            "Building_East",
+            "Building_West"
+        };
+
+        foreach (string token in blockingTokens)
+        {
+            if (ContainsToken(objectName, token))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool ContainsToken(string value, string token)
+    {
+        return value.IndexOf(token, System.StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
     private static void CreateOverheadLight(Transform parent, Vector3 position)
