@@ -2,7 +2,8 @@
     "name": "CCTVStarter.Editor",
     "rootNamespace": "",
     "references": [
-        "CCTVStarter"
+        "CCTVStarter",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [
         "Editor"
