@@ -284,6 +284,7 @@ public static class CctvDemoSceneBuilder
         CreateHouseFurnishings(parent);
         CreateHouseLighting(parent);
         CreateHouseExteriorDetails(parent);
+        CreateHouseGapFillers(parent);
     }
 
     private static void CreateTwoStoryHouseShell(Transform parent)
@@ -421,9 +422,50 @@ public static class CctvDemoSceneBuilder
         CreateDecorCube(parent, "Roof_Visual_Plate", new Vector3(0f, ExteriorWallHeight + 0.18f, 0f), new Vector3(HouseWidth + 2f, 0.24f, HouseDepth + 2f), "M_RoofDark", new Color(0.12f, 0.09f, 0.075f));
     }
 
+    private static void CreateHouseGapFillers(Transform parent)
+    {
+        float halfWidth = HouseWidth * 0.5f;
+        float halfDepth = HouseDepth * 0.5f;
+
+        CreateDecorCube(parent, "Ground_Floor_Front_Edge_Cover", new Vector3(0f, 0.065f, -halfDepth + 0.08f), new Vector3(HouseWidth + 0.35f, 0.08f, 0.32f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+        CreateDecorCube(parent, "Ground_Floor_Back_Edge_Cover", new Vector3(0f, 0.065f, halfDepth - 0.08f), new Vector3(HouseWidth + 0.35f, 0.08f, 0.32f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+        CreateDecorCube(parent, "Ground_Floor_West_Edge_Cover", new Vector3(-halfWidth + 0.08f, 0.065f, 0f), new Vector3(0.32f, 0.08f, HouseDepth + 0.35f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+        CreateDecorCube(parent, "Ground_Floor_East_Edge_Cover", new Vector3(halfWidth - 0.08f, 0.065f, 0f), new Vector3(0.32f, 0.08f, HouseDepth + 0.35f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+
+        CreateDecorCube(parent, "Front_Door_Threshold_Outer", new Vector3(0f, 0.12f, -halfDepth - 0.34f), new Vector3(8.8f, 0.16f, 0.62f), "M_Stone", new Color(0.28f, 0.28f, 0.26f));
+        CreateDecorCube(parent, "Front_Door_Threshold_Inner", new Vector3(0f, 0.12f, -halfDepth + 0.34f), new Vector3(8.8f, 0.16f, 0.62f), "M_Stone", new Color(0.28f, 0.28f, 0.26f));
+        CreateDecorCube(parent, "Front_Door_Left_Return", new Vector3(-4.55f, 1.62f, -halfDepth + 0.34f), new Vector3(0.5f, 3.05f, 0.55f), "M_HouseWall", new Color(0.72f, 0.69f, 0.62f));
+        CreateDecorCube(parent, "Front_Door_Right_Return", new Vector3(4.55f, 1.62f, -halfDepth + 0.34f), new Vector3(0.5f, 3.05f, 0.55f), "M_HouseWall", new Color(0.72f, 0.69f, 0.62f));
+        CreateDecorCube(parent, "Front_Door_Open_Panel_Left", new Vector3(-2.95f, 1.45f, -halfDepth + 0.18f), new Vector3(1.8f, 2.65f, 0.14f), "M_Door", new Color(0.28f, 0.16f, 0.08f));
+        CreateDecorCube(parent, "Front_Door_Open_Panel_Right", new Vector3(2.95f, 1.45f, -halfDepth + 0.18f), new Vector3(1.8f, 2.65f, 0.14f), "M_Door", new Color(0.28f, 0.16f, 0.08f));
+
+        CreateDecorCube(parent, "Second_Floor_Seam_West_Front", new Vector3(-9f, SecondFloorY + 0.025f, -26f), new Vector3(0.34f, 0.08f, 29.5f), "M_WoodTrim", new Color(0.19f, 0.13f, 0.075f));
+        CreateDecorCube(parent, "Second_Floor_Seam_East_Front", new Vector3(9f, SecondFloorY + 0.025f, -26f), new Vector3(0.34f, 0.08f, 29.5f), "M_WoodTrim", new Color(0.19f, 0.13f, 0.075f));
+        CreateDecorCube(parent, "Second_Floor_Seam_West_Back", new Vector3(-9f, SecondFloorY + 0.025f, 27f), new Vector3(0.34f, 0.08f, 28.5f), "M_WoodTrim", new Color(0.19f, 0.13f, 0.075f));
+        CreateDecorCube(parent, "Second_Floor_Seam_East_Back", new Vector3(9f, SecondFloorY + 0.025f, 27f), new Vector3(0.34f, 0.08f, 28.5f), "M_WoodTrim", new Color(0.19f, 0.13f, 0.075f));
+        CreateDecorCube(parent, "Second_Floor_Stairwell_Lip_Front", new Vector3(0f, SecondFloorY + 0.035f, -11.5f), new Vector3(18.5f, 0.08f, 0.34f), "M_WoodTrim", new Color(0.19f, 0.13f, 0.075f));
+        CreateDecorCube(parent, "Second_Floor_Stairwell_Lip_Back", new Vector3(0f, SecondFloorY + 0.035f, 13f), new Vector3(18.5f, 0.08f, 0.34f), "M_WoodTrim", new Color(0.19f, 0.13f, 0.075f));
+        CreateDecorCube(parent, "Second_Floor_Stairwell_Lip_Left", new Vector3(-9f, SecondFloorY + 0.035f, 0.75f), new Vector3(0.34f, 0.08f, 24.8f), "M_WoodTrim", new Color(0.19f, 0.13f, 0.075f));
+        CreateDecorCube(parent, "Second_Floor_Stairwell_Lip_Right", new Vector3(9f, SecondFloorY + 0.035f, 0.75f), new Vector3(0.34f, 0.08f, 24.8f), "M_WoodTrim", new Color(0.19f, 0.13f, 0.075f));
+
+        CreateCornerFiller(parent, "Exterior_Corner_NorthWest", new Vector3(-halfWidth, ExteriorWallHeight * 0.5f, halfDepth));
+        CreateCornerFiller(parent, "Exterior_Corner_NorthEast", new Vector3(halfWidth, ExteriorWallHeight * 0.5f, halfDepth));
+        CreateCornerFiller(parent, "Exterior_Corner_SouthWest", new Vector3(-halfWidth, ExteriorWallHeight * 0.5f, -halfDepth));
+        CreateCornerFiller(parent, "Exterior_Corner_SouthEast", new Vector3(halfWidth, ExteriorWallHeight * 0.5f, -halfDepth));
+
+        CreateDecorCube(parent, "Goal_Door_Frame_Left", new Vector3(14f, SecondFloorY + 1.5f, 32.35f), new Vector3(0.24f, 2.85f, 0.36f), "M_DoorFrame", new Color(0.16f, 0.11f, 0.07f));
+        CreateDecorCube(parent, "Goal_Door_Frame_Right", new Vector3(22f, SecondFloorY + 1.5f, 32.35f), new Vector3(0.24f, 2.85f, 0.36f), "M_DoorFrame", new Color(0.16f, 0.11f, 0.07f));
+        CreateDecorCube(parent, "Goal_Door_Frame_Top", new Vector3(18f, SecondFloorY + 2.9f, 32.35f), new Vector3(8.2f, 0.24f, 0.36f), "M_DoorFrame", new Color(0.16f, 0.11f, 0.07f));
+    }
+
+    private static void CreateCornerFiller(Transform parent, string name, Vector3 position)
+    {
+        CreateDecorCube(parent, name, position, new Vector3(0.72f, ExteriorWallHeight + 0.04f, 0.72f), "M_HouseWall", new Color(0.72f, 0.69f, 0.62f));
+    }
+
     private static void CreateHouseDefaultCctvs(Transform parent, CctvDetectionTarget target, StealthGameManager gameManager)
     {
-        CreateCctv(parent, "House_CCTV_Foyer", new Vector3(0f, 2.75f, -40.64f), Vector3.forward, 17f, 56f, 0.38f, 70f, 28f, target, gameManager);
+        CreateCctv(parent, "House_CCTV_Foyer_Cross", new Vector3(-8.64f, 2.75f, -18f), Vector3.right, 15f, 52f, 0.38f, 36f, 26f, target, gameManager);
         CreateCctv(parent, "House_CCTV_Living_West", new Vector3(-28.64f, 2.7f, -11f), Vector3.right, 16f, 54f, 0.42f, 82f, 30f, target, gameManager);
         CreateCctv(parent, "House_CCTV_Kitchen_East", new Vector3(28.64f, 2.7f, -3f), Vector3.left, 16f, 54f, 0.42f, 82f, 30f, target, gameManager);
         CreateCctv(parent, "House_CCTV_Upper_Hall", new Vector3(0f, SecondFloorY + 2.65f, 40.64f), Vector3.back, 18f, 58f, 0.35f, 92f, 34f, target, gameManager);
