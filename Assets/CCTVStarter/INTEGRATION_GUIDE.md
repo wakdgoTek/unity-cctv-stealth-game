@@ -27,20 +27,25 @@ After copying the folder:
 1. Wait for Unity to compile.
 2. Open any scene.
 3. Run `Tools > CCTV Starter > Create Stealth Mini Game`.
-4. Press Play.
+4. Add cameras with `Tools > CCTV Starter > Create Placeable CCTV`.
+5. Move and rotate each `Placeable_CCTV` root into your chosen position.
+6. Press Play.
 
-The menu creates a generated test map. It does not require existing scene objects.
+The map generator creates the player, goal, cover, UI, and game manager, but it does not place CCTV cameras automatically. This makes the camera layout easy to customize.
+
+Use `Tools > CCTV Starter > Delete All CCTVs` to clear all CCTV objects from the open scene.
 
 ## Manual Setup
 
 For your own scene:
 
 1. Add `CctvDetectionTarget` to the player.
-2. Add `CctvDetector` to each CCTV object.
-3. Add `CctvPatrol` if the CCTV should scan left/right.
-4. Add `CctvViewVisualizer` if the player should see the red detection area.
-5. Assign the player target to `CctvDetector`.
-6. Set `Obstacle Mask` to the layer used by walls and cover.
+2. Run `Tools > CCTV Starter > Create Placeable CCTV`, or add `CctvDetector` to your own CCTV root object.
+3. Move and rotate the CCTV root object to mount it wherever you want.
+4. Add `CctvPatrol` if the CCTV should scan left/right.
+5. Add `CctvViewVisualizer` if the player should see the red detection area.
+6. Assign the player target to `CctvDetector`.
+7. Set `Obstacle Mask` to the layer used by walls and cover.
 
 ## Important Notes
 

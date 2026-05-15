@@ -77,32 +77,38 @@ public static class CctvDemoSceneBuilder
 
         CreateGoal(root.transform, gameManager);
 
-        CctvDetectionTarget target = player.GetComponent<CctvDetectionTarget>();
-        CreateCctv(root.transform, "CCTV_Entrance_Left", new Vector3(-11.8f, 3.1f, -21.8f), new Vector3(0.95f, -0.1f, 0.7f), 12.5f, 62f, 0.45f, 75f, 38f, target, gameManager);
-        CreateCctv(root.transform, "CCTV_Entrance_Right", new Vector3(11.8f, 3.1f, -14.5f), new Vector3(-0.95f, -0.1f, 0.5f), 12f, 58f, 0.48f, 70f, 42f, target, gameManager);
-        CreateCctv(root.transform, "CCTV_Mid_Left", new Vector3(-12f, 3.1f, -3.5f), new Vector3(0.9f, -0.1f, 0.8f), 12.5f, 68f, 0.48f, 85f, 35f, target, gameManager);
-        CreateCctv(root.transform, "CCTV_Mid_Right", new Vector3(12f, 3.1f, 6f), new Vector3(-0.9f, -0.1f, 0.75f), 13f, 66f, 0.45f, 80f, 40f, target, gameManager);
-        CreateCctv(root.transform, "CCTV_Exit_Left", new Vector3(-11.8f, 3.1f, 17f), new Vector3(0.95f, -0.1f, 0.6f), 12.5f, 60f, 0.42f, 72f, 44f, target, gameManager);
-        CreateCctv(root.transform, "CCTV_Exit_Right", new Vector3(11.8f, 3.1f, 23.5f), new Vector3(-0.95f, -0.1f, 0.5f), 11.5f, 56f, 0.42f, 65f, 46f, target, gameManager);
-        CreateCctv(root.transform, "CCTV_Center_Cross_A", new Vector3(0f, 3.25f, -8.2f), new Vector3(1f, -0.1f, 0.25f), 10.5f, 54f, 0.4f, 95f, 48f, target, gameManager);
-        CreateCctv(root.transform, "CCTV_Center_Cross_B", new Vector3(0f, 3.25f, 8.8f), new Vector3(-1f, -0.1f, 0.25f), 10.5f, 54f, 0.4f, 95f, 52f, target, gameManager);
-        CreateCctv(root.transform, "CCTV_Final_Gate_Left", new Vector3(-5.2f, 3.15f, 25.8f), new Vector3(0.7f, -0.1f, 0.25f), 8.8f, 52f, 0.38f, 70f, 55f, target, gameManager);
-        CreateCctv(root.transform, "CCTV_Final_Gate_Right", new Vector3(5.2f, 3.15f, 25.8f), new Vector3(-0.7f, -0.1f, 0.25f), 8.8f, 52f, 0.38f, 70f, 55f, target, gameManager);
-
         AttachMainCameraToPlayer(player.transform);
 
         Selection.activeGameObject = player;
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
     }
 
+    [MenuItem("Tools/CCTV Starter/Delete All CCTVs")]
+    public static void DeleteAllCctvs()
+    {
+        CctvDetector[] detectors = FindAllCctvDetectors();
+        int deletedCount = 0;
+
+        foreach (CctvDetector detector in detectors)
+        {
+            if (detector == null)
+            {
+                continue;
+            }
+
+            Undo.DestroyObjectImmediate(detector.gameObject);
+            deletedCount++;
+        }
+
+        Selection.activeGameObject = null;
+        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        Debug.Log($"Deleted {deletedCount} CCTV object(s). Use Tools > CCTV Starter > Create Placeable CCTV to add cameras where you want them.");
+    }
+
     [MenuItem("Tools/CCTV Starter/Organize Existing CCTVs")]
     public static void OrganizeExistingCctvs()
     {
-#if UNITY_2023_1_OR_NEWER
-        CctvDetector[] detectors = Object.FindObjectsByType<CctvDetector>(FindObjectsSortMode.None);
-#else
-        CctvDetector[] detectors = Object.FindObjectsOfType<CctvDetector>();
-#endif
+        CctvDetector[] detectors = FindAllCctvDetectors();
 
         foreach (CctvDetector detector in detectors)
         {
@@ -259,6 +265,15 @@ public static class CctvDemoSceneBuilder
                 Object.DestroyImmediate(found);
             }
         }
+    }
+
+    private static CctvDetector[] FindAllCctvDetectors()
+    {
+#if UNITY_2023_1_OR_NEWER
+        return Object.FindObjectsByType<CctvDetector>(FindObjectsSortMode.None);
+#else
+        return Object.FindObjectsOfType<CctvDetector>();
+#endif
     }
 
     private static GameObject CreatePlayer(Transform parent, Vector3 position)

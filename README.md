@@ -9,7 +9,9 @@ Unity 6 sample project for a first-person stealth mini game with CCTV detection.
 3. Use Unity `6000.3.13f1` or a compatible Unity 6 version.
 4. Wait for scripts to compile.
 5. In Unity, run `Tools > CCTV Starter > Create Stealth Mini Game`.
-6. Press Play.
+6. Add cameras with `Tools > CCTV Starter > Create Placeable CCTV`.
+7. Move and rotate each `Placeable_CCTV` root wherever you want it.
+8. Press Play.
 
 ## Controls
 
@@ -29,6 +31,18 @@ Then run:
 
 ```text
 Tools > CCTV Starter > Create Stealth Mini Game
+```
+
+The generated map starts without CCTV cameras. Add them manually with:
+
+```text
+Tools > CCTV Starter > Create Placeable CCTV
+```
+
+To remove every CCTV from the open scene:
+
+```text
+Tools > CCTV Starter > Delete All CCTVs
 ```
 
 For manual setup, see:
