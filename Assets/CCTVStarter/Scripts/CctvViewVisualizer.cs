@@ -14,6 +14,7 @@ public class CctvViewVisualizer : MonoBehaviour
     private MeshRenderer meshRenderer;
     private Transform visualTransform;
     private Material material;
+    private bool visualReady;
 
     private void Awake()
     {
@@ -47,11 +48,6 @@ public class CctvViewVisualizer : MonoBehaviour
     private void OnValidate()
     {
         segments = Mathf.Clamp(segments, 8, 96);
-
-        if (Application.isPlaying)
-        {
-            RebuildMesh();
-        }
     }
 
     private void EnsureVisualObjects()
@@ -118,6 +114,7 @@ public class CctvViewVisualizer : MonoBehaviour
         material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
         meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         meshRenderer.receiveShadows = false;
+        visualReady = true;
     }
 
     private void RebuildMesh()
@@ -127,7 +124,10 @@ public class CctvViewVisualizer : MonoBehaviour
             detector = GetComponent<CctvDetector>();
         }
 
-        EnsureVisualObjects();
+        if (!visualReady || mesh == null)
+        {
+            EnsureVisualObjects();
+        }
 
         float distance = detector.ViewDistance;
         float halfAngle = detector.ViewAngle * 0.5f;

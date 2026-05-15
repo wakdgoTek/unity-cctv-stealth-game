@@ -17,11 +17,16 @@ public class StealthGameManager : MonoBehaviour
     private CctvDetector[] detectors;
     private bool gameEnded;
     private bool resetting;
+    private bool started;
 
     private void OnEnable()
     {
         RefreshDetectors();
-        SubscribeToDetectors();
+
+        if (started)
+        {
+            SubscribeToDetectors();
+        }
     }
 
     private void OnDisable()
@@ -55,6 +60,9 @@ public class StealthGameManager : MonoBehaviour
 
     private void Start()
     {
+        started = true;
+        RefreshDetectors();
+        SubscribeToDetectors();
         ShowPlayingText();
     }
 
