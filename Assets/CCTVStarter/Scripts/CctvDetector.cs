@@ -70,6 +70,11 @@ public class CctvDetector : MonoBehaviour
         requiredVisibleTime = newRequiredVisibleTime;
     }
 
+    public void SetDetectionOrigin(Transform newDetectionOrigin)
+    {
+        detectionOrigin = newDetectionOrigin;
+    }
+
     public void ForceResetDetection()
     {
         visibleTimer = 0f;
