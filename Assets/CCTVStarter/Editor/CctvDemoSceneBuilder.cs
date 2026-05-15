@@ -14,6 +14,8 @@ public static class CctvDemoSceneBuilder
     private const float SecondFloorY = 3.25f;
     private const float RoomWallHeight = 3.05f;
     private const float ExteriorWallHeight = 6.8f;
+    private const float BlueprintWallThickness = 0.8f;
+    private const float BlueprintWallOverlap = 0.28f;
     private const float SecurityWallHeight = 6.2f;
     private const float WallTopTrimY = 6.42f;
     private const float CeilingBeamY = 6.75f;
@@ -287,82 +289,98 @@ public static class CctvDemoSceneBuilder
 
     private static void CreateBlueprintFoundation(Transform parent)
     {
-        CreateDecorCube(parent, "Start_Safe_Zone", new Vector3(-34f, 0.02f, 27f), new Vector3(12f, 0.04f, 7f), "M_StartStripe", new Color(0.05f, 0.45f, 0.95f));
-        CreateDecorCube(parent, "Top_Main_Path", new Vector3(-10f, 0.01f, 25f), new Vector3(50f, 0.04f, 5.5f), "M_WoodFloor", new Color(0.38f, 0.31f, 0.23f));
-        CreateDecorCube(parent, "Center_Hall_Floor", new Vector3(-5f, 0.012f, 8f), new Vector3(29f, 0.04f, 30f), "M_WoodFloor", new Color(0.42f, 0.33f, 0.23f));
-        CreateDecorCube(parent, "Left_CCTV_Block_Floor", new Vector3(-31.5f, 0.012f, -4f), new Vector3(19f, 0.04f, 43f), "M_DarkFloor", new Color(0.12f, 0.13f, 0.14f));
-        CreateDecorCube(parent, "Right_CCTV_Block_Floor", new Vector3(28.5f, 0.012f, 9f), new Vector3(23f, 0.04f, 28f), "M_DarkFloor", new Color(0.12f, 0.13f, 0.14f));
-        CreateDecorCube(parent, "Emergency_Hall_Floor", new Vector3(1f, 0.014f, -21f), new Vector3(16f, 0.04f, 10f), "M_WoodFloor", new Color(0.42f, 0.33f, 0.23f));
-        CreateDecorCube(parent, "Lower_Run_Path", new Vector3(20f, 0.012f, -19f), new Vector3(42f, 0.04f, 5.5f), "M_WoodFloor", new Color(0.38f, 0.31f, 0.23f));
+        CreateDecorCube(parent, "Start_Safe_Zone", new Vector3(-34f, 0.02f, 27f), new Vector3(13f, 0.04f, 8f), "M_StartStripe", new Color(0.05f, 0.45f, 0.95f));
+        CreateDecorCube(parent, "Top_Main_Path", new Vector3(-10.5f, 0.016f, 25.25f), new Vector3(51f, 0.04f, 6.4f), "M_WoodFloor", new Color(0.38f, 0.31f, 0.23f));
+        CreateDecorCube(parent, "Main_Room_Block_Floor", new Vector3(-3f, 0.018f, 7.25f), new Vector3(35.4f, 0.04f, 31.4f), "M_WoodFloor", new Color(0.42f, 0.33f, 0.23f));
+        CreateDecorCube(parent, "Left_CCTV_Block_Floor", new Vector3(-32.5f, 0.018f, -4.5f), new Vector3(18.6f, 0.04f, 45.4f), "M_DarkFloor", new Color(0.12f, 0.13f, 0.14f));
+        CreateDecorCube(parent, "Right_CCTV_Block_Floor", new Vector3(29f, 0.018f, 9f), new Vector3(23.4f, 0.04f, 30.4f), "M_DarkFloor", new Color(0.12f, 0.13f, 0.14f));
+        CreateDecorCube(parent, "Fire_Door_Connector_Floor", new Vector3(14.5f, 0.02f, 3f), new Vector3(8.8f, 0.04f, 8f), "M_WoodFloor", new Color(0.4f, 0.32f, 0.24f));
+        CreateDecorCube(parent, "Emergency_Hall_Floor", new Vector3(1f, 0.02f, -21.5f), new Vector3(17.4f, 0.04f, 11.4f), "M_WoodFloor", new Color(0.42f, 0.33f, 0.23f));
+        CreateDecorCube(parent, "Lower_Run_Path", new Vector3(20f, 0.016f, -19.2f), new Vector3(44f, 0.04f, 6.2f), "M_WoodFloor", new Color(0.38f, 0.31f, 0.23f));
+        CreateDecorCube(parent, "Lower_Return_Path", new Vector3(15f, 0.014f, -29f), new Vector3(49f, 0.04f, 5.8f), "M_WoodFloor", new Color(0.36f, 0.29f, 0.22f));
+        CreateDecorCube(parent, "Airplane_Display_Pad", new Vector3(0f, 0.035f, -20.5f), new Vector3(13f, 0.08f, 5f), "M_Stone", new Color(0.28f, 0.28f, 0.26f));
     }
 
     private static void CreateBlueprintRoomShells(Transform parent)
     {
         CreateBlueprintOuterWalls(parent);
 
-        CreateBlueprintWall(parent, "Left_CCTV_Wall_W", new Vector3(-41f, 1.55f, -4f), new Vector3(0.6f, RoomWallHeight, 43f));
-        CreateBlueprintWall(parent, "Left_CCTV_Wall_E_Top", new Vector3(-22f, 1.55f, 7.5f), new Vector3(0.6f, RoomWallHeight, 20f));
-        CreateBlueprintWall(parent, "Left_CCTV_Wall_E_Bottom", new Vector3(-22f, 1.55f, -17.5f), new Vector3(0.6f, RoomWallHeight, 13f));
-        CreateBlueprintWall(parent, "Left_CCTV_Wall_N", new Vector3(-31.5f, 1.55f, 17.5f), new Vector3(19.6f, RoomWallHeight, 0.6f));
-        CreateBlueprintWall(parent, "Left_CCTV_Wall_S", new Vector3(-31.5f, 1.55f, -25.5f), new Vector3(19.6f, RoomWallHeight, 0.6f));
+        CreateBlueprintWallZ(parent, "Left_CCTV_Wall_W", -41f, -27f, 18f);
+        CreateBlueprintWallZ(parent, "Left_CCTV_Wall_E_Top", -24f, -2.8f, 18f);
+        CreateBlueprintWallZ(parent, "Left_CCTV_Wall_E_Bottom", -24f, -27f, -11.2f);
+        CreateBlueprintWallX(parent, "Left_CCTV_Wall_N", -41f, -24f, 18f);
+        CreateBlueprintWallX(parent, "Left_CCTV_Wall_S", -41f, -24f, -27f);
 
-        CreateBlueprintWall(parent, "Center_Block_West", new Vector3(-19.5f, 1.55f, 8f), new Vector3(0.6f, RoomWallHeight, 29f));
-        CreateBlueprintWall(parent, "Center_Block_East", new Vector3(10.5f, 1.55f, 8f), new Vector3(0.6f, RoomWallHeight, 29f));
-        CreateBlueprintWall(parent, "Center_Block_North_Left", new Vector3(-14.5f, 1.55f, 22.5f), new Vector3(10f, RoomWallHeight, 0.6f));
-        CreateBlueprintWall(parent, "Center_Block_North_Right", new Vector3(4.5f, 1.55f, 22.5f), new Vector3(12f, RoomWallHeight, 0.6f));
-        CreateBlueprintWall(parent, "Center_Block_South_Left", new Vector3(-14.5f, 1.55f, -6.5f), new Vector3(10f, RoomWallHeight, 0.6f));
-        CreateBlueprintWall(parent, "Center_Block_South_Right", new Vector3(5.5f, 1.55f, -6.5f), new Vector3(10f, RoomWallHeight, 0.6f));
-        CreateBlueprintWall(parent, "Room_One_Two_Divider", new Vector3(-10f, 1.55f, 8f), new Vector3(0.6f, RoomWallHeight, 29f));
-        CreateBlueprintWall(parent, "Room_Two_Equipment_Divider_Top", new Vector3(0f, 1.55f, 15.5f), new Vector3(0.6f, RoomWallHeight, 13f));
-        CreateBlueprintWall(parent, "Room_Two_Equipment_Divider_Bottom", new Vector3(0f, 1.55f, -1.5f), new Vector3(0.6f, RoomWallHeight, 10f));
+        CreateBlueprintWallZ(parent, "Center_Block_West", -20f, -8.5f, 22.5f);
+        CreateBlueprintWallZ(parent, "Center_Block_East_Upper", 14f, 6.2f, 22.5f);
+        CreateBlueprintWallZ(parent, "Center_Block_East_Lower", 14f, -8.5f, -0.2f);
+        CreateBlueprintWallX(parent, "Center_Block_North_Left", -20f, -5.4f, 22.5f);
+        CreateBlueprintWallX(parent, "Center_Block_North_Right", 0.6f, 14f, 22.5f);
+        CreateBlueprintWallX(parent, "Center_Block_South_Left", -20f, -4.2f, -8.5f);
+        CreateBlueprintWallX(parent, "Center_Block_South_Right", 5.2f, 14f, -8.5f);
+        CreateBlueprintWallZ(parent, "Room_One_Two_Divider_Upper", -10f, 4f, 22.5f);
+        CreateBlueprintWallZ(parent, "Room_One_Two_Divider_Lower", -10f, -8.5f, -0.1f);
+        CreateBlueprintWallX(parent, "Room_One_Lower_Divider", -20f, -10f, 6.2f);
+        CreateBlueprintWallZ(parent, "Room_Two_Equipment_Divider_Top", 0.8f, 8.6f, 22.5f);
+        CreateBlueprintWallZ(parent, "Room_Two_Equipment_Divider_Bottom", 0.8f, -8.5f, 3.6f);
+        CreateBlueprintWallX(parent, "Stair_Room_South", 0.8f, 14f, 8.6f);
+        CreateBlueprintWallZ(parent, "Stair_Room_West", 5.1f, 8.6f, 22.5f);
 
-        CreateBlueprintWall(parent, "Right_CCTV_Wall_W", new Vector3(17f, 1.55f, 9f), new Vector3(0.6f, RoomWallHeight, 28f));
-        CreateBlueprintWall(parent, "Right_CCTV_Wall_E", new Vector3(40f, 1.55f, 9f), new Vector3(0.6f, RoomWallHeight, 28f));
-        CreateBlueprintWall(parent, "Right_CCTV_Wall_N", new Vector3(28.5f, 1.55f, 23f), new Vector3(23.6f, RoomWallHeight, 0.6f));
-        CreateBlueprintWall(parent, "Right_CCTV_Wall_S_Left", new Vector3(22.5f, 1.55f, -5f), new Vector3(11f, RoomWallHeight, 0.6f));
-        CreateBlueprintWall(parent, "Right_CCTV_Wall_S_Right", new Vector3(35f, 1.55f, -5f), new Vector3(10f, RoomWallHeight, 0.6f));
+        CreateBlueprintWallZ(parent, "Right_CCTV_Wall_W", 18f, -6f, 24f);
+        CreateBlueprintWallZ(parent, "Right_CCTV_Wall_E", 40f, -6f, 24f);
+        CreateBlueprintWallX(parent, "Right_CCTV_Wall_N", 18f, 40f, 24f);
+        CreateBlueprintWallX(parent, "Right_CCTV_Wall_S_Left", 18f, 25f, -6f);
+        CreateBlueprintWallX(parent, "Right_CCTV_Wall_S_Right", 32f, 40f, -6f);
 
-        CreateBlueprintWall(parent, "Emergency_Room_West", new Vector3(-7f, 1.55f, -21f), new Vector3(0.6f, RoomWallHeight, 10f));
-        CreateBlueprintWall(parent, "Emergency_Room_East", new Vector3(9f, 1.55f, -21f), new Vector3(0.6f, RoomWallHeight, 10f));
-        CreateBlueprintWall(parent, "Emergency_Room_North_Left", new Vector3(-3.2f, 1.55f, -16f), new Vector3(7f, RoomWallHeight, 0.6f));
-        CreateBlueprintWall(parent, "Emergency_Room_North_Right", new Vector3(5.2f, 1.55f, -16f), new Vector3(7f, RoomWallHeight, 0.6f));
-        CreateBlueprintWall(parent, "Emergency_Room_South", new Vector3(1f, 1.55f, -26f), new Vector3(16.6f, RoomWallHeight, 0.6f));
+        CreateBlueprintWallZ(parent, "Emergency_Room_West", -8f, -27f, -16f);
+        CreateBlueprintWallZ(parent, "Emergency_Room_East", 10f, -27f, -16f);
+        CreateBlueprintWallX(parent, "Emergency_Room_North_Left", -8f, -2.5f, -16f);
+        CreateBlueprintWallX(parent, "Emergency_Room_North_Right", 4.5f, 10f, -16f);
+        CreateBlueprintWallX(parent, "Emergency_Room_South", -8f, 10f, -27f);
     }
 
     private static void CreateBlueprintOuterWalls(Transform parent)
     {
         float halfWidth = HouseWidth * 0.5f;
         float halfDepth = HouseDepth * 0.5f;
-        CreateBlueprintWall(parent, "Boundary_North", new Vector3(0f, 1.55f, halfDepth), new Vector3(HouseWidth, RoomWallHeight, 0.6f));
-        CreateBlueprintWall(parent, "Boundary_South", new Vector3(0f, 1.55f, -halfDepth), new Vector3(HouseWidth, RoomWallHeight, 0.6f));
-        CreateBlueprintWall(parent, "Boundary_West", new Vector3(-halfWidth, 1.55f, 0f), new Vector3(0.6f, RoomWallHeight, HouseDepth));
-        CreateBlueprintWall(parent, "Boundary_East", new Vector3(halfWidth, 1.55f, 0f), new Vector3(0.6f, RoomWallHeight, HouseDepth));
+        CreateBlueprintWallX(parent, "Boundary_North", -halfWidth, halfWidth, halfDepth);
+        CreateBlueprintWallX(parent, "Boundary_South", -halfWidth, halfWidth, -halfDepth);
+        CreateBlueprintWallZ(parent, "Boundary_West", -halfWidth, -halfDepth, halfDepth);
+        CreateBlueprintWallZ(parent, "Boundary_East", halfWidth, -halfDepth, halfDepth);
     }
 
     private static void CreateBlueprintDoorAndSeamFillers(Transform parent)
     {
-        CreateThreshold(parent, "Entry_To_Center_Threshold", new Vector3(-5f, 0.08f, 22.55f), new Vector3(8f, 0.12f, 0.8f));
-        CreateThreshold(parent, "Left_CCTV_Door_Threshold", new Vector3(-22f, 0.08f, -8.5f), new Vector3(0.8f, 0.12f, 5.2f));
-        CreateThreshold(parent, "Right_CCTV_Door_Threshold", new Vector3(28.8f, 0.08f, -5f), new Vector3(5.8f, 0.12f, 0.8f));
-        CreateThreshold(parent, "Emergency_Door_Threshold", new Vector3(1f, 0.08f, -16f), new Vector3(4.2f, 0.12f, 0.8f));
+        CreateBlueprintDoorway(parent, "Entry_To_Center", new Vector3(-2.4f, 1.55f, 22.5f), true, 5.8f);
+        CreateBlueprintDoorway(parent, "Room_One_To_Two", new Vector3(-10f, 1.55f, 1.95f), false, 4.4f);
+        CreateBlueprintDoorway(parent, "Room_Two_To_Equipment", new Vector3(0.8f, 1.55f, 6.1f), false, 4.4f);
+        CreateBlueprintDoorway(parent, "Main_To_Fire_Door", new Vector3(14f, 1.55f, 3f), false, 4.6f);
+        CreateBlueprintDoorway(parent, "Left_CCTV_Service_Door", new Vector3(-24f, 1.55f, -7f), false, 8.4f);
+        CreateBlueprintDoorway(parent, "Right_CCTV_South_Door", new Vector3(28.5f, 1.55f, -6f), true, 7.4f);
+        CreateBlueprintDoorway(parent, "Emergency_North_Door", new Vector3(1f, 1.55f, -16f), true, 7.4f);
+        CreateBlueprintDoorway(parent, "Center_To_Emergency", new Vector3(0.5f, 1.55f, -8.5f), true, 9.4f);
 
-        CreateDoorFrame(parent, "Entry_To_Center_Frame", new Vector3(-5f, 1.6f, 22.7f), true, 8f);
-        CreateDoorFrame(parent, "Left_CCTV_Frame", new Vector3(-22.3f, 1.6f, -8.5f), false, 5.2f);
-        CreateDoorFrame(parent, "Right_CCTV_Frame", new Vector3(28.8f, 1.6f, -5.3f), true, 5.8f);
-        CreateDoorFrame(parent, "Emergency_Frame", new Vector3(1f, 1.6f, -16.3f), true, 4.2f);
+        Vector3[] capPositions =
+        {
+            new Vector3(-41f, 1.55f, 18f), new Vector3(-24f, 1.55f, 18f), new Vector3(-41f, 1.55f, -27f), new Vector3(-24f, 1.55f, -27f),
+            new Vector3(-20f, 1.55f, 22.5f), new Vector3(14f, 1.55f, 22.5f), new Vector3(-20f, 1.55f, -8.5f), new Vector3(14f, 1.55f, -8.5f),
+            new Vector3(-10f, 1.55f, 22.5f), new Vector3(-10f, 1.55f, 6.2f), new Vector3(-10f, 1.55f, -8.5f),
+            new Vector3(0.8f, 1.55f, 22.5f), new Vector3(0.8f, 1.55f, 8.6f), new Vector3(0.8f, 1.55f, -8.5f),
+            new Vector3(5.1f, 1.55f, 22.5f), new Vector3(5.1f, 1.55f, 8.6f),
+            new Vector3(18f, 1.55f, 24f), new Vector3(40f, 1.55f, 24f), new Vector3(18f, 1.55f, -6f), new Vector3(40f, 1.55f, -6f),
+            new Vector3(-8f, 1.55f, -16f), new Vector3(10f, 1.55f, -16f), new Vector3(-8f, 1.55f, -27f), new Vector3(10f, 1.55f, -27f)
+        };
 
-        CreateBlueprintCap(parent, "Center_Block_Corner_NW", new Vector3(-19.5f, 1.55f, 22.5f));
-        CreateBlueprintCap(parent, "Center_Block_Corner_NE", new Vector3(10.5f, 1.55f, 22.5f));
-        CreateBlueprintCap(parent, "Center_Block_Corner_SW", new Vector3(-19.5f, 1.55f, -6.5f));
-        CreateBlueprintCap(parent, "Center_Block_Corner_SE", new Vector3(10.5f, 1.55f, -6.5f));
-        CreateBlueprintCap(parent, "Left_CCTV_Corner_NE", new Vector3(-22f, 1.55f, 17.5f));
-        CreateBlueprintCap(parent, "Left_CCTV_Corner_SE", new Vector3(-22f, 1.55f, -25.5f));
-        CreateBlueprintCap(parent, "Right_CCTV_Corner_NW", new Vector3(17f, 1.55f, 23f));
-        CreateBlueprintCap(parent, "Right_CCTV_Corner_SW", new Vector3(17f, 1.55f, -5f));
+        for (int i = 0; i < capPositions.Length; i++)
+        {
+            CreateBlueprintCap(parent, $"Blueprint_Sealed_Joint_{i:00}", capPositions[i]);
+        }
 
         CreateDecorCube(parent, "Start_Label_Floor_Marker", new Vector3(-34f, 0.045f, 30.4f), new Vector3(5f, 0.05f, 0.45f), "M_StartStripe", new Color(0.05f, 0.45f, 0.95f));
-        CreateDecorCube(parent, "Route_Arrow_Upper", new Vector3(-21f, 0.045f, 25.2f), new Vector3(11f, 0.05f, 0.35f), "M_StartStripe", new Color(0.05f, 0.45f, 0.95f));
-        CreateDecorCube(parent, "Route_Arrow_Lower", new Vector3(24f, 0.045f, -18.8f), new Vector3(20f, 0.05f, 0.35f), "M_StartStripe", new Color(0.05f, 0.45f, 0.95f));
+        CreateDecorCube(parent, "Route_Arrow_Upper_Left", new Vector3(-29f, 0.045f, 25.25f), new Vector3(13f, 0.05f, 0.35f), "M_StartStripe", new Color(0.05f, 0.45f, 0.95f));
+        CreateDecorCube(parent, "Route_Arrow_Upper_Right", new Vector3(9f, 0.045f, 25.25f), new Vector3(18f, 0.05f, 0.35f), "M_StartStripe", new Color(0.05f, 0.45f, 0.95f));
+        CreateDecorCube(parent, "Route_Arrow_Lower_Right", new Vector3(24f, 0.045f, -18.8f), new Vector3(21f, 0.05f, 0.35f), "M_StartStripe", new Color(0.05f, 0.45f, 0.95f));
+        CreateDecorCube(parent, "Route_Arrow_Lower_Return", new Vector3(14f, 0.045f, -29f), new Vector3(36f, 0.05f, 0.35f), "M_StartStripe", new Color(0.05f, 0.45f, 0.95f));
     }
 
     private static void CreateBlueprintEquipment(Transform parent)
@@ -400,13 +418,13 @@ public static class CctvDemoSceneBuilder
 
     private static void CreateBlueprintDefaultCctvs(Transform parent, CctvDetectionTarget target, StealthGameManager gameManager)
     {
-        CreateCctv(parent, "Blueprint_CCTV_Left_Block_A", new Vector3(-40.64f, 2.65f, 10f), Vector3.right, 17f, 55f, 0.38f, 78f, 28f, target, gameManager);
-        CreateCctv(parent, "Blueprint_CCTV_Left_Block_B", new Vector3(-22.64f, 2.65f, -20f), Vector3.left, 15f, 52f, 0.38f, 60f, 24f, target, gameManager);
-        CreateCctv(parent, "Blueprint_CCTV_Room_One", new Vector3(-19.14f, 2.65f, 18f), Vector3.right, 12f, 50f, 0.38f, 50f, 22f, target, gameManager);
-        CreateCctv(parent, "Blueprint_CCTV_Equipment", new Vector3(10.14f, 2.65f, 10f), Vector3.left, 13f, 52f, 0.38f, 58f, 24f, target, gameManager);
-        CreateCctv(parent, "Blueprint_CCTV_Right_Block_A", new Vector3(17.36f, 2.65f, 15f), Vector3.right, 17f, 55f, 0.38f, 76f, 28f, target, gameManager);
-        CreateCctv(parent, "Blueprint_CCTV_Right_Block_B", new Vector3(39.64f, 2.65f, 1f), Vector3.left, 16f, 55f, 0.38f, 70f, 26f, target, gameManager);
-        CreateCctv(parent, "Blueprint_CCTV_Lower_Path", new Vector3(9.36f, 2.65f, -19f), Vector3.right, 17f, 54f, 0.38f, 64f, 26f, target, gameManager);
+        CreateCctv(parent, "Blueprint_CCTV_01_Entrance", new Vector3(-2.4f, 2.65f, 22.14f), new Vector3(-0.95f, 0f, -0.3f), 12f, 48f, 0.38f, 32f, 18f, target, gameManager);
+        CreateCctv(parent, "Blueprint_CCTV_02_Internal_Hall", new Vector3(-9.6f, 2.65f, 4.8f), Vector3.right, 13f, 50f, 0.38f, 52f, 22f, target, gameManager);
+        CreateCctv(parent, "Blueprint_CCTV_03_Fire_Door", new Vector3(14.36f, 2.65f, 3f), Vector3.right, 15f, 52f, 0.38f, 58f, 24f, target, gameManager);
+        CreateCctv(parent, "Blueprint_CCTV_04_Right_Exterior", new Vector3(39.64f, 2.65f, 9f), Vector3.left, 17f, 55f, 0.38f, 68f, 24f, target, gameManager);
+        CreateCctv(parent, "Blueprint_CCTV_05_Airplane_Right", new Vector3(10.36f, 2.65f, -19.2f), Vector3.right, 17f, 54f, 0.38f, 64f, 24f, target, gameManager);
+        CreateCctv(parent, "Blueprint_CCTV_06_Airplane_Left", new Vector3(39.64f, 2.65f, -29f), Vector3.left, 18f, 54f, 0.38f, 72f, 24f, target, gameManager);
+        CreateCctv(parent, "Blueprint_CCTV_07_Left_Exterior", new Vector3(-40.64f, 2.65f, -4f), Vector3.right, 19f, 56f, 0.38f, 78f, 26f, target, gameManager);
     }
 
     private static void CreateBlueprintWall(Transform parent, string name, Vector3 position, Vector3 scale)
@@ -414,6 +432,34 @@ public static class CctvDemoSceneBuilder
         GameObject wall = CreateCube(name, position, scale, "M_HouseWall", new Color(0.72f, 0.69f, 0.62f));
         wall.transform.SetParent(parent);
         CreateDecorCube(parent, $"{name}_Floor_Seal", position + new Vector3(0f, -scale.y * 0.5f + 0.06f, 0f), new Vector3(scale.x + 0.08f, 0.12f, scale.z + 0.08f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+        CreateDecorCube(parent, $"{name}_Top_Seal", position + new Vector3(0f, scale.y * 0.5f - 0.06f, 0f), new Vector3(scale.x + 0.08f, 0.12f, scale.z + 0.08f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+    }
+
+    private static void CreateBlueprintWallX(Transform parent, string name, float xMin, float xMax, float z)
+    {
+        float centerX = (xMin + xMax) * 0.5f;
+        float length = Mathf.Abs(xMax - xMin) + BlueprintWallOverlap;
+        CreateBlueprintWall(parent, name, new Vector3(centerX, RoomWallHeight * 0.5f, z), new Vector3(length, RoomWallHeight, BlueprintWallThickness));
+    }
+
+    private static void CreateBlueprintWallZ(Transform parent, string name, float x, float zMin, float zMax)
+    {
+        float centerZ = (zMin + zMax) * 0.5f;
+        float length = Mathf.Abs(zMax - zMin) + BlueprintWallOverlap;
+        CreateBlueprintWall(parent, name, new Vector3(x, RoomWallHeight * 0.5f, centerZ), new Vector3(BlueprintWallThickness, RoomWallHeight, length));
+    }
+
+    private static void CreateBlueprintDoorway(Transform parent, string name, Vector3 position, bool horizontal, float width)
+    {
+        Vector3 thresholdScale = horizontal
+            ? new Vector3(width + 0.4f, 0.12f, BlueprintWallThickness + 0.28f)
+            : new Vector3(BlueprintWallThickness + 0.28f, 0.12f, width + 0.4f);
+        CreateThreshold(parent, $"{name}_Threshold", new Vector3(position.x, 0.08f, position.z), thresholdScale);
+        CreateDoorFrame(parent, $"{name}_Frame", position, horizontal, width);
+        Vector3 doorScale = horizontal
+            ? new Vector3(width * 0.78f, 2.25f, 0.08f)
+            : new Vector3(0.08f, 2.25f, width * 0.78f);
+        CreateDecorCube(parent, $"{name}_Door_Leaf", position + Vector3.up * 0.05f, doorScale, "M_Door", new Color(0.28f, 0.16f, 0.08f));
     }
 
     private static void CreateThreshold(Transform parent, string name, Vector3 position, Vector3 scale)
