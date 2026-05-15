@@ -11,14 +11,11 @@ public class CctvSideMover : MonoBehaviour
 
     private void Awake()
     {
-        startPosition = transform.position;
-        moveAxis = transform.TransformDirection(localMoveAxis.normalized);
+        enabled = false;
     }
 
     private void Update()
     {
-        float offset = Mathf.Sin(Time.time * moveSpeed) * moveDistance * 0.5f;
-        transform.position = startPosition + moveAxis * offset;
     }
 
     public void Configure(float newMoveDistance, float newMoveSpeed, Vector3 newLocalMoveAxis)
