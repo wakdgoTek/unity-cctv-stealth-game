@@ -293,6 +293,7 @@ public static class CctvDemoSceneBuilder
         CreateEstateRoadsAndCourtyards(parent);
         CreateEstateBuildings(parent);
         CreateEstateLandscapeAndProps(parent);
+        CreateImportedAssetEnhancements(parent);
         CreateBlueprintFoundation(parent);
         CreateBlueprintRoomShells(parent);
         CreateBlueprintDoorAndSeamFillers(parent);
@@ -506,6 +507,79 @@ public static class CctvDemoSceneBuilder
             CreateTree(parent, new Vector3(-88f, 0.6f, z));
             CreateTree(parent, new Vector3(91f, 0.6f, z + 2f));
         }
+    }
+
+    private static void CreateImportedAssetEnhancements(Transform parent)
+    {
+        GameObject root = new GameObject("Imported_Asset_Details");
+        root.transform.SetParent(parent, false);
+
+        CreateMansionPrefabDetails(root.transform);
+        CreateHangarPrefabDetails(root.transform);
+
+        if (root.transform.childCount == 0)
+        {
+            Object.DestroyImmediate(root);
+        }
+    }
+
+    private static void CreateMansionPrefabDetails(Transform parent)
+    {
+        const string prefabRoot = "Assets/Medieval Village Building Pack/Prefabs/";
+
+        string windowPath = prefabRoot + "Window_5.prefab";
+        string shutterPath = prefabRoot + "Window_5_Shutter_L.prefab";
+        string doorPath = prefabRoot + "Door_4.prefab";
+        string roofPath = prefabRoot + "Roof_Tile_Med_2x1.prefab";
+        string railingPath = prefabRoot + "Railing_Tall.prefab";
+        string pillarPath = prefabRoot + "Wood_Pillar_WBase_WTop_Thick_Tall.prefab";
+        string stairPath = prefabRoot + "Stairs_Stone_2x1.prefab";
+        string chimneyPath = prefabRoot + "Chimney_Stack.prefab";
+
+        float[] frontWindowX = { -21f, -15f, -9f, -3f, 3f, 9f, 15f };
+        for (int i = 0; i < frontWindowX.Length; i++)
+        {
+            Vector3 lower = new Vector3(frontWindowX[i], 1.35f, 25.95f);
+            Vector3 upper = new Vector3(frontWindowX[i], SecondFloorY + 1.28f, 22.45f);
+            InstantiateDetailPrefab(parent, windowPath, $"Asset_Lower_Window_{i:00}", lower, Vector3.zero, Vector3.one * 1.25f, false);
+            InstantiateDetailPrefab(parent, windowPath, $"Asset_Upper_Window_{i:00}", upper, Vector3.zero, Vector3.one * 1.1f, false);
+            InstantiateDetailPrefab(parent, shutterPath, $"Asset_Upper_Shutter_{i:00}", upper + new Vector3(0.82f, 0f, 0.02f), Vector3.zero, Vector3.one * 1.1f, false);
+        }
+
+        InstantiateDetailPrefab(parent, doorPath, "Asset_Mansion_Main_Door", new Vector3(-3f, 0.15f, 26.08f), Vector3.zero, new Vector3(1.7f, 1.7f, 1.7f), false);
+        InstantiateDetailPrefab(parent, stairPath, "Asset_Mansion_Front_Stone_Stairs", new Vector3(-3f, 0.1f, 18.8f), Vector3.zero, new Vector3(3.6f, 0.9f, 2.4f), true);
+
+        for (float x = -21f; x <= 15f; x += 6f)
+        {
+            InstantiateDetailPrefab(parent, pillarPath, $"Asset_Balcony_Pillar_{x}", new Vector3(x, SecondFloorY + 0.08f, 28.85f), Vector3.zero, new Vector3(0.7f, 0.9f, 0.7f), true);
+        }
+
+        for (float x = -19f; x <= 13f; x += 4f)
+        {
+            InstantiateDetailPrefab(parent, railingPath, $"Asset_Balcony_Railing_{x}", new Vector3(x, SecondFloorY + 0.45f, 29.1f), Vector3.zero, new Vector3(1.25f, 0.9f, 0.65f), false);
+        }
+
+        for (int i = 0; i < 7; i++)
+        {
+            float x = -21f + i * 7f;
+            InstantiateDetailPrefab(parent, roofPath, $"Asset_Main_Roof_Tile_Front_{i:00}", new Vector3(x, SecondFloorY + 3.45f, 23.3f), new Vector3(0f, 0f, 0f), new Vector3(1.8f, 1f, 1.35f), false);
+            InstantiateDetailPrefab(parent, roofPath, $"Asset_Main_Roof_Tile_Back_{i:00}", new Vector3(x, SecondFloorY + 3.45f, 1.2f), new Vector3(0f, 180f, 0f), new Vector3(1.8f, 1f, 1.35f), false);
+        }
+
+        InstantiateDetailPrefab(parent, chimneyPath, "Asset_Mansion_Chimney_Left", new Vector3(-30f, SecondFloorY + 3.25f, -2f), Vector3.zero, new Vector3(1.1f, 1.2f, 1.1f), true);
+        InstantiateDetailPrefab(parent, chimneyPath, "Asset_Mansion_Chimney_Right", new Vector3(24f, SecondFloorY + 3.25f, 2f), Vector3.zero, new Vector3(1.1f, 1.2f, 1.1f), true);
+    }
+
+    private static void CreateHangarPrefabDetails(Transform parent)
+    {
+        const string prefabRoot = "Assets/HQ Hangar Free/Prefabs/";
+
+        InstantiateDetailPrefab(parent, prefabRoot + "Floor.prefab", "Asset_Hangar_Concrete_Floor", new Vector3(68f, 0.04f, -47f), Vector3.zero, new Vector3(5.2f, 1f, 5.2f), false);
+        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_01.prefab", "Asset_Hangar_Back_Wall", new Vector3(84f, 0f, -47f), new Vector3(0f, -90f, 0f), new Vector3(1.6f, 1.55f, 1.6f), true);
+        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_02.prefab", "Asset_Hangar_Left_Wall", new Vector3(68f, 0f, -60f), Vector3.zero, new Vector3(1.6f, 1.55f, 1.6f), true);
+        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_03.prefab", "Asset_Hangar_Right_Wall", new Vector3(68f, 0f, -34f), new Vector3(0f, 180f, 0f), new Vector3(1.6f, 1.55f, 1.6f), true);
+        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_04.prefab", "Asset_Hangar_Door_Frame", new Vector3(51.5f, 0f, -47f), new Vector3(0f, 90f, 0f), new Vector3(1.6f, 1.55f, 1.6f), true);
+        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_05.prefab", "Asset_Hangar_Roof", new Vector3(68f, 0f, -47f), Vector3.zero, new Vector3(1.6f, 1.55f, 1.6f), true);
     }
 
     private static void CreateEstateWallX(Transform parent, string name, float xMin, float xMax, float z)
@@ -1742,6 +1816,52 @@ public static class CctvDemoSceneBuilder
         cube.transform.SetParent(parent, false);
         EnsureBoxCollider(cube);
         return cube;
+    }
+
+    private static GameObject InstantiateDetailPrefab(Transform parent, string assetPath, string name, Vector3 position, Vector3 eulerAngles, Vector3 scale, bool blocksCctv)
+    {
+        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+        if (prefab == null)
+        {
+            return null;
+        }
+
+        GameObject instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+        if (instance == null)
+        {
+            instance = Object.Instantiate(prefab);
+        }
+
+        instance.name = name;
+        instance.transform.SetParent(parent, false);
+        instance.transform.localPosition = position;
+        instance.transform.localRotation = Quaternion.Euler(eulerAngles);
+        instance.transform.localScale = scale;
+
+        if (blocksCctv)
+        {
+            EnsureBoxCollidersForRenderers(instance.transform);
+        }
+
+        return instance;
+    }
+
+    private static int EnsureBoxCollidersForRenderers(Transform root)
+    {
+        int colliderCount = 0;
+        Renderer[] renderers = root.GetComponentsInChildren<Renderer>(true);
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer == null || renderer.GetComponent<Collider>() != null)
+            {
+                continue;
+            }
+
+            EnsureBoxCollider(renderer.gameObject);
+            colliderCount++;
+        }
+
+        return colliderCount;
     }
 
     private static int EnsureBlockingCollidersForArchitecture(Transform scope)
