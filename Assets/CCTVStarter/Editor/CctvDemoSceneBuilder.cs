@@ -377,14 +377,13 @@ public static class CctvDemoSceneBuilder
         CreateDecorCube(parent, "Clean_Mansion_Front_First_Band", new Vector3(-3f, 3.34f, 28.12f), new Vector3(55f, 0.2f, 0.35f), "M_WoodTrim", trim);
         CreateDecorCube(parent, "Clean_Mansion_Upper_Band", new Vector3(-3f, SecondFloorY + 2.6f, 23.15f), new Vector3(42f, 0.22f, 0.35f), "M_WoodTrim", trim);
 
-        CreateDecorCube(parent, "Clean_Mansion_Main_Door", new Vector3(-3f, 1.35f, 28.15f), new Vector3(5.2f, 2.35f, 0.16f), "M_Door", new Color(0.24f, 0.14f, 0.08f));
+        CreateCleanMainDoorAssembly(parent, new Vector3(-3f, 0f, 28.18f));
         CreateStairs(parent, new Vector3(-3f, 0.12f, 21.2f), 5, 12f);
 
         for (float x = -24f; x <= 18f; x += 6f)
         {
-            CreateDecorCube(parent, $"Clean_Mansion_Front_Window_{x}", new Vector3(x, 1.95f, 28.18f), new Vector3(2.5f, 1.05f, 0.08f), "M_WindowGlass", new Color(0.25f, 0.5f, 0.68f));
-            CreateDecorCube(parent, $"Clean_Mansion_Upper_Window_{x}", new Vector3(x, SecondFloorY + 1.45f, 23.18f), new Vector3(2.3f, 1f, 0.08f), "M_WindowGlass", new Color(0.25f, 0.5f, 0.68f));
-            CreateDecorCube(parent, $"Clean_Mansion_Window_Header_{x}", new Vector3(x, 2.65f, 28.22f), new Vector3(3f, 0.16f, 0.11f), "M_WoodTrim", trim);
+            CreateCleanWindowAssembly(parent, $"Clean_Mansion_Front_Window_{x}", new Vector3(x, 1.95f, 28.18f), new Vector3(2.5f, 1.05f, 0.08f));
+            CreateCleanWindowAssembly(parent, $"Clean_Mansion_Upper_Window_{x}", new Vector3(x, SecondFloorY + 1.45f, 23.18f), new Vector3(2.3f, 1f, 0.08f));
         }
 
         for (float x = -23f; x <= 17f; x += 5f)
@@ -394,6 +393,51 @@ public static class CctvDemoSceneBuilder
 
         CreateDecorCube(parent, "Clean_Balcony_Floor", new Vector3(-3f, SecondFloorY + 0.06f, 26.7f), new Vector3(42f, 0.14f, 3f), "M_Stone", new Color(0.5f, 0.48f, 0.42f));
         CreateDecorCube(parent, "Clean_Balcony_Front_Rail", new Vector3(-3f, SecondFloorY + 0.98f, 28.15f), new Vector3(42f, 0.18f, 0.2f), "M_WoodTrim", trim);
+    }
+
+    private static void CreateCleanMainDoorAssembly(Transform parent, Vector3 basePosition)
+    {
+        Color door = new Color(0.19f, 0.105f, 0.055f);
+        Color panel = new Color(0.27f, 0.15f, 0.075f);
+        Color frame = new Color(0.16f, 0.11f, 0.07f);
+        Color brass = new Color(0.95f, 0.68f, 0.22f);
+        Color stone = new Color(0.52f, 0.49f, 0.43f);
+
+        CreateDecorCube(parent, "Clean_Mansion_Door_Recess_Shadow", basePosition + new Vector3(0f, 1.58f, -0.035f), new Vector3(6.4f, 3.15f, 0.1f), "M_DarkMetal", new Color(0.045f, 0.04f, 0.035f));
+        CreateDecorCube(parent, "Clean_Mansion_Door_Left_Leaf", basePosition + new Vector3(-1.22f, 1.46f, 0.035f), new Vector3(2.32f, 2.72f, 0.16f), "M_Door", door);
+        CreateDecorCube(parent, "Clean_Mansion_Door_Right_Leaf", basePosition + new Vector3(1.22f, 1.46f, 0.035f), new Vector3(2.32f, 2.72f, 0.16f), "M_Door", door);
+
+        CreateDecorCube(parent, "Clean_Mansion_Door_Center_Seam", basePosition + new Vector3(0f, 1.46f, 0.14f), new Vector3(0.08f, 2.75f, 0.08f), "M_DoorFrame", frame);
+        CreateDecorCube(parent, "Clean_Mansion_Door_Left_Panel_Upper", basePosition + new Vector3(-1.22f, 1.95f, 0.16f), new Vector3(1.48f, 0.82f, 0.08f), "M_Door", panel);
+        CreateDecorCube(parent, "Clean_Mansion_Door_Left_Panel_Lower", basePosition + new Vector3(-1.22f, 0.92f, 0.16f), new Vector3(1.48f, 0.82f, 0.08f), "M_Door", panel);
+        CreateDecorCube(parent, "Clean_Mansion_Door_Right_Panel_Upper", basePosition + new Vector3(1.22f, 1.95f, 0.16f), new Vector3(1.48f, 0.82f, 0.08f), "M_Door", panel);
+        CreateDecorCube(parent, "Clean_Mansion_Door_Right_Panel_Lower", basePosition + new Vector3(1.22f, 0.92f, 0.16f), new Vector3(1.48f, 0.82f, 0.08f), "M_Door", panel);
+
+        CreateDecorCube(parent, "Clean_Mansion_Door_Frame_Left", basePosition + new Vector3(-2.78f, 1.58f, 0.09f), new Vector3(0.28f, 3.16f, 0.28f), "M_DoorFrame", frame);
+        CreateDecorCube(parent, "Clean_Mansion_Door_Frame_Right", basePosition + new Vector3(2.78f, 1.58f, 0.09f), new Vector3(0.28f, 3.16f, 0.28f), "M_DoorFrame", frame);
+        CreateDecorCube(parent, "Clean_Mansion_Door_Frame_Top", basePosition + new Vector3(0f, 3.16f, 0.09f), new Vector3(5.85f, 0.28f, 0.28f), "M_DoorFrame", frame);
+        CreateDecorCube(parent, "Clean_Mansion_Door_Stone_Header", basePosition + new Vector3(0f, 3.55f, 0.02f), new Vector3(6.6f, 0.42f, 0.55f), "M_Stone", stone);
+        CreateDecorCube(parent, "Clean_Mansion_Door_Threshold", basePosition + new Vector3(0f, 0.12f, 0.28f), new Vector3(6.9f, 0.18f, 0.65f), "M_Stone", stone);
+        CreateDecorCube(parent, "Clean_Mansion_Door_Canopy", basePosition + new Vector3(0f, 3.95f, -0.12f), new Vector3(7.2f, 0.28f, 1.35f), "M_RoofDark", new Color(0.11f, 0.1f, 0.09f));
+
+        CreateDecorCube(parent, "Clean_Mansion_Door_Left_Handle", basePosition + new Vector3(-0.22f, 1.48f, 0.24f), new Vector3(0.11f, 0.42f, 0.08f), "M_Lamp", brass);
+        CreateDecorCube(parent, "Clean_Mansion_Door_Right_Handle", basePosition + new Vector3(0.22f, 1.48f, 0.24f), new Vector3(0.11f, 0.42f, 0.08f), "M_Lamp", brass);
+    }
+
+    private static void CreateCleanWindowAssembly(Transform parent, string name, Vector3 position, Vector3 glassScale)
+    {
+        Color glass = new Color(0.18f, 0.34f, 0.47f);
+        Color frame = new Color(0.12f, 0.11f, 0.1f);
+        float width = glassScale.x;
+        float height = glassScale.y;
+        float depth = glassScale.z;
+
+        CreateDecorCube(parent, $"{name}_Glass", position, glassScale, "M_WindowGlass", glass);
+        CreateDecorCube(parent, $"{name}_Frame_Top", position + new Vector3(0f, height * 0.5f + 0.12f, 0.035f), new Vector3(width + 0.34f, 0.12f, depth + 0.08f), "M_DoorFrame", frame);
+        CreateDecorCube(parent, $"{name}_Frame_Bottom", position + new Vector3(0f, -height * 0.5f - 0.12f, 0.035f), new Vector3(width + 0.34f, 0.12f, depth + 0.08f), "M_DoorFrame", frame);
+        CreateDecorCube(parent, $"{name}_Frame_Left", position + new Vector3(-width * 0.5f - 0.12f, 0f, 0.035f), new Vector3(0.12f, height + 0.34f, depth + 0.08f), "M_DoorFrame", frame);
+        CreateDecorCube(parent, $"{name}_Frame_Right", position + new Vector3(width * 0.5f + 0.12f, 0f, 0.035f), new Vector3(0.12f, height + 0.34f, depth + 0.08f), "M_DoorFrame", frame);
+        CreateDecorCube(parent, $"{name}_Center_Mullion", position + new Vector3(0f, 0f, 0.045f), new Vector3(0.09f, height + 0.18f, depth + 0.08f), "M_DoorFrame", frame);
     }
 
     private static void CreateCleanExteriorZones(Transform parent)
