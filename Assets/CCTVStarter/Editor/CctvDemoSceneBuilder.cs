@@ -9,6 +9,11 @@ public static class CctvDemoSceneBuilder
     private const string CctvHeadPivotName = "Head_Pivot";
     private const string LegacyCctvViewPivotName = "View_Pivot";
     private const string LegacyCctvYawPivotName = "Yaw_Pivot";
+    private const float HouseWidth = 58f;
+    private const float HouseDepth = 82f;
+    private const float SecondFloorY = 3.25f;
+    private const float RoomWallHeight = 3.05f;
+    private const float ExteriorWallHeight = 6.8f;
     private const float SecurityWallHeight = 6.2f;
     private const float WallTopTrimY = 6.42f;
     private const float CeilingBeamY = 6.75f;
@@ -24,12 +29,12 @@ public static class CctvDemoSceneBuilder
 
         GameObject root = new GameObject("StealthMiniGame");
 
-        GameObject floor = CreateCube("Security_Complex_Floor", new Vector3(0f, -0.05f, 0f), new Vector3(84f, 0.1f, 156f), "M_Floor", new Color(0.13f, 0.15f, 0.16f));
+        GameObject floor = CreateCube("House_Ground_Floor", new Vector3(0f, -0.05f, 0f), new Vector3(HouseWidth, 0.1f, HouseDepth), "M_WoodFloor", new Color(0.43f, 0.33f, 0.24f));
         floor.transform.SetParent(root.transform);
 
         BuildSecurityComplex(root.transform);
 
-        Vector3 startPosition = new Vector3(0f, 1f, -72f);
+        Vector3 startPosition = new Vector3(0f, 1f, -37f);
         GameObject player = CreatePlayer(root.transform, startPosition);
 
         Text statusText;
@@ -41,7 +46,8 @@ public static class CctvDemoSceneBuilder
         StealthGameManager gameManager = gameManagerObject.AddComponent<StealthGameManager>();
         gameManager.Configure(player.transform, player.GetComponent<SimplePlayerController>(), statusText, hintText, startPosition);
 
-        CreateGoal(root.transform, gameManager, new Vector3(0f, 0.08f, 73.5f), new Vector3(14f, 0.16f, 5f));
+        CreateHouseDefaultCctvs(root.transform, player.GetComponent<CctvDetectionTarget>(), gameManager);
+        CreateGoal(root.transform, gameManager, new Vector3(18f, SecondFloorY + 0.08f, 35f), new Vector3(7.5f, 0.16f, 4.5f));
 
         AttachMainCameraToPlayer(player.transform);
 
@@ -272,12 +278,299 @@ public static class CctvDemoSceneBuilder
 
     private static void BuildSecurityComplex(Transform parent)
     {
-        CreatePerimeterWalls(parent);
-        CreateFloorPanelGrid(parent);
-        CreateInteriorSecurityLayout(parent);
-        CreateIndustrialProps(parent);
-        CreateCeilingAndLighting(parent);
-        CreateEnvironmentalStoryDetails(parent);
+        CreateTwoStoryHouseShell(parent);
+        CreateHouseInteriorWalls(parent);
+        CreateHouseStaircase(parent);
+        CreateHouseFurnishings(parent);
+        CreateHouseLighting(parent);
+        CreateHouseExteriorDetails(parent);
+    }
+
+    private static void CreateTwoStoryHouseShell(Transform parent)
+    {
+        float halfWidth = HouseWidth * 0.5f;
+        float halfDepth = HouseDepth * 0.5f;
+        float exteriorCenterY = ExteriorWallHeight * 0.5f;
+
+        CreateDecorCube(parent, "Front_Porch_Stone", new Vector3(0f, 0.02f, -44.2f), new Vector3(13f, 0.08f, 6f), "M_Stone", new Color(0.33f, 0.34f, 0.33f));
+        CreateDecorCube(parent, "Back_Patio_Stone", new Vector3(0f, 0.02f, 44.2f), new Vector3(20f, 0.08f, 6f), "M_Stone", new Color(0.32f, 0.32f, 0.31f));
+
+        CreateHouseWall(parent, "Exterior_Wall_Front_Left", new Vector3(-18.3f, exteriorCenterY, -halfDepth), new Vector3(21.4f, ExteriorWallHeight, 0.55f));
+        CreateHouseWall(parent, "Exterior_Wall_Front_Right", new Vector3(18.3f, exteriorCenterY, -halfDepth), new Vector3(21.4f, ExteriorWallHeight, 0.55f));
+        CreateHouseWall(parent, "Exterior_Wall_Back", new Vector3(0f, exteriorCenterY, halfDepth), new Vector3(HouseWidth, ExteriorWallHeight, 0.55f));
+        CreateHouseWall(parent, "Exterior_Wall_West", new Vector3(-halfWidth, exteriorCenterY, 0f), new Vector3(0.55f, ExteriorWallHeight, HouseDepth));
+        CreateHouseWall(parent, "Exterior_Wall_East", new Vector3(halfWidth, exteriorCenterY, 0f), new Vector3(0.55f, ExteriorWallHeight, HouseDepth));
+
+        CreateDecorCube(parent, "Front_Door_Frame_Top", new Vector3(0f, 3.1f, -halfDepth - 0.03f), new Vector3(8.2f, 0.32f, 0.72f), "M_DoorFrame", new Color(0.16f, 0.11f, 0.07f));
+        CreateDecorCube(parent, "Front_Door_Left_Frame", new Vector3(-4.25f, 1.55f, -halfDepth - 0.03f), new Vector3(0.32f, 3.1f, 0.72f), "M_DoorFrame", new Color(0.16f, 0.11f, 0.07f));
+        CreateDecorCube(parent, "Front_Door_Right_Frame", new Vector3(4.25f, 1.55f, -halfDepth - 0.03f), new Vector3(0.32f, 3.1f, 0.72f), "M_DoorFrame", new Color(0.16f, 0.11f, 0.07f));
+
+        CreateSecondFloorSlabs(parent);
+        CreateHouseTrim(parent);
+    }
+
+    private static void CreateSecondFloorSlabs(Transform parent)
+    {
+        float y = SecondFloorY - 0.08f;
+        CreateHouseFloor(parent, "Second_Floor_West_Wing", new Vector3(-19f, y, 0f), new Vector3(20f, 0.16f, HouseDepth - 1f));
+        CreateHouseFloor(parent, "Second_Floor_East_Wing", new Vector3(19f, y, 0f), new Vector3(20f, 0.16f, HouseDepth - 1f));
+        CreateHouseFloor(parent, "Second_Floor_Front_Landing", new Vector3(0f, y, -26f), new Vector3(18f, 0.16f, 29f));
+        CreateHouseFloor(parent, "Second_Floor_Back_Landing", new Vector3(0f, y, 27f), new Vector3(18f, 0.16f, 28f));
+
+        CreateDecorCube(parent, "Stairwell_Railing_North", new Vector3(0f, SecondFloorY + 0.65f, 8f), new Vector3(15f, 1.3f, 0.18f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+        CreateDecorCube(parent, "Stairwell_Railing_West", new Vector3(-7.5f, SecondFloorY + 0.65f, -2.5f), new Vector3(0.18f, 1.3f, 21f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+        CreateDecorCube(parent, "Stairwell_Railing_East", new Vector3(7.5f, SecondFloorY + 0.65f, -2.5f), new Vector3(0.18f, 1.3f, 21f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+    }
+
+    private static void CreateHouseInteriorWalls(Transform parent)
+    {
+        CreateHouseWall(parent, "Ground_Hall_Left_Wall_A", new Vector3(-9f, RoomWallHeight * 0.5f, -25f), new Vector3(0.42f, RoomWallHeight, 24f));
+        CreateHouseWall(parent, "Ground_Hall_Right_Wall_A", new Vector3(9f, RoomWallHeight * 0.5f, -25f), new Vector3(0.42f, RoomWallHeight, 24f));
+        CreateHouseWall(parent, "Ground_Hall_Left_Wall_B", new Vector3(-9f, RoomWallHeight * 0.5f, 17f), new Vector3(0.42f, RoomWallHeight, 26f));
+        CreateHouseWall(parent, "Ground_Hall_Right_Wall_B", new Vector3(9f, RoomWallHeight * 0.5f, 17f), new Vector3(0.42f, RoomWallHeight, 26f));
+        CreateHouseWall(parent, "Ground_Living_Divider", new Vector3(-19f, RoomWallHeight * 0.5f, -7f), new Vector3(19f, RoomWallHeight, 0.42f));
+        CreateHouseWall(parent, "Ground_Kitchen_Divider", new Vector3(19f, RoomWallHeight * 0.5f, -7f), new Vector3(19f, RoomWallHeight, 0.42f));
+        CreateHouseWall(parent, "Ground_Back_Room_Divider", new Vector3(0f, RoomWallHeight * 0.5f, 18f), new Vector3(18f, RoomWallHeight, 0.42f));
+
+        float upperCenterY = SecondFloorY + RoomWallHeight * 0.5f;
+        CreateHouseWall(parent, "Upper_Hall_Left_Wall_A", new Vector3(-9f, upperCenterY, -26f), new Vector3(0.42f, RoomWallHeight, 22f));
+        CreateHouseWall(parent, "Upper_Hall_Right_Wall_A", new Vector3(9f, upperCenterY, -26f), new Vector3(0.42f, RoomWallHeight, 22f));
+        CreateHouseWall(parent, "Upper_Hall_Left_Wall_B", new Vector3(-9f, upperCenterY, 22f), new Vector3(0.42f, RoomWallHeight, 24f));
+        CreateHouseWall(parent, "Upper_Hall_Right_Wall_B", new Vector3(9f, upperCenterY, 22f), new Vector3(0.42f, RoomWallHeight, 24f));
+        CreateHouseWall(parent, "Upper_Master_Divider", new Vector3(19f, upperCenterY, 18f), new Vector3(19f, RoomWallHeight, 0.42f));
+        CreateHouseWall(parent, "Upper_Bedroom_Divider", new Vector3(-19f, upperCenterY, 4f), new Vector3(19f, RoomWallHeight, 0.42f));
+    }
+
+    private static void CreateHouseStaircase(Transform parent)
+    {
+        int steps = 22;
+        float startZ = -15.5f;
+        float depth = 0.78f;
+        float width = 7.2f;
+        for (int i = 0; i < steps; i++)
+        {
+            float t = (i + 0.5f) / steps;
+            float y = t * SecondFloorY;
+            float z = startZ + i * depth;
+            GameObject step = CreateCube($"Main_Stair_Step_{i:00}", new Vector3(0f, y, z), new Vector3(width, 0.16f, depth + 0.05f), "M_StairWood", new Color(0.31f, 0.21f, 0.13f));
+            step.transform.SetParent(parent);
+        }
+
+        CreateDecorCube(parent, "Stair_Left_Rail", new Vector3(-4.05f, 1.7f, -7f), new Vector3(0.18f, 2.9f, 18f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+        CreateDecorCube(parent, "Stair_Right_Rail", new Vector3(4.05f, 1.7f, -7f), new Vector3(0.18f, 2.9f, 18f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+    }
+
+    private static void CreateHouseFurnishings(Transform parent)
+    {
+        CreateSofa(parent, new Vector3(-20f, 0.55f, -24f), 0f);
+        CreateCoffeeTable(parent, new Vector3(-20f, 0.32f, -18f));
+        CreateRug(parent, "Living_Room_Rug", new Vector3(-20f, 0.015f, -18f), new Vector3(10f, 0.03f, 7f), new Color(0.45f, 0.08f, 0.07f));
+        CreateBookshelf(parent, new Vector3(-27.5f, 1.45f, -1f), 90f);
+        CreateBookshelf(parent, new Vector3(-27.5f, 1.45f, 28f), 90f);
+
+        CreateKitchen(parent);
+        CreateDiningSet(parent, new Vector3(18f, 0.45f, 8f));
+        CreateBed(parent, "Upper_Master_Bed", new Vector3(19f, SecondFloorY + 0.45f, 29f), 180f);
+        CreateBed(parent, "Upper_Guest_Bed", new Vector3(-19f, SecondFloorY + 0.45f, 26f), 180f);
+        CreateDesk(parent, new Vector3(-20f, SecondFloorY + 0.42f, -23f), 0f);
+        CreateWardrobe(parent, new Vector3(27.4f, SecondFloorY + 1.1f, 26f), 90f);
+        CreateBathroom(parent, new Vector3(20f, SecondFloorY, -25f));
+
+        CreatePlant(parent, new Vector3(-25f, 0.65f, -34f));
+        CreatePlant(parent, new Vector3(25f, 0.65f, -34f));
+        CreatePlant(parent, new Vector3(-25f, SecondFloorY + 0.65f, 36f));
+        CreatePictureFrames(parent);
+    }
+
+    private static void CreateHouseLighting(Transform parent)
+    {
+        Vector3[] points =
+        {
+            new Vector3(0f, 2.75f, -28f),
+            new Vector3(-20f, 2.75f, -18f),
+            new Vector3(20f, 2.75f, -18f),
+            new Vector3(-20f, 2.75f, 18f),
+            new Vector3(20f, 2.75f, 18f),
+            new Vector3(0f, SecondFloorY + 2.75f, -25f),
+            new Vector3(-20f, SecondFloorY + 2.75f, 23f),
+            new Vector3(20f, SecondFloorY + 2.75f, 23f)
+        };
+
+        for (int i = 0; i < points.Length; i++)
+        {
+            CreateDecorCube(parent, $"House_Ceiling_Lamp_{i:00}", points[i] + Vector3.down * 0.12f, new Vector3(2.3f, 0.08f, 2.3f), "M_Lamp", new Color(0.96f, 0.9f, 0.66f));
+            Light light = new GameObject($"House_Point_Light_{i:00}").AddComponent<Light>();
+            light.transform.SetParent(parent);
+            light.transform.position = points[i];
+            light.type = LightType.Point;
+            light.range = 13f;
+            light.intensity = 1.55f;
+            light.color = new Color(1f, 0.88f, 0.66f);
+        }
+    }
+
+    private static void CreateHouseExteriorDetails(Transform parent)
+    {
+        for (float x = -20f; x <= 20f; x += 10f)
+        {
+            CreateDecorCube(parent, $"Front_Window_{x}", new Vector3(x, 2.15f, -41.32f), new Vector3(4.2f, 1.35f, 0.08f), "M_WindowGlass", new Color(0.26f, 0.55f, 0.72f));
+            CreateDecorCube(parent, $"Upper_Front_Window_{x}", new Vector3(x, SecondFloorY + 2.05f, -41.32f), new Vector3(4.2f, 1.35f, 0.08f), "M_WindowGlass", new Color(0.26f, 0.55f, 0.72f));
+        }
+
+        CreateDecorCube(parent, "Goal_Room_Door", new Vector3(18f, SecondFloorY + 0.12f, 32.4f), new Vector3(5.8f, 0.08f, 0.18f), "M_Goal", new Color(0.1f, 0.85f, 0.35f));
+        CreateDecorCube(parent, "Roof_Visual_Plate", new Vector3(0f, ExteriorWallHeight + 0.18f, 0f), new Vector3(HouseWidth + 2f, 0.24f, HouseDepth + 2f), "M_RoofDark", new Color(0.12f, 0.09f, 0.075f));
+    }
+
+    private static void CreateHouseDefaultCctvs(Transform parent, CctvDetectionTarget target, StealthGameManager gameManager)
+    {
+        CreateCctv(parent, "House_CCTV_Foyer", new Vector3(0f, 2.75f, -40.64f), Vector3.forward, 17f, 56f, 0.38f, 70f, 28f, target, gameManager);
+        CreateCctv(parent, "House_CCTV_Living_West", new Vector3(-28.64f, 2.7f, -11f), Vector3.right, 16f, 54f, 0.42f, 82f, 30f, target, gameManager);
+        CreateCctv(parent, "House_CCTV_Kitchen_East", new Vector3(28.64f, 2.7f, -3f), Vector3.left, 16f, 54f, 0.42f, 82f, 30f, target, gameManager);
+        CreateCctv(parent, "House_CCTV_Upper_Hall", new Vector3(0f, SecondFloorY + 2.65f, 40.64f), Vector3.back, 18f, 58f, 0.35f, 92f, 34f, target, gameManager);
+        CreateCctv(parent, "House_CCTV_Master_Room", new Vector3(28.64f, SecondFloorY + 2.55f, 24f), Vector3.left, 15f, 52f, 0.35f, 70f, 30f, target, gameManager);
+    }
+
+    private static void CreateHouseWall(Transform parent, string name, Vector3 position, Vector3 scale)
+    {
+        GameObject wall = CreateCube(name, position, scale, "M_HouseWall", new Color(0.72f, 0.69f, 0.62f));
+        wall.transform.SetParent(parent);
+        CreateDecorCube(parent, $"{name}_BaseTrim", position + new Vector3(0f, -scale.y * 0.5f + 0.13f, 0f), new Vector3(scale.x + 0.06f, 0.18f, scale.z + 0.06f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+    }
+
+    private static void CreateHouseFloor(Transform parent, string name, Vector3 position, Vector3 scale)
+    {
+        GameObject floor = CreateCube(name, position, scale, "M_WoodFloor", new Color(0.43f, 0.33f, 0.24f));
+        floor.transform.SetParent(parent);
+    }
+
+    private static void CreateHouseTrim(Transform parent)
+    {
+        float halfWidth = HouseWidth * 0.5f;
+        float halfDepth = HouseDepth * 0.5f;
+        CreateDecorCube(parent, "Exterior_Top_Trim_Front", new Vector3(0f, ExteriorWallHeight + 0.08f, -halfDepth), new Vector3(HouseWidth, 0.22f, 0.74f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+        CreateDecorCube(parent, "Exterior_Top_Trim_Back", new Vector3(0f, ExteriorWallHeight + 0.08f, halfDepth), new Vector3(HouseWidth, 0.22f, 0.74f), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+        CreateDecorCube(parent, "Exterior_Top_Trim_West", new Vector3(-halfWidth, ExteriorWallHeight + 0.08f, 0f), new Vector3(0.74f, 0.22f, HouseDepth), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+        CreateDecorCube(parent, "Exterior_Top_Trim_East", new Vector3(halfWidth, ExteriorWallHeight + 0.08f, 0f), new Vector3(0.74f, 0.22f, HouseDepth), "M_WoodTrim", new Color(0.18f, 0.12f, 0.07f));
+    }
+
+    private static GameObject CreateFurnitureCube(Transform parent, string name, Vector3 position, Vector3 scale, string materialName, Color color)
+    {
+        GameObject cube = CreateCube(name, position, scale, materialName, color);
+        cube.transform.SetParent(parent, false);
+        return cube;
+    }
+
+    private static void CreateSofa(Transform parent, Vector3 position, float yaw)
+    {
+        GameObject root = new GameObject("Living_Room_Sofa");
+        root.transform.SetParent(parent);
+        root.transform.position = position;
+        root.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+        CreateFurnitureCube(root.transform, "Sofa_Seat", Vector3.zero, new Vector3(7f, 0.55f, 2.2f), "M_SofaFabric", new Color(0.18f, 0.28f, 0.36f));
+        CreateFurnitureCube(root.transform, "Sofa_Back", new Vector3(0f, 0.75f, -1.05f), new Vector3(7.2f, 1.1f, 0.35f), "M_SofaFabric", new Color(0.14f, 0.22f, 0.3f));
+        CreateFurnitureCube(root.transform, "Sofa_Left_Arm", new Vector3(-3.75f, 0.55f, 0f), new Vector3(0.35f, 0.9f, 2.4f), "M_SofaFabric", new Color(0.14f, 0.22f, 0.3f));
+        CreateFurnitureCube(root.transform, "Sofa_Right_Arm", new Vector3(3.75f, 0.55f, 0f), new Vector3(0.35f, 0.9f, 2.4f), "M_SofaFabric", new Color(0.14f, 0.22f, 0.3f));
+    }
+
+    private static void CreateCoffeeTable(Transform parent, Vector3 position)
+    {
+        CreateFurnitureCube(parent, "Coffee_Table_Top", position + new Vector3(0f, 0.22f, 0f), new Vector3(4.4f, 0.18f, 2.4f), "M_DarkWood", new Color(0.22f, 0.13f, 0.07f));
+        CreateFurnitureCube(parent, "Coffee_Table_Base", position + new Vector3(0f, -0.02f, 0f), new Vector3(3.3f, 0.24f, 1.4f), "M_DarkWood", new Color(0.16f, 0.09f, 0.05f));
+    }
+
+    private static void CreateKitchen(Transform parent)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            CreateFurnitureCube(parent, $"Kitchen_Counter_{i}", new Vector3(16f + i * 2.4f, 0.55f, -28f), new Vector3(2.25f, 1.1f, 1.25f), "M_Cabinet", new Color(0.36f, 0.32f, 0.27f));
+        }
+
+        CreateFurnitureCube(parent, "Kitchen_Island", new Vector3(20.5f, 0.55f, -19f), new Vector3(7.8f, 1.1f, 2.4f), "M_Cabinet", new Color(0.32f, 0.29f, 0.25f));
+        CreateFurnitureCube(parent, "Fridge", new Vector3(27.2f, 1.35f, -33.5f), new Vector3(2.2f, 2.7f, 1.8f), "M_Appliance", new Color(0.66f, 0.68f, 0.67f));
+        CreateFurnitureCube(parent, "Stove", new Vector3(14.8f, 0.68f, -33.5f), new Vector3(2.6f, 1.35f, 1.8f), "M_Appliance", new Color(0.09f, 0.1f, 0.1f));
+    }
+
+    private static void CreateDiningSet(Transform parent, Vector3 position)
+    {
+        CreateFurnitureCube(parent, "Dining_Table", position + new Vector3(0f, 0.35f, 0f), new Vector3(6.4f, 0.22f, 3.2f), "M_DarkWood", new Color(0.21f, 0.12f, 0.06f));
+        for (int i = 0; i < 6; i++)
+        {
+            float x = -2.5f + (i % 3) * 2.5f;
+            float z = i < 3 ? -2.35f : 2.35f;
+            CreateFurnitureCube(parent, $"Dining_Chair_{i}", position + new Vector3(x, 0.35f, z), new Vector3(0.9f, 0.7f, 0.9f), "M_Chair", new Color(0.17f, 0.1f, 0.06f));
+        }
+    }
+
+    private static void CreateBed(Transform parent, string name, Vector3 position, float yaw)
+    {
+        GameObject root = new GameObject(name);
+        root.transform.SetParent(parent);
+        root.transform.position = position;
+        root.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+        CreateFurnitureCube(root.transform, "Bed_Frame", Vector3.zero, new Vector3(5.6f, 0.55f, 8f), "M_DarkWood", new Color(0.19f, 0.11f, 0.06f));
+        CreateFurnitureCube(root.transform, "Mattress", new Vector3(0f, 0.42f, 0.2f), new Vector3(5.1f, 0.38f, 7.2f), "M_Bedding", new Color(0.86f, 0.82f, 0.73f));
+        CreateFurnitureCube(root.transform, "Pillow_Left", new Vector3(-1.3f, 0.75f, 2.55f), new Vector3(1.7f, 0.25f, 1f), "M_Pillow", new Color(0.96f, 0.94f, 0.88f));
+        CreateFurnitureCube(root.transform, "Pillow_Right", new Vector3(1.3f, 0.75f, 2.55f), new Vector3(1.7f, 0.25f, 1f), "M_Pillow", new Color(0.96f, 0.94f, 0.88f));
+    }
+
+    private static void CreateBookshelf(Transform parent, Vector3 position, float yaw)
+    {
+        GameObject shelf = new GameObject($"Bookshelf_{position.x}_{position.z}");
+        shelf.transform.SetParent(parent);
+        shelf.transform.position = position;
+        shelf.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+        CreateFurnitureCube(shelf.transform, "Bookshelf_Frame", Vector3.zero, new Vector3(0.8f, 2.9f, 6.5f), "M_DarkWood", new Color(0.2f, 0.12f, 0.06f));
+        for (int i = 0; i < 4; i++)
+        {
+            CreateDecorCube(shelf.transform, $"Book_Row_{i}", new Vector3(0.43f, -0.95f + i * 0.62f, 0f), new Vector3(0.12f, 0.24f, 5.6f), "M_Books", new Color(0.58f - i * 0.08f, 0.2f + i * 0.1f, 0.16f + i * 0.07f));
+        }
+    }
+
+    private static void CreateDesk(Transform parent, Vector3 position, float yaw)
+    {
+        GameObject desk = new GameObject("Upper_Study_Desk");
+        desk.transform.SetParent(parent);
+        desk.transform.position = position;
+        desk.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+        CreateFurnitureCube(desk.transform, "Desk_Top", Vector3.zero, new Vector3(5.2f, 0.22f, 2.1f), "M_DarkWood", new Color(0.2f, 0.11f, 0.06f));
+        CreateDecorCube(desk.transform, "Monitor", new Vector3(0f, 0.62f, -0.45f), new Vector3(1.7f, 1f, 0.08f), "M_Screen", new Color(0.03f, 0.3f, 0.34f));
+    }
+
+    private static void CreateWardrobe(Transform parent, Vector3 position, float yaw)
+    {
+        GameObject wardrobe = CreateFurnitureCube(parent, "Wardrobe", position, new Vector3(1.6f, 2.2f, 6.5f), "M_DarkWood", new Color(0.18f, 0.1f, 0.055f));
+        wardrobe.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+    }
+
+    private static void CreateBathroom(Transform parent, Vector3 origin)
+    {
+        CreateFurnitureCube(parent, "Bathroom_Tub", origin + new Vector3(4.8f, 0.35f, -7.5f), new Vector3(4.8f, 0.7f, 2.2f), "M_Ceramic", new Color(0.86f, 0.88f, 0.86f));
+        CreateFurnitureCube(parent, "Bathroom_Sink", origin + new Vector3(-3.2f, 0.55f, -7.5f), new Vector3(2f, 1.1f, 1.2f), "M_Ceramic", new Color(0.86f, 0.88f, 0.86f));
+        CreateFurnitureCube(parent, "Bathroom_Toilet", origin + new Vector3(-5.5f, 0.45f, -2.2f), new Vector3(1.25f, 0.9f, 1.4f), "M_Ceramic", new Color(0.88f, 0.9f, 0.88f));
+    }
+
+    private static void CreateRug(Transform parent, string name, Vector3 position, Vector3 scale, Color color)
+    {
+        CreateDecorCube(parent, name, position, scale, "M_Rug", color);
+    }
+
+    private static void CreatePlant(Transform parent, Vector3 position)
+    {
+        CreateFurnitureCube(parent, $"Plant_Pot_{position.x}_{position.z}", position, new Vector3(1f, 0.65f, 1f), "M_PlantPot", new Color(0.33f, 0.18f, 0.08f));
+        GameObject leaves = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        leaves.name = $"Plant_Leaves_{position.x}_{position.z}";
+        leaves.transform.SetParent(parent);
+        leaves.transform.position = position + new Vector3(0f, 0.85f, 0f);
+        leaves.transform.localScale = new Vector3(1.55f, 1.25f, 1.55f);
+        leaves.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_PlantLeaves", new Color(0.08f, 0.34f, 0.15f));
+        Object.DestroyImmediate(leaves.GetComponent<Collider>());
+    }
+
+    private static void CreatePictureFrames(Transform parent)
+    {
+        CreateDecorCube(parent, "Living_Wall_Painting", new Vector3(-9.25f, 1.95f, -20f), new Vector3(0.08f, 1.4f, 3.4f), "M_Painting", new Color(0.68f, 0.26f, 0.18f));
+        CreateDecorCube(parent, "Dining_Wall_Painting", new Vector3(9.25f, 1.95f, 8f), new Vector3(0.08f, 1.4f, 3.4f), "M_Painting", new Color(0.18f, 0.38f, 0.58f));
+        CreateDecorCube(parent, "Upper_Hall_Painting", new Vector3(-9.25f, SecondFloorY + 1.95f, 14f), new Vector3(0.08f, 1.4f, 3.4f), "M_Painting", new Color(0.68f, 0.52f, 0.18f));
     }
 
     private static void CreatePerimeterWalls(Transform parent)
@@ -599,11 +892,21 @@ public static class CctvDemoSceneBuilder
         Transform headPivot = CreateHeadPivot(cctvRoot.transform);
 
         CreateCctvLocalPart(cctvRoot.transform, "Wall_Mount_Plate", new Vector3(0f, 0f, -0.08f), new Vector3(0.95f, 0.78f, 0.08f), "M_DarkMetal", new Color(0.045f, 0.05f, 0.055f));
+        CreateCctvLocalPart(cctvRoot.transform, "Wall_Mount_Bevel_Top", new Vector3(0f, 0.43f, -0.03f), new Vector3(1.05f, 0.08f, 0.12f), "M_CCTV", new Color(0.08f, 0.085f, 0.09f));
+        CreateCctvLocalPart(cctvRoot.transform, "Wall_Mount_Bevel_Bottom", new Vector3(0f, -0.43f, -0.03f), new Vector3(1.05f, 0.08f, 0.12f), "M_CCTV", new Color(0.08f, 0.085f, 0.09f));
+        CreateCctvLocalSphere(cctvRoot.transform, "Plate_Screw_Top_Left", new Vector3(-0.33f, 0.25f, -0.015f), Vector3.one * 0.075f, "M_Screw", new Color(0.62f, 0.64f, 0.62f));
+        CreateCctvLocalSphere(cctvRoot.transform, "Plate_Screw_Top_Right", new Vector3(0.33f, 0.25f, -0.015f), Vector3.one * 0.075f, "M_Screw", new Color(0.62f, 0.64f, 0.62f));
+        CreateCctvLocalSphere(cctvRoot.transform, "Plate_Screw_Bottom_Left", new Vector3(-0.33f, -0.25f, -0.015f), Vector3.one * 0.075f, "M_Screw", new Color(0.62f, 0.64f, 0.62f));
+        CreateCctvLocalSphere(cctvRoot.transform, "Plate_Screw_Bottom_Right", new Vector3(0.33f, -0.25f, -0.015f), Vector3.one * 0.075f, "M_Screw", new Color(0.62f, 0.64f, 0.62f));
         CreateCctvLocalPart(cctvRoot.transform, "Mount_Arm", new Vector3(0f, 0f, 0.22f), new Vector3(0.16f, 0.16f, 0.58f), "M_CCTV", new Color(0.08f, 0.09f, 0.1f));
+        CreateCctvLocalSphere(cctvRoot.transform, "Rear_Ball_Joint", new Vector3(0f, 0f, 0.52f), Vector3.one * 0.26f, "M_DarkMetal", new Color(0.035f, 0.04f, 0.045f));
         CreateCctvLocalPart(cctvRoot.transform, "Cable_Conduit", new Vector3(-0.52f, 0.18f, -0.02f), new Vector3(0.08f, 0.12f, 0.1f), "M_DarkMetal", new Color(0.025f, 0.028f, 0.03f));
+        CreateCctvLocalPart(cctvRoot.transform, "Cable_Run_Up", new Vector3(-0.52f, 0.49f, -0.02f), new Vector3(0.08f, 0.52f, 0.08f), "M_DarkMetal", new Color(0.025f, 0.028f, 0.03f));
 
         CreateCctvLocalPart(headPivot, "Camera_Body", new Vector3(0f, 0f, 0.46f), new Vector3(0.72f, 0.38f, 0.75f), "M_CCTV", new Color(0.08f, 0.09f, 0.1f));
         CreateCctvLocalPart(headPivot, "Camera_Hood", new Vector3(0f, 0.24f, 0.5f), new Vector3(0.88f, 0.08f, 0.86f), "M_DarkMetal", new Color(0.035f, 0.04f, 0.045f));
+        CreateCctvLocalPart(headPivot, "Camera_Hood_Left_Lip", new Vector3(-0.48f, 0.08f, 0.52f), new Vector3(0.08f, 0.32f, 0.82f), "M_DarkMetal", new Color(0.028f, 0.032f, 0.036f));
+        CreateCctvLocalPart(headPivot, "Camera_Hood_Right_Lip", new Vector3(0.48f, 0.08f, 0.52f), new Vector3(0.08f, 0.32f, 0.82f), "M_DarkMetal", new Color(0.028f, 0.032f, 0.036f));
         CreateCctvLocalPart(headPivot, "Camera_Bottom_Rail", new Vector3(0f, -0.24f, 0.46f), new Vector3(0.78f, 0.07f, 0.62f), "M_DarkMetal", new Color(0.035f, 0.04f, 0.045f));
 
         GameObject lens = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -615,6 +918,7 @@ public static class CctvDemoSceneBuilder
         Object.DestroyImmediate(lens.GetComponent<Collider>());
 
         CreateCctvLocalPart(headPivot, "Lens_Ring", new Vector3(0f, 0f, 0.82f), new Vector3(0.42f, 0.42f, 0.08f), "M_DarkMetal", new Color(0.025f, 0.028f, 0.03f));
+        CreateCctvLocalSphere(headPivot, "Status_LED", new Vector3(0.29f, -0.11f, 0.88f), Vector3.one * 0.07f, "M_StatusLed", new Color(0.08f, 1f, 0.25f));
         CreateCctvLocalPart(headPivot, "Left_Hinge", new Vector3(-0.46f, 0f, 0.22f), new Vector3(0.1f, 0.28f, 0.12f), "M_DarkMetal", new Color(0.035f, 0.04f, 0.045f));
         CreateCctvLocalPart(headPivot, "Right_Hinge", new Vector3(0.46f, 0f, 0.22f), new Vector3(0.1f, 0.28f, 0.12f), "M_DarkMetal", new Color(0.035f, 0.04f, 0.045f));
 
@@ -650,6 +954,19 @@ public static class CctvDemoSceneBuilder
     private static GameObject CreateCctvLocalPart(Transform parent, string name, Vector3 localPosition, Vector3 localScale, string materialName, Color color)
     {
         GameObject part = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        part.name = name;
+        part.transform.SetParent(parent, false);
+        part.transform.localPosition = localPosition;
+        part.transform.localRotation = Quaternion.identity;
+        part.transform.localScale = localScale;
+        part.GetComponent<Renderer>().sharedMaterial = CreateMaterial(materialName, color);
+        Object.DestroyImmediate(part.GetComponent<Collider>());
+        return part;
+    }
+
+    private static GameObject CreateCctvLocalSphere(Transform parent, string name, Vector3 localPosition, Vector3 localScale, string materialName, Color color)
+    {
+        GameObject part = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         part.name = name;
         part.transform.SetParent(parent, false);
         part.transform.localPosition = localPosition;
@@ -805,7 +1122,7 @@ public static class CctvDemoSceneBuilder
     private static GameObject CreateDecorCube(Transform parent, string name, Vector3 position, Vector3 scale, string materialName, Color color)
     {
         GameObject cube = CreateCube(name, position, scale, materialName, color);
-        cube.transform.SetParent(parent);
+        cube.transform.SetParent(parent, false);
         Object.DestroyImmediate(cube.GetComponent<Collider>());
         return cube;
     }
