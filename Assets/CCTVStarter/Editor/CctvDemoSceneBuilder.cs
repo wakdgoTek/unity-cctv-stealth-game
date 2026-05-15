@@ -115,6 +115,14 @@ public static class CctvDemoSceneBuilder
         Debug.Log($"Added or refreshed {colliderCount} wall/building BoxCollider(s) for CCTV line-of-sight blocking.");
     }
 
+    [MenuItem("Tools/CCTV Starter/Fix Pink Imported Materials")]
+    public static void FixPinkImportedMaterials()
+    {
+        int rendererCount = ReplaceImportedSceneMaterials();
+        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        Debug.Log($"Replaced {rendererCount} imported asset renderer material(s) with Unity-safe CCTVStarter materials.");
+    }
+
     [MenuItem("Tools/CCTV Starter/Create Placeable CCTV")]
     public static void CreatePlaceableCctv()
     {
@@ -541,45 +549,45 @@ public static class CctvDemoSceneBuilder
         {
             Vector3 lower = new Vector3(frontWindowX[i], 1.35f, 25.95f);
             Vector3 upper = new Vector3(frontWindowX[i], SecondFloorY + 1.28f, 22.45f);
-            InstantiateDetailPrefab(parent, windowPath, $"Asset_Lower_Window_{i:00}", lower, Vector3.zero, Vector3.one * 1.25f, false);
-            InstantiateDetailPrefab(parent, windowPath, $"Asset_Upper_Window_{i:00}", upper, Vector3.zero, Vector3.one * 1.1f, false);
-            InstantiateDetailPrefab(parent, shutterPath, $"Asset_Upper_Shutter_{i:00}", upper + new Vector3(0.82f, 0f, 0.02f), Vector3.zero, Vector3.one * 1.1f, false);
+            InstantiateDetailPrefab(parent, windowPath, $"Asset_Lower_Window_{i:00}", lower, Vector3.zero, Vector3.one * 1.25f, false, "M_ImportedTrim", new Color(0.55f, 0.48f, 0.38f));
+            InstantiateDetailPrefab(parent, windowPath, $"Asset_Upper_Window_{i:00}", upper, Vector3.zero, Vector3.one * 1.1f, false, "M_ImportedTrim", new Color(0.55f, 0.48f, 0.38f));
+            InstantiateDetailPrefab(parent, shutterPath, $"Asset_Upper_Shutter_{i:00}", upper + new Vector3(0.82f, 0f, 0.02f), Vector3.zero, Vector3.one * 1.1f, false, "M_ImportedWood", new Color(0.22f, 0.16f, 0.1f));
         }
 
-        InstantiateDetailPrefab(parent, doorPath, "Asset_Mansion_Main_Door", new Vector3(-3f, 0.15f, 26.08f), Vector3.zero, new Vector3(1.7f, 1.7f, 1.7f), false);
-        InstantiateDetailPrefab(parent, stairPath, "Asset_Mansion_Front_Stone_Stairs", new Vector3(-3f, 0.1f, 18.8f), Vector3.zero, new Vector3(3.6f, 0.9f, 2.4f), true);
+        InstantiateDetailPrefab(parent, doorPath, "Asset_Mansion_Main_Door", new Vector3(-3f, 0.15f, 26.08f), Vector3.zero, new Vector3(1.7f, 1.7f, 1.7f), false, "M_ImportedDoor", new Color(0.18f, 0.11f, 0.06f));
+        InstantiateDetailPrefab(parent, stairPath, "Asset_Mansion_Front_Stone_Stairs", new Vector3(-3f, 0.1f, 18.8f), Vector3.zero, new Vector3(3.6f, 0.9f, 2.4f), true, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f));
 
         for (float x = -21f; x <= 15f; x += 6f)
         {
-            InstantiateDetailPrefab(parent, pillarPath, $"Asset_Balcony_Pillar_{x}", new Vector3(x, SecondFloorY + 0.08f, 28.85f), Vector3.zero, new Vector3(0.7f, 0.9f, 0.7f), true);
+            InstantiateDetailPrefab(parent, pillarPath, $"Asset_Balcony_Pillar_{x}", new Vector3(x, SecondFloorY + 0.08f, 28.85f), Vector3.zero, new Vector3(0.7f, 0.9f, 0.7f), true, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f));
         }
 
         for (float x = -19f; x <= 13f; x += 4f)
         {
-            InstantiateDetailPrefab(parent, railingPath, $"Asset_Balcony_Railing_{x}", new Vector3(x, SecondFloorY + 0.45f, 29.1f), Vector3.zero, new Vector3(1.25f, 0.9f, 0.65f), false);
+            InstantiateDetailPrefab(parent, railingPath, $"Asset_Balcony_Railing_{x}", new Vector3(x, SecondFloorY + 0.45f, 29.1f), Vector3.zero, new Vector3(1.25f, 0.9f, 0.65f), false, "M_ImportedTrim", new Color(0.55f, 0.48f, 0.38f));
         }
 
         for (int i = 0; i < 7; i++)
         {
             float x = -21f + i * 7f;
-            InstantiateDetailPrefab(parent, roofPath, $"Asset_Main_Roof_Tile_Front_{i:00}", new Vector3(x, SecondFloorY + 3.45f, 23.3f), new Vector3(0f, 0f, 0f), new Vector3(1.8f, 1f, 1.35f), false);
-            InstantiateDetailPrefab(parent, roofPath, $"Asset_Main_Roof_Tile_Back_{i:00}", new Vector3(x, SecondFloorY + 3.45f, 1.2f), new Vector3(0f, 180f, 0f), new Vector3(1.8f, 1f, 1.35f), false);
+            InstantiateDetailPrefab(parent, roofPath, $"Asset_Main_Roof_Tile_Front_{i:00}", new Vector3(x, SecondFloorY + 3.45f, 23.3f), new Vector3(0f, 0f, 0f), new Vector3(1.8f, 1f, 1.35f), false, "M_ImportedRoof", new Color(0.13f, 0.13f, 0.14f));
+            InstantiateDetailPrefab(parent, roofPath, $"Asset_Main_Roof_Tile_Back_{i:00}", new Vector3(x, SecondFloorY + 3.45f, 1.2f), new Vector3(0f, 180f, 0f), new Vector3(1.8f, 1f, 1.35f), false, "M_ImportedRoof", new Color(0.13f, 0.13f, 0.14f));
         }
 
-        InstantiateDetailPrefab(parent, chimneyPath, "Asset_Mansion_Chimney_Left", new Vector3(-30f, SecondFloorY + 3.25f, -2f), Vector3.zero, new Vector3(1.1f, 1.2f, 1.1f), true);
-        InstantiateDetailPrefab(parent, chimneyPath, "Asset_Mansion_Chimney_Right", new Vector3(24f, SecondFloorY + 3.25f, 2f), Vector3.zero, new Vector3(1.1f, 1.2f, 1.1f), true);
+        InstantiateDetailPrefab(parent, chimneyPath, "Asset_Mansion_Chimney_Left", new Vector3(-30f, SecondFloorY + 3.25f, -2f), Vector3.zero, new Vector3(1.1f, 1.2f, 1.1f), true, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f));
+        InstantiateDetailPrefab(parent, chimneyPath, "Asset_Mansion_Chimney_Right", new Vector3(24f, SecondFloorY + 3.25f, 2f), Vector3.zero, new Vector3(1.1f, 1.2f, 1.1f), true, "M_ImportedStone", new Color(0.47f, 0.44f, 0.38f));
     }
 
     private static void CreateHangarPrefabDetails(Transform parent)
     {
         const string prefabRoot = "Assets/HQ Hangar Free/Prefabs/";
 
-        InstantiateDetailPrefab(parent, prefabRoot + "Floor.prefab", "Asset_Hangar_Concrete_Floor", new Vector3(68f, 0.04f, -47f), Vector3.zero, new Vector3(5.2f, 1f, 5.2f), false);
-        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_01.prefab", "Asset_Hangar_Back_Wall", new Vector3(84f, 0f, -47f), new Vector3(0f, -90f, 0f), new Vector3(1.6f, 1.55f, 1.6f), true);
-        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_02.prefab", "Asset_Hangar_Left_Wall", new Vector3(68f, 0f, -60f), Vector3.zero, new Vector3(1.6f, 1.55f, 1.6f), true);
-        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_03.prefab", "Asset_Hangar_Right_Wall", new Vector3(68f, 0f, -34f), new Vector3(0f, 180f, 0f), new Vector3(1.6f, 1.55f, 1.6f), true);
-        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_04.prefab", "Asset_Hangar_Door_Frame", new Vector3(51.5f, 0f, -47f), new Vector3(0f, 90f, 0f), new Vector3(1.6f, 1.55f, 1.6f), true);
-        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_05.prefab", "Asset_Hangar_Roof", new Vector3(68f, 0f, -47f), Vector3.zero, new Vector3(1.6f, 1.55f, 1.6f), true);
+        InstantiateDetailPrefab(parent, prefabRoot + "Floor.prefab", "Asset_Hangar_Concrete_Floor", new Vector3(68f, 0.04f, -47f), Vector3.zero, new Vector3(5.2f, 1f, 5.2f), false, "M_ImportedConcrete", new Color(0.42f, 0.42f, 0.4f));
+        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_01.prefab", "Asset_Hangar_Back_Wall", new Vector3(84f, 0f, -47f), new Vector3(0f, -90f, 0f), new Vector3(1.6f, 1.55f, 1.6f), true, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f));
+        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_02.prefab", "Asset_Hangar_Left_Wall", new Vector3(68f, 0f, -60f), Vector3.zero, new Vector3(1.6f, 1.55f, 1.6f), true, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f));
+        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_03.prefab", "Asset_Hangar_Right_Wall", new Vector3(68f, 0f, -34f), new Vector3(0f, 180f, 0f), new Vector3(1.6f, 1.55f, 1.6f), true, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f));
+        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_04.prefab", "Asset_Hangar_Door_Frame", new Vector3(51.5f, 0f, -47f), new Vector3(0f, 90f, 0f), new Vector3(1.6f, 1.55f, 1.6f), true, "M_ImportedMetal", new Color(0.33f, 0.35f, 0.36f));
+        InstantiateDetailPrefab(parent, prefabRoot + "Hangar_part_05.prefab", "Asset_Hangar_Roof", new Vector3(68f, 0f, -47f), Vector3.zero, new Vector3(1.6f, 1.55f, 1.6f), true, "M_ImportedRoof", new Color(0.13f, 0.13f, 0.14f));
     }
 
     private static void CreateEstateWallX(Transform parent, string name, float xMin, float xMax, float z)
@@ -1818,7 +1826,7 @@ public static class CctvDemoSceneBuilder
         return cube;
     }
 
-    private static GameObject InstantiateDetailPrefab(Transform parent, string assetPath, string name, Vector3 position, Vector3 eulerAngles, Vector3 scale, bool blocksCctv)
+    private static GameObject InstantiateDetailPrefab(Transform parent, string assetPath, string name, Vector3 position, Vector3 eulerAngles, Vector3 scale, bool blocksCctv, string fallbackMaterialName = null, Color fallbackColor = default)
     {
         GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
         if (prefab == null)
@@ -1838,12 +1846,143 @@ public static class CctvDemoSceneBuilder
         instance.transform.localRotation = Quaternion.Euler(eulerAngles);
         instance.transform.localScale = scale;
 
+        if (!string.IsNullOrEmpty(fallbackMaterialName))
+        {
+            ReplacePrefabMaterials(instance.transform, fallbackMaterialName, fallbackColor);
+        }
+
         if (blocksCctv)
         {
             EnsureBoxCollidersForRenderers(instance.transform);
         }
 
         return instance;
+    }
+
+    private static void ReplacePrefabMaterials(Transform root, string materialName, Color color)
+    {
+        Material material = CreateMaterial(materialName, color);
+        Renderer[] renderers = root.GetComponentsInChildren<Renderer>(true);
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer == null)
+            {
+                continue;
+            }
+
+            Material[] replacement = new Material[renderer.sharedMaterials.Length];
+            for (int i = 0; i < replacement.Length; i++)
+            {
+                replacement[i] = material;
+            }
+
+            renderer.sharedMaterials = replacement;
+        }
+    }
+
+    private static int ReplaceImportedSceneMaterials()
+    {
+#if UNITY_2023_1_OR_NEWER
+        Renderer[] renderers = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+#else
+        Renderer[] renderers = Object.FindObjectsOfType<Renderer>(true);
+#endif
+        int rendererCount = 0;
+        foreach (Renderer renderer in renderers)
+        {
+            Transform importedRoot = FindImportedAssetRoot(renderer.transform);
+            if (importedRoot == null)
+            {
+                continue;
+            }
+
+            if (!TryGetImportedFallbackMaterial(importedRoot.name, out string materialName, out Color color))
+            {
+                continue;
+            }
+
+            ApplyMaterialToRenderer(renderer, CreateMaterial(materialName, color));
+            EditorUtility.SetDirty(renderer);
+            rendererCount++;
+        }
+
+        return rendererCount;
+    }
+
+    private static Transform FindImportedAssetRoot(Transform child)
+    {
+        Transform current = child;
+        while (current != null)
+        {
+            if (current.name.StartsWith("Asset_"))
+            {
+                return current;
+            }
+
+            current = current.parent;
+        }
+
+        return null;
+    }
+
+    private static bool TryGetImportedFallbackMaterial(string objectName, out string materialName, out Color color)
+    {
+        if (objectName.Contains("Roof"))
+        {
+            materialName = "M_ImportedRoof";
+            color = new Color(0.13f, 0.13f, 0.14f);
+            return true;
+        }
+
+        if (objectName.Contains("Hangar") && !objectName.Contains("Floor"))
+        {
+            materialName = "M_ImportedMetal";
+            color = new Color(0.33f, 0.35f, 0.36f);
+            return true;
+        }
+
+        if (objectName.Contains("Floor"))
+        {
+            materialName = "M_ImportedConcrete";
+            color = new Color(0.42f, 0.42f, 0.4f);
+            return true;
+        }
+
+        if (objectName.Contains("Door"))
+        {
+            materialName = "M_ImportedDoor";
+            color = new Color(0.18f, 0.11f, 0.06f);
+            return true;
+        }
+
+        if (objectName.Contains("Shutter"))
+        {
+            materialName = "M_ImportedWood";
+            color = new Color(0.22f, 0.16f, 0.1f);
+            return true;
+        }
+
+        if (objectName.Contains("Stair") || objectName.Contains("Pillar") || objectName.Contains("Chimney"))
+        {
+            materialName = "M_ImportedStone";
+            color = new Color(0.47f, 0.44f, 0.38f);
+            return true;
+        }
+
+        materialName = "M_ImportedTrim";
+        color = new Color(0.55f, 0.48f, 0.38f);
+        return true;
+    }
+
+    private static void ApplyMaterialToRenderer(Renderer renderer, Material material)
+    {
+        Material[] replacement = new Material[renderer.sharedMaterials.Length];
+        for (int i = 0; i < replacement.Length; i++)
+        {
+            replacement[i] = material;
+        }
+
+        renderer.sharedMaterials = replacement;
     }
 
     private static int EnsureBoxCollidersForRenderers(Transform root)
@@ -2118,21 +2257,51 @@ public static class CctvDemoSceneBuilder
         const string folderPath = "Assets/CCTVStarter";
         string assetPath = $"{folderPath}/{materialName}.mat";
         Material material = AssetDatabase.LoadAssetAtPath<Material>(assetPath);
+        Shader shader = GetSafeSurfaceShader();
 
         if (material == null)
         {
-            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-            if (shader == null)
-            {
-                shader = Shader.Find("Standard");
-            }
-
             material = new Material(shader);
             AssetDatabase.CreateAsset(material, assetPath);
+        }
+        else if (material.shader == null || material.shader.name == "Hidden/InternalErrorShader" || ShouldReplaceMaterialShader(material.shader))
+        {
+            material.shader = shader;
         }
 
         material.color = color;
         EditorUtility.SetDirty(material);
         return material;
+    }
+
+    private static Shader GetSafeSurfaceShader()
+    {
+        Shader shader = null;
+        if (UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline != null)
+        {
+            shader = Shader.Find("Universal Render Pipeline/Lit");
+        }
+
+        if (shader == null)
+        {
+            shader = Shader.Find("Standard");
+        }
+
+        if (shader == null)
+        {
+            shader = Shader.Find("Diffuse");
+        }
+
+        return shader;
+    }
+
+    private static bool ShouldReplaceMaterialShader(Shader shader)
+    {
+        if (UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline != null)
+        {
+            return false;
+        }
+
+        return shader.name.Contains("Universal Render Pipeline") || shader.name.Contains("HDRenderPipeline");
     }
 }
