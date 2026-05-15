@@ -9,8 +9,8 @@ public static class CctvDemoSceneBuilder
     private const string CctvHeadPivotName = "Head_Pivot";
     private const string LegacyCctvViewPivotName = "View_Pivot";
     private const string LegacyCctvYawPivotName = "Yaw_Pivot";
-    private const float HouseWidth = 84f;
-    private const float HouseDepth = 64f;
+    private const float HouseWidth = 190f;
+    private const float HouseDepth = 130f;
     private const float SecondFloorY = 3.25f;
     private const float RoomWallHeight = 3.05f;
     private const float ExteriorWallHeight = 6.8f;
@@ -31,12 +31,12 @@ public static class CctvDemoSceneBuilder
 
         GameObject root = new GameObject("StealthMiniGame");
 
-        GameObject floor = CreateCube("Blueprint_Foundation_Floor", new Vector3(0f, -0.06f, 0f), new Vector3(HouseWidth, 0.12f, HouseDepth), "M_Floor", new Color(0.18f, 0.2f, 0.2f));
+        GameObject floor = CreateCube("Estate_Grounds_Foundation", new Vector3(0f, -0.06f, 0f), new Vector3(HouseWidth, 0.12f, HouseDepth), "M_EstateGrass", new Color(0.18f, 0.28f, 0.12f));
         floor.transform.SetParent(root.transform);
 
         BuildSecurityComplex(root.transform);
 
-        Vector3 startPosition = new Vector3(-34f, 1f, 27f);
+        Vector3 startPosition = new Vector3(-82f, 1f, 56f);
         GameObject player = CreatePlayer(root.transform, startPosition);
 
         Text statusText;
@@ -280,11 +280,270 @@ public static class CctvDemoSceneBuilder
 
     private static void BuildSecurityComplex(Transform parent)
     {
+        CreateEstateGrounds(parent);
+        CreateEstatePerimeter(parent);
+        CreateEstateRoadsAndCourtyards(parent);
+        CreateEstateBuildings(parent);
+        CreateEstateLandscapeAndProps(parent);
         CreateBlueprintFoundation(parent);
         CreateBlueprintRoomShells(parent);
         CreateBlueprintDoorAndSeamFillers(parent);
         CreateBlueprintEquipment(parent);
         CreateBlueprintLighting(parent);
+    }
+
+    private static void CreateEstateGrounds(Transform parent)
+    {
+        CreateDecorCube(parent, "Estate_Back_Lawn", new Vector3(0f, 0.006f, 45f), new Vector3(184f, 0.04f, 35f), "M_LawnDark", new Color(0.14f, 0.25f, 0.09f));
+        CreateDecorCube(parent, "Estate_Front_Plaza_Base", new Vector3(0f, 0.01f, -42f), new Vector3(150f, 0.05f, 42f), "M_Asphalt", new Color(0.18f, 0.18f, 0.17f));
+        CreateDecorCube(parent, "Mansion_Stone_Terrace", new Vector3(0f, 0.035f, -3f), new Vector3(70f, 0.07f, 55f), "M_Stone", new Color(0.55f, 0.52f, 0.45f));
+        CreateDecorCube(parent, "Central_Garden_Base", new Vector3(-3f, 0.045f, -38f), new Vector3(44f, 0.08f, 22f), "M_GardenStone", new Color(0.48f, 0.46f, 0.38f));
+    }
+
+    private static void CreateEstatePerimeter(Transform parent)
+    {
+        float halfWidth = HouseWidth * 0.5f;
+        float halfDepth = HouseDepth * 0.5f;
+        CreateEstateWallX(parent, "Estate_North_Wall_Left", -halfWidth, -10f, halfDepth);
+        CreateEstateWallX(parent, "Estate_North_Wall_Right", 10f, halfWidth, halfDepth);
+        CreateEstateWallX(parent, "Estate_South_Wall", -halfWidth, halfWidth, -halfDepth);
+        CreateEstateWallZ(parent, "Estate_West_Wall", -halfWidth, -halfDepth, halfDepth);
+        CreateEstateWallZ(parent, "Estate_East_Wall", halfWidth, -halfDepth, halfDepth);
+
+        CreateDecorCube(parent, "Main_Gate_Left_Pillar", new Vector3(-10f, 2.6f, halfDepth - 0.35f), new Vector3(1.8f, 5.2f, 1.8f), "M_StoneWall", new Color(0.58f, 0.56f, 0.5f));
+        CreateDecorCube(parent, "Main_Gate_Right_Pillar", new Vector3(10f, 2.6f, halfDepth - 0.35f), new Vector3(1.8f, 5.2f, 1.8f), "M_StoneWall", new Color(0.58f, 0.56f, 0.5f));
+        CreateDecorCube(parent, "Main_Gate_Arch", new Vector3(0f, 4.9f, halfDepth - 0.35f), new Vector3(21f, 0.8f, 1.3f), "M_StoneWall", new Color(0.58f, 0.56f, 0.5f));
+        CreateDecorCube(parent, "Main_Gate_Left_Door", new Vector3(-4.7f, 1.45f, halfDepth - 0.65f), new Vector3(8.5f, 2.7f, 0.18f), "M_Door", new Color(0.22f, 0.13f, 0.07f));
+        CreateDecorCube(parent, "Main_Gate_Right_Door", new Vector3(4.7f, 1.45f, halfDepth - 0.65f), new Vector3(8.5f, 2.7f, 0.18f), "M_Door", new Color(0.22f, 0.13f, 0.07f));
+    }
+
+    private static void CreateEstateRoadsAndCourtyards(Transform parent)
+    {
+        float halfDepth = HouseDepth * 0.5f;
+        CreateDecorCube(parent, "North_Entry_Drive", new Vector3(0f, 0.04f, 49f), new Vector3(17f, 0.06f, 31f), "M_Asphalt", new Color(0.2f, 0.2f, 0.19f));
+        CreateDecorCube(parent, "Roundabout_Road_North", new Vector3(0f, 0.045f, 34f), new Vector3(44f, 0.06f, 13f), "M_Asphalt", new Color(0.2f, 0.2f, 0.19f));
+        CreateDecorCube(parent, "Roundabout_Road_South", new Vector3(0f, 0.045f, 19f), new Vector3(44f, 0.06f, 13f), "M_Asphalt", new Color(0.2f, 0.2f, 0.19f));
+        CreateDecorCube(parent, "Roundabout_Road_West", new Vector3(-21f, 0.045f, 26.5f), new Vector3(13f, 0.06f, 25f), "M_Asphalt", new Color(0.2f, 0.2f, 0.19f));
+        CreateDecorCube(parent, "Roundabout_Road_East", new Vector3(21f, 0.045f, 26.5f), new Vector3(13f, 0.06f, 25f), "M_Asphalt", new Color(0.2f, 0.2f, 0.19f));
+
+        CreateFountain(parent, new Vector3(0f, 0.1f, 26.5f), 3.2f);
+        CreateFountain(parent, new Vector3(-3f, 0.1f, -37f), 2.5f);
+
+        CreateDecorCube(parent, "Right_Service_Road", new Vector3(61f, 0.05f, -12f), new Vector3(16f, 0.08f, 74f), "M_Asphalt", new Color(0.17f, 0.17f, 0.16f));
+        CreateDecorCube(parent, "Airfield_Taxiway", new Vector3(29f, 0.055f, -49f), new Vector3(99f, 0.08f, 23f), "M_Asphalt", new Color(0.17f, 0.17f, 0.16f));
+        CreateDecorCube(parent, "Airfield_Return_Lane", new Vector3(21f, 0.06f, -60f), new Vector3(118f, 0.08f, 7f), "M_Asphalt", new Color(0.16f, 0.16f, 0.15f));
+        CreateDecorCube(parent, "Entry_Road_To_Gate", new Vector3(0f, 0.045f, halfDepth - 9f), new Vector3(20f, 0.06f, 17f), "M_Asphalt", new Color(0.2f, 0.2f, 0.19f));
+
+        CreateDecorCube(parent, "Route_Line_01", new Vector3(-42f, 0.09f, 55.5f), new Vector3(18f, 0.05f, 0.32f), "M_StartStripe", new Color(0.05f, 0.25f, 1f));
+        CreateDecorCube(parent, "Route_Line_02", new Vector3(26f, 0.09f, 55.5f), new Vector3(22f, 0.05f, 0.32f), "M_StartStripe", new Color(0.05f, 0.25f, 1f));
+        CreateDecorCube(parent, "Route_Line_05", new Vector3(47f, 0.09f, -38f), new Vector3(34f, 0.05f, 0.32f), "M_StartStripe", new Color(0.05f, 0.25f, 1f));
+        CreateDecorCube(parent, "Route_Line_06", new Vector3(5f, 0.09f, -59f), new Vector3(82f, 0.05f, 0.32f), "M_StartStripe", new Color(0.05f, 0.25f, 1f));
+    }
+
+    private static void CreateEstateBuildings(Transform parent)
+    {
+        CreateMansionEnvelope(parent);
+        CreateLeftExteriorBuilding(parent);
+        CreateRightExteriorBuilding(parent);
+        CreatePoolHouse(parent);
+    }
+
+    private static void CreateMansionEnvelope(Transform parent)
+    {
+        CreateDecorCube(parent, "Mansion_Main_Facade", new Vector3(-3f, 1.65f, 24.9f), new Vector3(50f, 3.3f, 1.2f), "M_StoneWall", new Color(0.62f, 0.59f, 0.52f));
+        CreateDecorCube(parent, "Mansion_Left_Wing_Facade", new Vector3(-34f, 1.65f, 4f), new Vector3(18f, 3.3f, 47f), "M_StoneWall", new Color(0.62f, 0.59f, 0.52f));
+        CreateDecorCube(parent, "Mansion_Right_Wing_Facade", new Vector3(20f, 1.65f, 4f), new Vector3(18f, 3.3f, 47f), "M_StoneWall", new Color(0.62f, 0.59f, 0.52f));
+        CreateDecorCube(parent, "Mansion_Central_Roof", new Vector3(-3f, 3.7f, 7f), new Vector3(42f, 0.45f, 34f), "M_RoofDark", new Color(0.12f, 0.11f, 0.1f));
+        CreateDecorCube(parent, "Mansion_Left_Roof", new Vector3(-32f, 3.55f, -4.5f), new Vector3(19f, 0.42f, 46f), "M_RoofDark", new Color(0.12f, 0.11f, 0.1f));
+        CreateDecorCube(parent, "Mansion_Right_Roof", new Vector3(29f, 3.55f, 8f), new Vector3(24f, 0.42f, 31f), "M_RoofDark", new Color(0.12f, 0.11f, 0.1f));
+        CreateStairs(parent, new Vector3(-3f, 0.15f, 17f), 7, 17f);
+        CreateDecorCube(parent, "Mansion_Entrance_Door", new Vector3(-3f, 1.45f, 22.75f), new Vector3(5.8f, 2.5f, 0.18f), "M_Door", new Color(0.24f, 0.14f, 0.08f));
+    }
+
+    private static void CreateLeftExteriorBuilding(Transform parent)
+    {
+        CreateDecorCube(parent, "Left_Exterior_Building_Floor", new Vector3(-72f, 0.04f, -16f), new Vector3(25f, 0.08f, 24f), "M_WoodFloor", new Color(0.42f, 0.33f, 0.24f));
+        CreateEstateWallX(parent, "Left_Exterior_Building_North", -84f, -60f, -4f);
+        CreateEstateWallX(parent, "Left_Exterior_Building_South", -84f, -60f, -28f);
+        CreateEstateWallZ(parent, "Left_Exterior_Building_West", -84f, -28f, -4f);
+        CreateEstateWallZ(parent, "Left_Exterior_Building_East", -60f, -28f, -4f);
+        CreateDecorCube(parent, "Left_Exterior_Building_Roof", new Vector3(-72f, 3.55f, -16f), new Vector3(25f, 0.42f, 24f), "M_RoofDark", new Color(0.12f, 0.11f, 0.1f));
+        CreatePool(parent, new Vector3(-72f, 0.09f, -18f), new Vector3(11f, 0.12f, 7f));
+    }
+
+    private static void CreateRightExteriorBuilding(Transform parent)
+    {
+        CreateDecorCube(parent, "Right_Long_Building_Floor", new Vector3(77f, 0.04f, 7f), new Vector3(26f, 0.08f, 60f), "M_WoodFloor", new Color(0.42f, 0.33f, 0.24f));
+        CreateEstateWallX(parent, "Right_Long_Building_North", 64f, 90f, 37f);
+        CreateEstateWallX(parent, "Right_Long_Building_South", 64f, 90f, -23f);
+        CreateEstateWallZ(parent, "Right_Long_Building_West", 64f, -23f, 37f);
+        CreateEstateWallZ(parent, "Right_Long_Building_East", 90f, -23f, 37f);
+        CreateDecorCube(parent, "Right_Long_Building_Roof", new Vector3(77f, 3.65f, 7f), new Vector3(27f, 0.45f, 61f), "M_RoofDark", new Color(0.12f, 0.11f, 0.1f));
+        CreateFurnitureCube(parent, "Right_Building_Lounge_Table", new Vector3(77f, 0.4f, 18f), new Vector3(6f, 0.8f, 3f), "M_DarkWood", new Color(0.2f, 0.12f, 0.06f));
+        CreateFurnitureCube(parent, "Right_Building_Office_Table", new Vector3(77f, 0.4f, -10f), new Vector3(6f, 0.8f, 3f), "M_DarkWood", new Color(0.2f, 0.12f, 0.06f));
+    }
+
+    private static void CreatePoolHouse(Transform parent)
+    {
+        CreatePool(parent, new Vector3(32f, 0.08f, -18f), new Vector3(17f, 0.12f, 11f));
+        CreateDecorCube(parent, "Pool_Stone_Deck", new Vector3(32f, 0.055f, -18f), new Vector3(25f, 0.06f, 18f), "M_Stone", new Color(0.5f, 0.48f, 0.42f));
+        CreateDecorCube(parent, "Pool_Cabana_Roof", new Vector3(44f, 2.4f, -18f), new Vector3(8f, 0.35f, 8f), "M_RoofDark", new Color(0.12f, 0.11f, 0.1f));
+    }
+
+    private static void CreateEstateLandscapeAndProps(Transform parent)
+    {
+        CreateTennisCourt(parent, new Vector3(-75f, 0.07f, 37f));
+        CreateParkingLot(parent, new Vector3(-70f, 0.07f, 12f));
+        CreateAirplane(parent, new Vector3(-34f, 0.55f, -50f), 12f);
+        CreateHelicopter(parent, new Vector3(73f, 0.5f, -46f), 0f);
+        CreateGardenBeds(parent);
+
+        for (int i = 0; i < 15; i++)
+        {
+            float x = -84f + i * 12f;
+            CreateTree(parent, new Vector3(x, 0.6f, 52f + (i % 2) * 5f));
+        }
+
+        for (int i = 0; i < 12; i++)
+        {
+            float z = -55f + i * 9f;
+            CreateTree(parent, new Vector3(-88f, 0.6f, z));
+            CreateTree(parent, new Vector3(91f, 0.6f, z + 2f));
+        }
+    }
+
+    private static void CreateEstateWallX(Transform parent, string name, float xMin, float xMax, float z)
+    {
+        float centerX = (xMin + xMax) * 0.5f;
+        float length = Mathf.Abs(xMax - xMin) + 0.35f;
+        GameObject wall = CreateCube(name, new Vector3(centerX, 2f, z), new Vector3(length, 4f, 1f), "M_StoneWall", new Color(0.58f, 0.56f, 0.5f));
+        wall.transform.SetParent(parent);
+        CreateDecorCube(parent, $"{name}_Top_Cap", new Vector3(centerX, 4.1f, z), new Vector3(length + 0.4f, 0.25f, 1.35f), "M_StoneWall", new Color(0.64f, 0.62f, 0.56f));
+    }
+
+    private static void CreateEstateWallZ(Transform parent, string name, float x, float zMin, float zMax)
+    {
+        float centerZ = (zMin + zMax) * 0.5f;
+        float length = Mathf.Abs(zMax - zMin) + 0.35f;
+        GameObject wall = CreateCube(name, new Vector3(x, 2f, centerZ), new Vector3(1f, 4f, length), "M_StoneWall", new Color(0.58f, 0.56f, 0.5f));
+        wall.transform.SetParent(parent);
+        CreateDecorCube(parent, $"{name}_Top_Cap", new Vector3(x, 4.1f, centerZ), new Vector3(1.35f, 0.25f, length + 0.4f), "M_StoneWall", new Color(0.64f, 0.62f, 0.56f));
+    }
+
+    private static void CreateFountain(Transform parent, Vector3 position, float radius)
+    {
+        GameObject baseObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        baseObject.name = $"Fountain_Base_{position.x}_{position.z}";
+        baseObject.transform.SetParent(parent);
+        baseObject.transform.position = position;
+        baseObject.transform.localScale = new Vector3(radius, 0.2f, radius);
+        baseObject.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_Stone", new Color(0.5f, 0.48f, 0.42f));
+        Object.DestroyImmediate(baseObject.GetComponent<Collider>());
+
+        GameObject water = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        water.name = $"Fountain_Water_{position.x}_{position.z}";
+        water.transform.SetParent(parent);
+        water.transform.position = position + Vector3.up * 0.22f;
+        water.transform.localScale = new Vector3(radius * 0.72f, 0.06f, radius * 0.72f);
+        water.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_PoolWater", new Color(0.08f, 0.38f, 0.62f));
+        Object.DestroyImmediate(water.GetComponent<Collider>());
+
+        CreateDecorCube(parent, $"Fountain_Jet_{position.x}_{position.z}", position + Vector3.up * 0.95f, new Vector3(0.25f, 1.3f, 0.25f), "M_WindowGlass", new Color(0.45f, 0.75f, 0.9f));
+    }
+
+    private static void CreateStairs(Transform parent, Vector3 basePosition, int steps, float width)
+    {
+        for (int i = 0; i < steps; i++)
+        {
+            Vector3 position = basePosition + new Vector3(0f, i * 0.08f, -i * 0.55f);
+            Vector3 scale = new Vector3(width, 0.16f, 0.65f);
+            GameObject step = CreateCube($"Facade_Stair_{i:00}", position, scale, "M_Stone", new Color(0.5f, 0.48f, 0.42f));
+            step.transform.SetParent(parent);
+        }
+    }
+
+    private static void CreatePool(Transform parent, Vector3 position, Vector3 scale)
+    {
+        CreateDecorCube(parent, $"Pool_Water_{position.x}_{position.z}", position + Vector3.up * 0.08f, scale, "M_PoolWater", new Color(0.08f, 0.38f, 0.62f));
+        CreateDecorCube(parent, $"Pool_Edge_N_{position.x}_{position.z}", position + new Vector3(0f, 0.16f, scale.z * 0.5f + 0.55f), new Vector3(scale.x + 1.2f, 0.2f, 0.45f), "M_Stone", new Color(0.5f, 0.48f, 0.42f));
+        CreateDecorCube(parent, $"Pool_Edge_S_{position.x}_{position.z}", position + new Vector3(0f, 0.16f, -scale.z * 0.5f - 0.55f), new Vector3(scale.x + 1.2f, 0.2f, 0.45f), "M_Stone", new Color(0.5f, 0.48f, 0.42f));
+        CreateDecorCube(parent, $"Pool_Edge_W_{position.x}_{position.z}", position + new Vector3(-scale.x * 0.5f - 0.55f, 0.16f, 0f), new Vector3(0.45f, 0.2f, scale.z + 1.2f), "M_Stone", new Color(0.5f, 0.48f, 0.42f));
+        CreateDecorCube(parent, $"Pool_Edge_E_{position.x}_{position.z}", position + new Vector3(scale.x * 0.5f + 0.55f, 0.16f, 0f), new Vector3(0.45f, 0.2f, scale.z + 1.2f), "M_Stone", new Color(0.5f, 0.48f, 0.42f));
+    }
+
+    private static void CreateTennisCourt(Transform parent, Vector3 position)
+    {
+        CreateDecorCube(parent, "Tennis_Court_Surface", position, new Vector3(22f, 0.06f, 13f), "M_TennisCourt", new Color(0.13f, 0.32f, 0.32f));
+        CreateDecorCube(parent, "Tennis_Court_Line_Center", position + Vector3.up * 0.05f, new Vector3(0.2f, 0.035f, 13.1f), "M_CourtLine", Color.white);
+        CreateDecorCube(parent, "Tennis_Court_Line_N", position + new Vector3(0f, 0.05f, 6.2f), new Vector3(21f, 0.035f, 0.16f), "M_CourtLine", Color.white);
+        CreateDecorCube(parent, "Tennis_Court_Line_S", position + new Vector3(0f, 0.05f, -6.2f), new Vector3(21f, 0.035f, 0.16f), "M_CourtLine", Color.white);
+        CreateDecorCube(parent, "Tennis_Net", position + new Vector3(0f, 0.55f, 0f), new Vector3(21f, 0.8f, 0.08f), "M_DarkMetal", new Color(0.04f, 0.045f, 0.05f));
+    }
+
+    private static void CreateParkingLot(Transform parent, Vector3 position)
+    {
+        CreateDecorCube(parent, "Parking_Lot_Surface", position, new Vector3(24f, 0.06f, 19f), "M_Asphalt", new Color(0.17f, 0.17f, 0.16f));
+        for (int i = 0; i < 6; i++)
+        {
+            float x = position.x - 8f + i * 3.2f;
+            CreateDecorCube(parent, $"Parking_Line_{i}", new Vector3(x, 0.11f, position.z), new Vector3(0.12f, 0.035f, 17f), "M_CourtLine", Color.white);
+            CreateCar(parent, new Vector3(x + 1.4f, 0.35f, position.z + (i % 2 == 0 ? 4f : -4f)), i);
+        }
+    }
+
+    private static void CreateCar(Transform parent, Vector3 position, int index)
+    {
+        Color bodyColor = index % 3 == 0 ? new Color(0.1f, 0.12f, 0.14f) : index % 3 == 1 ? new Color(0.55f, 0.55f, 0.52f) : new Color(0.35f, 0.08f, 0.06f);
+        CreateDecorCube(parent, $"Car_{index}_Body", position, new Vector3(2.4f, 0.55f, 4.2f), $"M_Car_{index}", bodyColor);
+        CreateDecorCube(parent, $"Car_{index}_Cabin", position + Vector3.up * 0.48f, new Vector3(1.7f, 0.45f, 2f), "M_WindowGlass", new Color(0.12f, 0.25f, 0.32f));
+    }
+
+    private static void CreateAirplane(Transform parent, Vector3 position, float yaw)
+    {
+        GameObject plane = new GameObject("Estate_Private_Jet");
+        plane.transform.SetParent(parent);
+        plane.transform.position = position;
+        plane.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+        CreateDecorCube(plane.transform, "Jet_Fuselage", Vector3.zero, new Vector3(3f, 1f, 15f), "M_Appliance", new Color(0.82f, 0.82f, 0.78f));
+        CreateDecorCube(plane.transform, "Jet_Left_Wing", new Vector3(-4.2f, -0.05f, -0.4f), new Vector3(8f, 0.18f, 2.1f), "M_Appliance", new Color(0.78f, 0.78f, 0.74f));
+        CreateDecorCube(plane.transform, "Jet_Right_Wing", new Vector3(4.2f, -0.05f, -0.4f), new Vector3(8f, 0.18f, 2.1f), "M_Appliance", new Color(0.78f, 0.78f, 0.74f));
+        CreateDecorCube(plane.transform, "Jet_Tail", new Vector3(0f, 1f, -6.4f), new Vector3(0.35f, 2.2f, 1.8f), "M_Appliance", new Color(0.18f, 0.18f, 0.18f));
+        CreateDecorCube(plane.transform, "Jet_Nose_Glass", new Vector3(0f, 0.25f, 7.8f), new Vector3(2.2f, 0.55f, 0.5f), "M_WindowGlass", new Color(0.12f, 0.25f, 0.32f));
+    }
+
+    private static void CreateHelicopter(Transform parent, Vector3 position, float yaw)
+    {
+        GameObject helicopter = new GameObject("Estate_Helicopter");
+        helicopter.transform.SetParent(parent);
+        helicopter.transform.position = position;
+        helicopter.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+        CreateDecorCube(parent, "Helipad", new Vector3(position.x, 0.06f, position.z), new Vector3(17f, 0.08f, 17f), "M_Asphalt", new Color(0.16f, 0.16f, 0.15f));
+        CreateDecorCube(helicopter.transform, "Heli_Body", Vector3.zero, new Vector3(3.2f, 1f, 6f), "M_DarkMetal", new Color(0.05f, 0.055f, 0.06f));
+        CreateDecorCube(helicopter.transform, "Heli_Tail", new Vector3(0f, 0.15f, -5.2f), new Vector3(0.55f, 0.45f, 5.5f), "M_DarkMetal", new Color(0.05f, 0.055f, 0.06f));
+        CreateDecorCube(helicopter.transform, "Heli_Main_Rotor_A", new Vector3(0f, 1.15f, 0f), new Vector3(10f, 0.08f, 0.25f), "M_DarkMetal", new Color(0.02f, 0.025f, 0.03f));
+        CreateDecorCube(helicopter.transform, "Heli_Main_Rotor_B", new Vector3(0f, 1.17f, 0f), new Vector3(0.25f, 0.08f, 10f), "M_DarkMetal", new Color(0.02f, 0.025f, 0.03f));
+    }
+
+    private static void CreateGardenBeds(Transform parent)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            float x = -18f + i * 12f;
+            CreateDecorCube(parent, $"Garden_Bed_{i}", new Vector3(x, 0.08f, -36f), new Vector3(8f, 0.12f, 4f), "M_LawnDark", new Color(0.11f, 0.22f, 0.08f));
+            CreateDecorCube(parent, $"Garden_Path_{i}", new Vector3(x, 0.11f, -31f), new Vector3(6f, 0.08f, 0.65f), "M_Stone", new Color(0.5f, 0.48f, 0.42f));
+        }
+    }
+
+    private static void CreateTree(Transform parent, Vector3 position)
+    {
+        CreateDecorCube(parent, $"Tree_Trunk_{position.x}_{position.z}", position + Vector3.up * 0.55f, new Vector3(0.45f, 1.1f, 0.45f), "M_DarkWood", new Color(0.18f, 0.1f, 0.05f));
+        GameObject leaves = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        leaves.name = $"Tree_Canopy_{position.x}_{position.z}";
+        leaves.transform.SetParent(parent);
+        leaves.transform.position = position + Vector3.up * 1.75f;
+        leaves.transform.localScale = new Vector3(2.8f, 2.2f, 2.8f);
+        leaves.GetComponent<Renderer>().sharedMaterial = CreateMaterial("M_PlantLeaves", new Color(0.08f, 0.28f, 0.1f));
+        Object.DestroyImmediate(leaves.GetComponent<Collider>());
     }
 
     private static void CreateBlueprintFoundation(Transform parent)
